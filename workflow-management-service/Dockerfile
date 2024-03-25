@@ -1,0 +1,28 @@
+# Stage Build
+FROM python:3.11-slim as build
+
+WORKDIR /app
+
+
+
+# Install dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r requirements.txt
+
+
+COPY ./app /app/app
+
+
+# Stage Tests
+FROM build as tests
+    RUN apt install 
+    COPY .pylintrc /app/.pylintrc
+    COPY /tests/ /app/tests/
+    COPY /tests/entrypoint.sh /app/entrypoint.sh
+    COPY /reports /app/reports
+    RUN pip install pytest pytest-cov pylint
+    CMD ["sh","entrypoint.sh"]
+
+# Stage App
+FROM build as app
+    CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
