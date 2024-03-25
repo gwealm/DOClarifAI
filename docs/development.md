@@ -12,7 +12,7 @@ Describe coding conventions and other guidelines adopted by the project.
 
 
 ### Workflow    
-[GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow) should be followed. When creating a pull request, the following [template](../.github/blob/main/PULL_REQUEST_TEMPLATE.md) should be used.
+[GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow) should be followed. When creating a pull request, the following [template](../.github/PULL_REQUEST_TEMPLATE.md) should be used.
 
 
 ## Quality assurance
