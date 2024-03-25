@@ -1,22 +1,13 @@
 version: "3.8"
 services:
-  app:
+  mongodb:
     build: .
+    container_name: lgp-mongo
+    restart: always
     ports:
-      - "3000:3000" 
-    depends_on:
-      - mongo
+      - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-
-  mongo:
-    image: mongo
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - mongo-data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-
-volumes:
-  mongo-data:
+      - ./mongo-data:/data/db
