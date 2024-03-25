@@ -5,13 +5,24 @@
 version: "3"
 
 services:
-  app:
+  workflow_management:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
       - "8080:8080"
+    volumes:
+      - ./app:/app/app
     environment:
       - PORT=8080
+
   tests:
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    build: 
+      context: .
+      target: tests
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      - POSTGRES_TEST_DB=${POSTGRES_TEST_DB:?}
+      - POSTGRES_TEST_USER=${POSTGRES_TEST_USER:?}
+      - POSTGRES_TEST_PASSWORD=${POSTGRES_TEST_PASSWORD:?}
+      - POSTGRES_TEST_HOST=${POSTGRES_TEST_HOST:?}
