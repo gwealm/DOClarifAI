@@ -1,30 +1,56 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+`Frontend` is supposed to deal with the frontend of our services.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Before utilizing this repository, ensure the following software is installed on your system:
 
-## Expanding the ESLint configuration
+- [Docker](https://www.docker.com/get-started)
+- [nodejs](https://nodejs.org/en/download/current)
+- [npm](https://www.npmjs.com/package/npm)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Getting Started - Docker
 
-- Configure the top-level `parserOptions` property like this:
+To execute this using docker you just need to build the image:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+docker build -t some_tag:v1.0
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+And then run it:
+
+```bash
+docker run -p "8080:8080" some_tag:v1.0
+```
+
+You can also run `docker compose up frontend` in the parent directory
+
+## Getting started - Manual Pipeline
+
+### Running the Application
+
+To initiate the application, execute the following setps
+
+This script will launch the application.
+
+### Testing
+
+To execute the tests you just need to run `npm run test`
+
+This will trigger the tests.
+
+Note: note that tests should be placed under `/tests` and follow the proper naming conventions.
+
+## Project Structure
+
+The project structure encompasses the following components:
+
+- `/src/`: Holds the application's source code.
+- `/tests/`: Contains the tests for the application.
+
+Note: for more information about the structure of the project you should get familiar with [Vite](https://vitejs.dev/)
+
+## Formatting
+
+To format the code, run `npm run prettier`.
