@@ -1,0 +1,28 @@
+# This Docker Compose project is not intended to be executed directly.
+# Instead, this project is meant to be merged with the `compose.base.yml`
+# project.
+
+version: "3"
+
+services:
+  workflow_management:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./app:/app/app
+    environment:
+      - PORT=8080
+
+  tests:
+    build: 
+      context: .
+      target: tests
+    volumes:
+      - ./reports:/app/reports
+    environment:
+      - POSTGRES_TEST_DB=${POSTGRES_TEST_DB:?}
+      - POSTGRES_TEST_USER=${POSTGRES_TEST_USER:?}
+      - POSTGRES_TEST_PASSWORD=${POSTGRES_TEST_PASSWORD:?}
+      - POSTGRES_TEST_HOST=${POSTGRES_TEST_HOST:?}
