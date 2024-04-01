@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 function Workflow() {
   // State for file upload and confidence interval
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -24,7 +25,7 @@ function Workflow() {
           Logout
         </button>
       </header>
-      <div className="p-8 w-full max-w-4xl bg-white shadow rounded mt-6">
+      <div className="p-8 w-full max-w-4xl red shadow rounded mt-6">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Template
