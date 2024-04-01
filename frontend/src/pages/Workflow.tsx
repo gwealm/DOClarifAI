@@ -18,13 +18,7 @@ function Workflow() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-      <header className="flex w-full justify-between p-4 shadow-md bg-white">
-        <span className="text-xl font-semibold">Workflow 1</span>
-        <button className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300">
-          Logout
-        </button>
-      </header>
+    <div className=" min-h-screen flex flex-col items-center justify-center">
       <div className="p-8 w-full max-w-4xl red shadow rounded mt-6">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
