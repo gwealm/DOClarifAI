@@ -2,7 +2,8 @@
 tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module app.main
 app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/main.py:16:0: C0115: Missing class docstring (missing-class-docstring)
 
 -----------------------------------
-Your code has been rated at 8.18/10
+Your code has been rated at 9.38/10
 
