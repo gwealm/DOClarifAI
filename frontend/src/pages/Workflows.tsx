@@ -5,15 +5,15 @@ import { faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import NewWorkflowModal from '../components/NewWorkflowModal';
 
 const Workflows = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isNewWorkflowModalOpen, setIsNewWorkflowModalOpen] = useState(false);
     const [workflows, setWorkflows] = useState([
         { name: 'Workflow 1', date: '10/03/2024 17:45' },
         { name: 'Workflow 2', date: '10/04/2024 09:30' },
         { name: 'Workflow 3', date: '10/05/2024 14:20' },
     ]);
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
+    const toggleNewWorkflowModal = () => {
+        setIsNewWorkflowModalOpen(!isNewWorkflowModalOpen);
     };
 
     const handleAddWorkflow = (workflowName) => {
@@ -31,8 +31,14 @@ const Workflows = () => {
         };
     
         setWorkflows([...workflows, newWorkflow]); // Add the new workflow to the list
-        setIsModalOpen(false); // Close the modal
-    };    
+        setIsNewWorkflowModalOpen(false); // Close the modal
+    };
+    
+    const handleDeleteWorkflow = (index) => {
+        const updatedWorkflows = [...workflows];
+        updatedWorkflows.splice(index, 1); // Remove the workflow at the specified index
+        setWorkflows(updatedWorkflows); // Update the workflows state
+    } 
 
     return (
         <>
@@ -49,13 +55,13 @@ const Workflows = () => {
                 <div className="border-b border-blue-[#F5F5F5] my-4"></div>
 
                 {workflows.map((workflow, index) => (
-                    <WorkflowCard index={index} name={workflow.name} date={workflow.date} />
+                    <WorkflowCard key={index} index={index} name={workflow.name} date={workflow.date} onDelete={handleDeleteWorkflow}/>
                 ))}
             </div>
             <div className="flex items-center justify-start">
                 <button 
                     className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-[#5583C5] bg-opacity-80 border border-gray-300 hover:bg-opacity-50 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
-                    onClick={toggleModal}
+                    onClick={toggleNewWorkflowModal}
                 >
                     New Workflow
                     <FontAwesomeIcon icon={faSquarePlus} className="ml-2" style={{ fontSize: '24px' }} />
@@ -63,7 +69,7 @@ const Workflows = () => {
             </div>
         </div>
         {/* Render NewWorkflowModal component if isModalOpen is true */}
-        {isModalOpen && <NewWorkflowModal onClose={toggleModal} onAddWorkflow={handleAddWorkflow}/>}
+        {isNewWorkflowModalOpen && <NewWorkflowModal onClose={toggleNewWorkflowModal} onAddWorkflow={handleAddWorkflow}/>}
         </>
     );
 }
