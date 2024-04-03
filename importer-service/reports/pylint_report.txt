@@ -1,0 +1,9 @@
+************* Module test_main
+tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.main
+app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/main.py:63:4: W0707: Consider explicitly re-raising using 'raise HTTPException(status_code=500, detail=str(e)) from e' (raise-missing-from)
+
+-----------------------------------
+Your code has been rated at 9.23/10
+

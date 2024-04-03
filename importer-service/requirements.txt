@@ -1,0 +1,7 @@
+fastapi
+pydantic
+uvicorn
+httpx
+python-dotenv
+sap-business-document-processing
+python-multipart
