@@ -1,7 +1,8 @@
+authlib
 fastapi
-pydantic
+python-dotenv
+Requests
+urllib3
+python-multipart
 uvicorn
 httpx
-python-dotenv
-sap-business-document-processing
-python-multipart

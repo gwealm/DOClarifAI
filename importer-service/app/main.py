@@ -1,9 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException, UploadFile
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, BackgroundTasks
 from dotenv import load_dotenv
-from sap_business_document_processing import DoxApiClient
 from typing import Annotated
+from .document_information_extraction_client.dox_api_client import DoxApiClient
 import os
-import shutil
 
 app = FastAPI()
 load_dotenv()
@@ -14,13 +13,13 @@ BASE_URL = os.getenv("SAP_BASE_URL")
 UAA_URL = os.getenv("SAP_UAA_URL")
 DEFAULT_CLIENT_ID = "default"
 DEFAULT_DOCUMENT_TYPE = "invoice"
-header_fields = [
+DEFAULT_HEADER_FIELDS = [
     "documentNumber", "taxId", "purchaseOrderNumber", "shippingAmount",
     "netAmount", "senderAddress", "senderName", "grossAmount", "currencyCode",
     "receiverContact", "documentDate", "taxAmount", "taxRate", "receiverName",
     "receiverAddress"
 ]
-line_item_fields = [
+DEFAULT_LINE_ITEM_FIELDS = [
     "description", "netAmount", "quantity", "unitPrice", "materialNumber"
 ]
 
@@ -34,28 +33,26 @@ class DoxApiClientSingleton:
     return cls._instance
 
 
+
 @app.get("/")
 async def read_main():
   return {"msg": "Hello World"}
 
 
-@app.post("/upload-file")
+@app.post("/upload-file",status_code=202)
 async def upload_file(dox_client: Annotated[DoxApiClient,
                                             Depends(DoxApiClientSingleton)],
-                      file: UploadFile):
+                      file: UploadFile,background_tasks: BackgroundTasks):
   try:
-    # Save the uploaded file to a temporary location
-    with open(file.filename, "wb") as buffer:
-      shutil.copyfileobj(file.file, buffer)
 
-    # Extract information from the uploaded file
-    extracted_info = dox_client.extract_information_from_document(
-        document_path=file.filename,
-        client_id=DEFAULT_CLIENT_ID,
-        document_type=DEFAULT_DOCUMENT_TYPE,
-        mime_type=file.content_type,
-        header_fields=header_fields,
-        line_item_fields=line_item_fields)
+    extracted_info = await dox_client.upload_document(
+        file,
+        DEFAULT_CLIENT_ID,
+        DEFAULT_DOCUMENT_TYPE,
+        background_tasks,
+        DEFAULT_HEADER_FIELDS,
+        DEFAULT_LINE_ITEM_FIELDS
+    )
 
     return extracted_info
 
