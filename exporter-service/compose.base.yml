@@ -1,0 +1,13 @@
+# This Docker Compose project is not intended to be executed directly.
+# Instead, this project is meant to be merged with one of the
+# `compose.production.yml` or `compose.standalone.yml` projects.
+
+version: "3"
+
+services:
+  exporter:
+    build:
+      context: .
+      target: app
+      dockerfile: Dockerfile
+    restart: unless-stopped
