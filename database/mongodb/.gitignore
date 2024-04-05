@@ -1,4 +1,4 @@
 mongo-data/*
 mongo-data/
 *.env
-!*.example.env
+!*example.env
