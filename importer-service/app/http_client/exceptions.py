@@ -1,31 +1,34 @@
 class ApiException(Exception):
-    def __init__(self, message, response=None, status_code=None):
-        super(ApiException, self).__init__(message)
-        self.response = response
-        self.status_code = status_code
+
+  def __init__(self, message, response=None, status_code=None):
+    super(ApiException, self).__init__(message)
+    self.response = response
+    self.status_code = status_code
 
 
 class PollingTimeoutException(ApiException):
-    pass
+  pass
 
 
 class FailedAsynchronousOperationException(ApiException):
-    pass
+  pass
 
 
 class ClientException(ApiException):
-    pass
+  pass
 
 
 class ServerException(ApiException):
-    pass
+  pass
 
 
 class UnauthorizedException(ClientException):
-    pass
+  pass
+
 
 class TokenExpiredError(ClientException):
-    pass
+  pass
+
 
 class MissingTokenError(ClientException):
-    pass
+  pass
