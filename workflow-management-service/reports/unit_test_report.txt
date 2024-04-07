@@ -6,19 +6,13 @@ collected 1 item
 
 tests/test_main.py .                                                     [100%]
 
-=============================== warnings summary ===============================
-../usr/local/lib/python3.11/site-packages/httpx/_client.py:680
-  /usr/local/lib/python3.11/site-packages/httpx/_client.py:680: DeprecationWarning: The 'app' shortcut is now deprecated. Use the explicit style 'transport=WSGITransport(app=...)' instead.
-    warnings.warn(message, DeprecationWarning)
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-
 ---------- coverage: platform linux, python 3.11.8-final-0 -----------
 Name              Stmts   Miss  Cover   Missing
 -----------------------------------------------
 app/__init__.py       0      0   100%
-app/main.py           5      0   100%
+app/main.py          43     18    58%   23-25, 28-43, 51, 55-57, 67
 -----------------------------------------------
-TOTAL                 5      0   100%
+TOTAL                43     18    58%
 
-========================= 1 passed, 1 warning in 3.06s =========================
+
+============================== 1 passed in 1.84s ===============================
