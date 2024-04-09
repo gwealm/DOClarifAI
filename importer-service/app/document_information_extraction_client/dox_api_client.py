@@ -1,11 +1,13 @@
 import json
 import logging
+import os
 from typing import List, Union
 from app.http_client.http_client_base import CommonClient
 from .constants import API_FIELD_CLIENT_ID, API_FIELD_RETURN_NULL, API_REQUEST_FIELD_FILE, API_REQUEST_FIELD_OPTIONS
 from fastapi import UploadFile, HTTPException, BackgroundTasks
 from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT
 from .helpers import create_document_options
+from pymongo import MongoClient
 
 
 class DoxApiClient(CommonClient):
@@ -105,7 +107,7 @@ class DoxApiClient(CommonClient):
                                        ) -> dict:
     """
         Polls the DOX API for a document identified by its ID until the extraction results are ready.
-        TODO: store results in document database
+        Stores the results in the mongodb document database (lgp database, documents collection).
         Args:
             document_id: The ID of the document for which extraction results are requested.
             return_null_values (bool, optional): Flag indicating whether to include null values in the extraction results.
@@ -125,3 +127,13 @@ class DoxApiClient(CommonClient):
 
     logging.debug(f"Document {document_id} processed!")
     logging.debug(response.json())
+    user = os.getenv('MONGO_INITDB_ROOT_USERNAME')
+    pwd = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
+    mongo_client = MongoClient('mongodb://'+user+':'+pwd+'@mongo:27017/')
+    #switch to lgp database
+    db = mongo_client.lgp
+    #switch to the document collection
+    collection = db.documents
+    #insert the document into the collection
+    collection.insert_one(response.json())
+    return response.json()

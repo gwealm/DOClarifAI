@@ -259,124 +259,124 @@ class CommonClient:
     return make_url(self.base_url, path)
 
 
-async def get(self, path: str, validate=True, **kwargs):
-  """
-    Sends a GET request to the specified path.
-
-    Args:
-        path (str): The URL path to send the request to.
-        validate (bool, optional): Flag indicating whether to validate the response status.
-        **kwargs: Additional keyword arguments to pass to the request function.
-
-    Returns:
-        httpx.Response: The response received from the server.
-
-    Raises:
-        UnauthorizedException: If the server returns a 401 status code.
-        ClientException: If the server returns a status code in the range 400-499.
-        ServerException: If the server returns a status code in the range 500-599.
-        ApiException: If there is an issue fetching a new OAuth token 
+  async def get(self, path: str, validate=True, **kwargs):
     """
-  return await self._request((await self.session).get, path, validate, **kwargs)
+      Sends a GET request to the specified path.
+
+      Args:
+          path (str): The URL path to send the request to.
+          validate (bool, optional): Flag indicating whether to validate the response status.
+          **kwargs: Additional keyword arguments to pass to the request function.
+
+      Returns:
+          httpx.Response: The response received from the server.
+
+      Raises:
+          UnauthorizedException: If the server returns a 401 status code.
+          ClientException: If the server returns a status code in the range 400-499.
+          ServerException: If the server returns a status code in the range 500-599.
+          ApiException: If there is an issue fetching a new OAuth token 
+      """
+    return await self._request((await self.session).get, path, validate, **kwargs)
 
 
-async def post(self, path: str, validate=True, **kwargs):
-  """
-    Sends a POST request to the specified path.
-
-    Args:
-        path (str): The URL path to send the request to.
-        validate (bool, optional): Flag indicating whether to validate the response status.
-        **kwargs: Additional keyword arguments to pass to the request function.
-
-    Returns:
-        httpx.Response: The response received from the server.
-
-    Raises:
-        UnauthorizedException: If the server returns a 401 status code.
-        ClientException: If the server returns a status code in the range 400-499.
-        ServerException: If the server returns a status code in the range 500-599.
-        ApiException: If there is an issue fetching a new OAuth token 
+  async def post(self, path: str, validate=True, **kwargs):
     """
-  return await self._request((await self.session).post, path, validate,
-                             **kwargs)
+      Sends a POST request to the specified path.
+
+      Args:
+          path (str): The URL path to send the request to.
+          validate (bool, optional): Flag indicating whether to validate the response status.
+          **kwargs: Additional keyword arguments to pass to the request function.
+
+      Returns:
+          httpx.Response: The response received from the server.
+
+      Raises:
+          UnauthorizedException: If the server returns a 401 status code.
+          ClientException: If the server returns a status code in the range 400-499.
+          ServerException: If the server returns a status code in the range 500-599.
+          ApiException: If there is an issue fetching a new OAuth token 
+      """
+    return await self._request((await self.session).post, path, validate,
+                              **kwargs)
 
 
-async def delete(self, path: str, validate=True, **kwargs):
-  """
-    Sends a DELETE request to the specified path.
-
-    Args:
-        path (str): The URL path to send the request to.
-        validate (bool, optional): Flag indicating whether to validate the response status.
-        **kwargs: Additional keyword arguments to pass to the request function.
-
-    Returns:
-        httpx.Response: The response received from the server.
-
-    Raises:
-        UnauthorizedException: If the server returns a 401 status code.
-        ClientException: If the server returns a status code in the range 400-499.
-        ServerException: If the server returns a status code in the range 500-599.
-        ApiException: If there is an issue fetching a new OAuth token 
+  async def delete(self, path: str, validate=True, **kwargs):
     """
-  return await self._request((await self.session).delete, path, validate,
-                             **kwargs)
+      Sends a DELETE request to the specified path.
+
+      Args:
+          path (str): The URL path to send the request to.
+          validate (bool, optional): Flag indicating whether to validate the response status.
+          **kwargs: Additional keyword arguments to pass to the request function.
+
+      Returns:
+          httpx.Response: The response received from the server.
+
+      Raises:
+          UnauthorizedException: If the server returns a 401 status code.
+          ClientException: If the server returns a status code in the range 400-499.
+          ServerException: If the server returns a status code in the range 500-599.
+          ApiException: If there is an issue fetching a new OAuth token 
+      """
+    return await self._request((await self.session).delete, path, validate,
+                              **kwargs)
 
 
-async def put(self, path: str, validate=True, **kwargs):
-  """
-    Sends a PUT request to the specified path.
-
-    Args:
-        path (str): The URL path to send the request to.
-        validate (bool, optional): Flag indicating whether to validate the response status.
-        **kwargs: Additional keyword arguments to pass to the request function.
-
-    Returns:
-        httpx.Response: The response received from the server.
-
-    Raises:
-        UnauthorizedException: If the server returns a 401 status code.
-        ClientException: If the server returns a status code in the range 400-499.
-        ServerException: If the server returns a status code in the range 500-599.
-        ApiException: If there is an issue fetching a new OAuth token 
+  async def put(self, path: str, validate=True, **kwargs):
     """
-  return await self._request((await self.session).put, path, validate, **kwargs)
+      Sends a PUT request to the specified path.
+
+      Args:
+          path (str): The URL path to send the request to.
+          validate (bool, optional): Flag indicating whether to validate the response status.
+          **kwargs: Additional keyword arguments to pass to the request function.
+
+      Returns:
+          httpx.Response: The response received from the server.
+
+      Raises:
+          UnauthorizedException: If the server returns a 401 status code.
+          ClientException: If the server returns a status code in the range 400-499.
+          ServerException: If the server returns a status code in the range 500-599.
+          ApiException: If there is an issue fetching a new OAuth token 
+      """
+    return await self._request((await self.session).put, path, validate, **kwargs)
 
 
-def raise_for_status_with_logging(self, response):
-  """
-    Checks the response status and raises exceptions if necessary.
-
-    Args:
-        response (httpx.Response): The HTTP response to check.
-
-    Raises:
-        UnauthorizedException: If the server returns a 401 status code.
-        ClientException: If the server returns a status code in the range 400-499.
-        ServerException: If the server returns a status code in the range 500-599.
+  def raise_for_status_with_logging(self, response):
     """
-  e = None
-  if response.status_code == 401:
-    e = UnauthorizedException('Missing authorization for this service',
-                              response,
-                              status_code=401)
-  elif 400 <= response.status_code < 500:
-    try:
-      msg = str(response.json())
-    except json.JSONDecodeError:
-      msg = response.text
-    e = ClientException(msg,
-                        response=response,
-                        status_code=response.status_code)
-  elif 500 <= response.status_code < 600:
-    e = ServerException(response.text,
-                        response=response,
-                        status_code=response.status_code)
+      Checks the response status and raises exceptions if necessary.
 
-  if e is not None:
-    self.common_logger.warning(
-        f'{response.request.method} request to URL {response.url} failed '
-        f'with body: {response.text}')
-    raise e
+      Args:
+          response (httpx.Response): The HTTP response to check.
+
+      Raises:
+          UnauthorizedException: If the server returns a 401 status code.
+          ClientException: If the server returns a status code in the range 400-499.
+          ServerException: If the server returns a status code in the range 500-599.
+      """
+    e = None
+    if response.status_code == 401:
+      e = UnauthorizedException('Missing authorization for this service',
+                                response,
+                                status_code=401)
+    elif 400 <= response.status_code < 500:
+      try:
+        msg = str(response.json())
+      except json.JSONDecodeError:
+        msg = response.text
+      e = ClientException(msg,
+                          response=response,
+                          status_code=response.status_code)
+    elif 500 <= response.status_code < 600:
+      e = ServerException(response.text,
+                          response=response,
+                          status_code=response.status_code)
+
+    if e is not None:
+      self.common_logger.warning(
+          f'{response.request.method} request to URL {response.url} failed '
+          f'with body: {response.text}')
+      raise e
