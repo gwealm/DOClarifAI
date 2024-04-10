@@ -2,11 +2,20 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, BackgroundTasks
 from dotenv import load_dotenv
 from typing import Annotated
 from .document_information_extraction_client.dox_api_client import DoxApiClient
+from fastapi.middleware.cors import CORSMiddleware
 from .models import DocumentStatus
 import os
 
 app = FastAPI()
 load_dotenv()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load environment variables
 CLIENT_ID = os.getenv("SAP_CLIENT_ID")
