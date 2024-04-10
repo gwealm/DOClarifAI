@@ -1,0 +1,9 @@
+authlib
+fastapi
+python-dotenv
+Requests
+urllib3
+python-multipart
+uvicorn
+httpx
+pymongo

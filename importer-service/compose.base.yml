@@ -5,10 +5,14 @@
 version: "3"
 
 services:
-  workflow_management:
+  importer:
     build:
       context: .
       target: app
       dockerfile: Dockerfile
     restart: unless-stopped
-
+    networks:
+      - lgp-network
+networks:
+  lgp-network:
+    external: true

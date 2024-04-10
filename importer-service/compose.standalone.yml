@@ -5,14 +5,13 @@
 version: "3"
 
 services:
-  workflow_management:
+  importer:
     env_file:
-      - path: ./env/standalone.env
-        required: true
+      - ./env/standalone.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "8080:8080"
+      - "8081:8081"
     volumes:
       - ./app:/app/app
     environment:
