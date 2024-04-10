@@ -2,7 +2,7 @@ version: "3.8"
 services:
   db:
     build: .
-    container_name: bdnr_postgres
+    container_name: doclarifai_postgres
     restart: always
     ports:
       - "5432:5432"
@@ -13,7 +13,7 @@ services:
       - "./data/postgres:/var/lib/postgresql/data"
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: bdnr_pgadmin
+    container_name: doclarifai_pgadmin
     depends_on:
       - db
     restart: always
