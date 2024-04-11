@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DragDrop } from '../components/DragDrop.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
@@ -62,13 +63,7 @@ function Workflow() {
             {/* Add more options here */}
           </select>
         </div>
-        <div className="flex flex-col h-40 items-center justify-center border-2 border-dashed border-blue-300 text-gray-700 rounded-md p-6 mb-4 w-3/4 mx-auto">
-          <div className="mb-4">
-          <FontAwesomeIcon icon={faBox} bounce size ="2x" style={{color: 'gray'}} />
-          </div>
-          Drag and drop files here
-          {/* Implement file input */}
-        </div>
+        <DragDrop/>
         <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
           <label className="text-md font-semibold flex text-black pl-6 ">
             Confidence Interval
