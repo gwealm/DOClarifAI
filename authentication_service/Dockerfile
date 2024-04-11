@@ -11,6 +11,7 @@ RUN pip install -r requirements.txt
 
 
 COPY ./app /app/app
+COPY ./ES256 /app/ES256
 
 
 # Stage Tests
@@ -25,5 +26,4 @@ FROM build as tests
 
 # Stage App
 FROM build as app
-    COPY ./ES256 /app/ES256
-    CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8082", "--reload"]
+    CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8083", "--reload"]

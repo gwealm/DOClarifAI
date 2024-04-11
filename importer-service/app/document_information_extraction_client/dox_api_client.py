@@ -129,7 +129,8 @@ class DoxApiClient(CommonClient):
     logging.debug(response.json())
     user = os.getenv('MONGO_INITDB_ROOT_USERNAME')
     pwd = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
-    mongo_client = MongoClient('mongodb://'+user+':'+pwd+'@mongo:27017/')
+    mongo_client = MongoClient('mongodb://' + user + ':' + pwd +
+                               '@mongo:27017/')
     #switch to lgp database
     db = mongo_client.lgp
     #switch to the document collection

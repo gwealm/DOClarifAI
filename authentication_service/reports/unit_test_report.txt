@@ -2,34 +2,74 @@
 platform linux -- Python 3.11.9, pytest-8.1.1, pluggy-1.4.0
 rootdir: /app
 plugins: cov-5.0.0, anyio-4.3.0
-collected 1 item
+collected 0 items / 1 error
 
-tests/test_main.py .                                                     [100%]
-
+==================================== ERRORS ====================================
+_____________________ ERROR collecting tests/test_main.py ______________________
+tests/test_main.py:3: in <module>
+    from app.main import app
+app/main.py:2: in <module>
+    from app.api.main import api_router
+app/api/main.py:3: in <module>
+    from app.api.routes import users, oauth, hello_world
+app/api/routes/users.py:3: in <module>
+    from app.crud import users as crud_users
+app/crud/users.py:2: in <module>
+    from app.core.security import get_password_hash, verify_password
+app/core/security.py:5: in <module>
+    from app.core.config import settings
+app/core/config.py:49: in <module>
+    settings = Settings()
+/usr/local/lib/python3.11/site-packages/pydantic_settings/main.py:84: in __init__
+    super().__init__(
+E   pydantic_core._pydantic_core.ValidationError: 5 validation errors for Settings
+E   POSTGRES_HOST
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   POSTGRES_PORT
+E     Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/int_type
+E   POSTGRES_USER
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   POSTGRES_PASSWORD
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   POSTGRES_DB
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 =============================== warnings summary ===============================
-../usr/local/lib/python3.11/site-packages/pydantic/fields.py:754
-../usr/local/lib/python3.11/site-packages/pydantic/fields.py:754
-  /usr/local/lib/python3.11/site-packages/pydantic/fields.py:754: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.6/migration/
-    warn(
+../usr/local/lib/python3.11/site-packages/passlib/utils/__init__.py:854
+  /usr/local/lib/python3.11/site-packages/passlib/utils/__init__.py:854: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+    from crypt import crypt as _crypt
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 
 ---------- coverage: platform linux, python 3.11.9-final-0 -----------
-Name                                                           Stmts   Miss  Cover   Missing
---------------------------------------------------------------------------------------------
-app/__init__.py                                                    0      0   100%
-app/document_information_extraction_client/constants.py           75      0   100%
-app/document_information_extraction_client/dox_api_client.py      28     16    43%   38, 74-100, 117-127
-app/document_information_extraction_client/endpoints.py           18      0   100%
-app/document_information_extraction_client/helpers.py             31     28    10%   33-70, 84-90
-app/http_client/__init__.py                                        0      0   100%
-app/http_client/constants.py                                      10      0   100%
-app/http_client/exceptions.py                                     19      3    84%   4-6
-app/http_client/helpers.py                                        12     10    17%   16-20, 37-41
-app/http_client/http_client_base.py                              122     99    19%   41-58, 68-70, 82-86, 101-123, 153-176, 212-244, 259, 280, 301, 323, 345, 360-382
-app/main.py                                                       32      8    75%   42-44, 60-69
-app/models.py                                                      5      0   100%
---------------------------------------------------------------------------------------------
-TOTAL                                                            352    164    53%
+Name                            Stmts   Miss  Cover   Missing
+-------------------------------------------------------------
+app/__init__.py                     0      0   100%
+app/api/__init__.py                 0      0   100%
+app/api/deps.py                    28     28     0%   1-43
+app/api/main.py                     6      4    33%   5-8
+app/api/routes/__init__.py          0      0   100%
+app/api/routes/hello_world.py       5      5     0%   1-8
+app/api/routes/oauth.py            17     17     0%   1-31
+app/api/routes/users.py            27     24    11%   4-55
+app/core/__init__.py                0      0   100%
+app/core/config.py                 27      1    96%   39
+app/core/db.py                      6      6     0%   1-9
+app/core/security.py               16     11    31%   7-25
+app/crud/__init__.py                0      0   100%
+app/crud/users.py                  20     18    10%   3-29
+app/main.py                         4      2    50%   4-5
+app/models/__init__.py              0      0   100%
+app/models/tokens.py                6      6     0%   1-10
+app/models/users.py                10     10     0%   1-19
+-------------------------------------------------------------
+TOTAL                             172    132    23%
 
-======================== 1 passed, 2 warnings in 3.39s =========================
+=========================== short test summary info ============================
+ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 5 va...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+========================= 1 warning, 1 error in 2.68s ==========================

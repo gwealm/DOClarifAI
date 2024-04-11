@@ -258,7 +258,6 @@ class CommonClient:
         """
     return make_url(self.base_url, path)
 
-
   async def get(self, path: str, validate=True, **kwargs):
     """
       Sends a GET request to the specified path.
@@ -277,8 +276,8 @@ class CommonClient:
           ServerException: If the server returns a status code in the range 500-599.
           ApiException: If there is an issue fetching a new OAuth token 
       """
-    return await self._request((await self.session).get, path, validate, **kwargs)
-
+    return await self._request((await self.session).get, path, validate,
+                               **kwargs)
 
   async def post(self, path: str, validate=True, **kwargs):
     """
@@ -299,8 +298,7 @@ class CommonClient:
           ApiException: If there is an issue fetching a new OAuth token 
       """
     return await self._request((await self.session).post, path, validate,
-                              **kwargs)
-
+                               **kwargs)
 
   async def delete(self, path: str, validate=True, **kwargs):
     """
@@ -321,8 +319,7 @@ class CommonClient:
           ApiException: If there is an issue fetching a new OAuth token 
       """
     return await self._request((await self.session).delete, path, validate,
-                              **kwargs)
-
+                               **kwargs)
 
   async def put(self, path: str, validate=True, **kwargs):
     """
@@ -342,8 +339,8 @@ class CommonClient:
           ServerException: If the server returns a status code in the range 500-599.
           ApiException: If there is an issue fetching a new OAuth token 
       """
-    return await self._request((await self.session).put, path, validate, **kwargs)
-
+    return await self._request((await self.session).put, path, validate,
+                               **kwargs)
 
   def raise_for_status_with_logging(self, response):
     """
