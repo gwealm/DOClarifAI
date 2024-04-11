@@ -3,5 +3,7 @@ pydantic
 uvicorn
 httpx
 python-dotenv
-sap-business-document-processing
 python-multipart
+pymongo
+pandas
+openpyxl
