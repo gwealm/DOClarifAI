@@ -5,7 +5,7 @@ import './App.css';
 import Workflows from './pages/Workflows';
 import Workflow from './pages/Workflow';
 import Header from './components/Header';
-import SingleFileUpload from './pages/SingleFileUpload';
+import ProcessedFiles from './pages/ProcessedFiles';
 
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
           <Route path="/workflows" element={<Workflows/>}/>
           <Route path="/" element={<Workflows/>}/>
           <Route path="/workflow/:id" element={<Workflow/>}/>
-          <Route path="/singlefileupload" element={<SingleFileUpload/>}/>
+          <Route path="/processedfiles" element={<ProcessedFiles/>}/>
         </Routes>
       </BrowserRouter>
     </>

@@ -1,23 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import SingleFileUploadCard from '../components/SingleFileUploadCard';
+import ProcessedFileCard from '../components/ProcessedFileCard';
 import { faPenToSquare, faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
 
-function SingleFileUpload() {
-  const [files, setUploadedFiles] = useState([
-    { name: 'invoice_txt.pdf', date: '10/03/2024 17:45' },
-  ]);
+function ProcessedFiles() {
+  const [files, setUploadedFiles] = useState([]);
 
   const handleDeleteFiles = (index) => {
     const updatedFiles = files.filter((_, i) => i !== index);
     setUploadedFiles(updatedFiles);
   };
 
+  const handleDownloadFiles = (id) => {
+    const url = 'http://localhost:8082/export-document-excel?document_id=' + id;
+    fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'document.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch((error) => {
+        console.error(`Error: ${error}`);
+      });
+  }
+
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+
+  const fetchDocuments = async () => {
+    const url = 'http://localhost:8082/list-documents';
+    fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUploadedFiles(data);
+      })
+      .catch((error) => {
+        console.error(`Error: ${error}`);
+      });
+  };
+
   return (
     <div className="mx-20 my-5">
        <div className="flex max-w-8xl items-center justify-between pl-6 mb-4">
       <div className="flex lg:flex-1 items-center">
-      <h2 className="text-lg font-semibold text-black">Single File Upload </h2>
+      <h2 className="text-lg font-semibold text-black">Processed Files </h2>
             <FontAwesomeIcon icon={faPenToSquare} className="ml-4" /> 
         </div>
         <div className="flex lg:flex justify-left">
@@ -44,7 +82,7 @@ function SingleFileUpload() {
           <div className="border-b border-blue-200 mb-4"></div>
 
           {files.map((file, index) => (
-            <SingleFileUploadCard key={index} index={index} name={file.name} date={file.date} onDelete={handleDeleteFiles} />
+            <ProcessedFileCard key={index} id={file.id} index={index} name={file.filename} date={file.timestamp} onDelete={handleDeleteFiles} onDownload={handleDownloadFiles} />
           ))}
         </div>
 
@@ -64,4 +102,4 @@ function SingleFileUpload() {
   );
 }
 
-export default SingleFileUpload;
+export default ProcessedFiles;
