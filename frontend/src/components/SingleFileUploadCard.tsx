@@ -23,12 +23,13 @@ const SingleFileUploadCard = ({ index, name, date, onDelete}) => {
             <div className="flex lg:flex-1 justify-left">
                 <p className="text-lg text-black">{date}</p>
             </div>
+            <div className="cursor-pointer hover:cursor-pointer mr-4" >
+                <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
+            </div>
             <div className="cursor-pointer hover:cursor-pointer" onClick={toggleDeleteModal}>
                 <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '24px' }} />
             </div>
-            <div className="cursor-pointer hover:cursor-pointer ml-4" >
-                <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
-            </div>
+            
         </div>
         {/* Render NewWorkflowModal component if isModalOpen is true */}
         {isDeleteModalOpen && <DeleteWorkflowModal onClose={toggleDeleteModal} onDelete={() => onDelete(index)} />}
