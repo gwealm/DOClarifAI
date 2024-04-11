@@ -6,6 +6,7 @@ import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
+import { Link } from 'react-router-dom';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -93,10 +94,12 @@ function Workflow() {
           <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Stop Workflow
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Processed Files
-          </button>
+          <a href="/singlefileupload" className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           
+          Processed Files
+          </a>
+            
+
         </div>
       </div>
 
