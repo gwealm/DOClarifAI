@@ -52,3 +52,16 @@ async def export_document_excel(document_id: str = Query(..., description="The I
   formatted_document.to_excel("output.xlsx", index=False)
 
   return FileResponse("output.xlsx", filename="output.xlsx", media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+@app.get("/list-documents")
+async def list_documents():
+  """
+    This endpoint returns a list of all documents in the database.
+    TODO: In the future it must only return the documents for a specific user and workflow.
+  """
+  documents = collection.find({})
+  # Retrieve only the json with the id, timestamp and filename
+  documents_data = [{"id": document["id"], "timestamp": document["finished"], "filename": document["fileName"]} for document in documents]
+  #sort the documents by timestamp
+  documents_data = sorted(documents_data, key=lambda x: x["timestamp"], reverse=True)
+  return documents_data
