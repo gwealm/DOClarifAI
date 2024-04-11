@@ -21,11 +21,11 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
     """
     Create a new user.
     """
-    user = crud_users.get_user_by_username(session=session, email=user_in.username)
+    user = crud_users.get_user_by_username(session=session, username=user_in.username)
     if user:
         raise HTTPException(
             status_code=400,
-            detail="The user with this email already exists in the system",
+            detail="The user with this username already exists in the system",
         )
     user_create = UserCreate.model_validate(user_in)
     user = crud_users.create_user(session=session, user_create=user_create)
