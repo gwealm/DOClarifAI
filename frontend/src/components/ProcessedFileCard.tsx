@@ -5,8 +5,9 @@ import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import DeleteWorkflowModal from "./DeleteWorkflowModal";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
-const SingleFileUploadCard = ({ index, name, date, onDelete}) => {
+const ProcessedFileCard = ({ index, id, name, date, onDelete, onDownload }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
     
     const toggleDeleteModal = () => {
         setIsDeleteModalOpen(!isDeleteModalOpen);
@@ -21,9 +22,9 @@ const SingleFileUploadCard = ({ index, name, date, onDelete}) => {
                 </a>
             </div>
             <div className="flex lg:flex-1 justify-left">
-                <p className="text-lg text-black">{date}</p>
+                <p className="text-lg text-black">{new Date(date).toLocaleString('pt-PT')}</p>
             </div>
-            <div className="cursor-pointer hover:cursor-pointer mr-4" >
+            <div className="cursor-pointer hover:cursor-pointer mr-4" onClick={() => onDownload(id)}>
                 <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
             </div>
             <div className="cursor-pointer hover:cursor-pointer" onClick={toggleDeleteModal}>
@@ -37,4 +38,4 @@ const SingleFileUploadCard = ({ index, name, date, onDelete}) => {
     );
 }
 
-export default SingleFileUploadCard;
+export default ProcessedFileCard;

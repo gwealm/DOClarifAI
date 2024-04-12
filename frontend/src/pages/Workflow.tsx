@@ -94,7 +94,7 @@ function Workflow() {
           <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Stop Workflow
           </button>
-          <a href="/singlefileupload" className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          <a href="/processedfiles" className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           
           Processed Files
           </a>
