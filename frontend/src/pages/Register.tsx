@@ -9,7 +9,7 @@ const Register = () => {
                     <div className="flex">
                         <a href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Your Company</span>
-                        <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="" />
+                        <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
                         </a>
                     </div>
                     <div className="flex px-4">
