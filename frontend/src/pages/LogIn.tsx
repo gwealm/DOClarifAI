@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const LogIn = () => {
+const LogIn = ( {onLogin} ) => {
 
     return (
         <div className="flex justify-center items-center">
@@ -38,9 +39,9 @@ const LogIn = () => {
                         />
                     </div>
 
-                    <button className="text-md font-semibold leading-6 text-white mx-6 mt-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <Link to="/workflows" onClick={onLogin} className="text-md font-semibold leading-6 text-white mx-6 mt-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Log In
-                    </button>
+                    </Link>
                 </div>
 
                 <div className="relative my-6 mx-14 mt-12">
@@ -54,9 +55,9 @@ const LogIn = () => {
                         Sign in with Google
                     </button>
 
-                    <button className="w-1/2 text-sm font-semibold leading-6 text-white mx-6 p-2 rounded-md bg-[#1976D2] border hover:bg-opacity-80 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <a href="/register" className="w-1/2 text-sm font-semibold leading-6 text-white mx-6 p-2 rounded-md bg-[#1976D2] border hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Register here
-                    </button>
+                    </a>
                 </div>
 
                 <p className="my-4">

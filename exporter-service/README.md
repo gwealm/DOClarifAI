@@ -1,4 +1,4 @@
-# Importer  Service
+# Exporter Service
 
 
 ## Prerequisites
@@ -10,13 +10,6 @@ Before utilizing this repository, ensure the following software is installed on 
 
 In addition, you need a service key for Document Information Extraction. You can find a tutorial on how to get one [here](https://developers.sap.com/tutorials/cp-aibus-dox-free-booster-key.html).
 In the .env file, set SAP_BASE_URL as  url, SAP_CLIENT_ID as uaa.clientid, SAP_CLIENT_SECRET as uaa.clientsecret, and SAP_UAA_URL as uaa.url
-
-You will also need a docker network called lgp-network. 
-In order to do this, run the following command:
-
-```bash
-docker network create lgp-network
-```
 
 
 ## Getting Started

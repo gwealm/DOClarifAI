@@ -5,13 +5,13 @@
 version: "3"
 
 services:
-  importer:
+  exporter:
     env_file:
       - ./env/standalone.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "8081:8081"
+      - "8082:8082"
     volumes:
       - ./app:/app/app
     environment:
