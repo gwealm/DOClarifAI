@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { DragDrop } from '../components/DragDrop.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
+import { Link } from 'react-router-dom';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -62,13 +64,7 @@ function Workflow() {
             {/* Add more options here */}
           </select>
         </div>
-        <div className="flex flex-col h-40 items-center justify-center border-2 border-dashed border-blue-300 text-gray-700 rounded-md p-6 mb-4 w-3/4 mx-auto">
-          <div className="mb-4">
-          <FontAwesomeIcon icon={faBox} bounce size ="2x" style={{color: 'gray'}} />
-          </div>
-          Drag and drop files here
-          {/* Implement file input */}
-        </div>
+        <DragDrop/>
         <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
           <label className="text-md font-semibold flex text-black pl-6 ">
             Confidence Interval
@@ -98,10 +94,12 @@ function Workflow() {
           <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Stop Workflow
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Processed Files
-          </button>
+          <a href="/processedfiles" className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           
+          Processed Files
+          </a>
+            
+
         </div>
       </div>
 
