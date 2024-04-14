@@ -1,5 +1,5 @@
 from pymongo.database import Database
-from models.users import User
+from app.models.users import User
 import pandas as pd
 import tempfile
 
@@ -47,7 +47,7 @@ def get_documents_by_workflow(db:Database,current_user:User,workflow_id:int):
     collection = db["documents"]
     pipeline = [
         {"$sort": {"finished": -1}},
-        {"$project": {"id": "$id", "timestamp": "$finished", "filename": "$fileName"}}
+        {"$project": {"_id":0, "id": "$id", "timestamp": "$finished", "filename": "$fileName"}}
     ]
     documents = collection.aggregate(pipeline)
-    return documents
+    return list(documents)

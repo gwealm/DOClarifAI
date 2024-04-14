@@ -1,6 +1,5 @@
 .pytest_cache
 *.env
 __pycache__
-ES256/
 *.key
 *.pem

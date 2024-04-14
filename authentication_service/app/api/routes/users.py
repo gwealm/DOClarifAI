@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from app.crud import users as crud_users
 from app.api.deps import (
     CurrentUser,
-    SessionDep,
+    PostgresDB,
 )
 from app.models.users import (User, UserCreate, UserPublic)
 
@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 @router.post("/", response_model=UserPublic)
-def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
+def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
   """
     Create a new user.
     """
@@ -36,7 +36,7 @@ def read_user_me(current_user: CurrentUser) -> Any:
 
 
 @router.delete("/{user_id}")
-def delete_user(session: SessionDep, current_user: CurrentUser,
+def delete_user(session: PostgresDB, current_user: CurrentUser,
                 user_id: int) -> Any:
   """
     Delete a user.

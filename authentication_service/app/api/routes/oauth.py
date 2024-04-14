@@ -6,7 +6,7 @@ from app.core import security
 from app.core.config import settings
 from fastapi.security import OAuth2PasswordRequestForm
 from app.api.deps import (
-    SessionDep,)
+    PostgresDB,)
 
 from app.models.tokens import Token
 
@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post("/token")
 def login_access_token(
-    session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm,
+    session: PostgresDB, form_data: Annotated[OAuth2PasswordRequestForm,
                                               Depends()]) -> Token:
   """
     OAuth2 compatible token login, get an access token for future requests

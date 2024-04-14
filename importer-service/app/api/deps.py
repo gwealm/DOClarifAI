@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from pydantic import ValidationError
 from sqlmodel import Session
 from app.core.config import settings
-from app.core.db import engine
+from app.core.postgres_db import engine
 from app.models.users import User
 from app.models.tokens import TokenPayload
 from app.document_information_extraction_client.dox_api_client import DoxApiClient

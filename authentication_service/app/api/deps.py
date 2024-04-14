@@ -7,23 +7,23 @@ from jose import JWTError, jwt
 from pydantic import ValidationError
 from sqlmodel import Session
 from app.core.config import settings
-from app.core.db import engine
+from app.core.postgres_db import engine
 from app.models.users import User
 from app.models.tokens import TokenPayload
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"/oauth/token")
 
 
-def get_db() -> Generator[Session, None, None]:
+def get_postgres_db() -> Generator[Session, None, None]:
   with Session(engine) as session:
     yield session
 
 
-SessionDep = Annotated[Session, Depends(get_db)]
-TokenDep = Annotated[str, Depends(reusable_oauth2)]
+PostgresDB = Annotated[Session, Depends(get_postgres_db)]
+OAuth2Token = Annotated[str, Depends(reusable_oauth2)]
 
 
-def get_current_user(session: SessionDep, token: TokenDep) -> User:
+def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
   try:
     payload = jwt.decode(token,
                          settings.PUBLIC_KEY,

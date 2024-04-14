@@ -5,7 +5,7 @@
 version: "3"
 
 services:
-  importer:
+  authentication_service:
     build:
       context: .
       target: app
