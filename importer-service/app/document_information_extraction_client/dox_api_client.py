@@ -53,6 +53,7 @@ class DoxApiClient(CommonClient):
                             client_id,
                             document_type: str,
                             background_tasks: BackgroundTasks,
+                            document_extracted_callback,
                             header_fields: Union[str, List[str]] = None,
                             line_item_fields: Union[str, List[str]] = None,
                             template_id=None,
@@ -98,11 +99,12 @@ class DoxApiClient(CommonClient):
       raise HTTPException(status_code=500)
 
     document_id: int = response_json["id"]
-    background_tasks.add_task(self.get_extraction_for_document, document_id)
+    background_tasks.add_task(self.get_extraction_for_document, document_id, document_extracted_callback)
     return response_json
 
   async def get_extraction_for_document(self,
                                         document_id,
+                                        document_extracted_callback,
                                         return_null_values: bool = False
                                        ) -> dict:
     """
@@ -125,16 +127,7 @@ class DoxApiClient(CommonClient):
         log_msg_after=
         f'Successfully got extraction for document with ID {document_id}')
 
+    extracted_document = response.json()
     logging.debug(f"Document {document_id} processed!")
-    logging.debug(response.json())
-    user = os.getenv('MONGO_INITDB_ROOT_USERNAME')
-    pwd = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
-    mongo_client = MongoClient('mongodb://' + user + ':' + pwd +
-                               '@mongo:27017/')
-    #switch to lgp database
-    db = mongo_client.lgp
-    #switch to the document collection
-    collection = db.documents
-    #insert the document into the collection
-    collection.insert_one(response.json())
-    return response.json()
+    logging.debug(extracted_document)
+    document_extracted_callback(extracted_document)
