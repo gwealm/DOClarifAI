@@ -9,6 +9,10 @@ Before utilizing this repository, ensure the following software is installed on 
 - [Docker](https://www.docker.com/get-started)
 - Docker Compose 
 
+In addition, you need a service key for Document Information Extraction. You can find a tutorial on how to get one [here](https://developers.sap.com/tutorials/cp-aibus-dox-free-booster-key.html).
+In the .env file, set SAP_OAUTH_URL as uaa.url, SAP_CLIENT_ID as uaa.clientid, and SAP_CLIENT_SECRET as uaa.clientsecret
+
+
 ## Getting Started
 
 ### Running the Application

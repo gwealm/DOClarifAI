@@ -1,0 +1,27 @@
+# This Docker Compose project is not intended to be executed directly.
+# Instead, this project is meant to be merged with the `compose.base.yml`
+# project.
+
+version: "3"
+
+services:
+  importer:
+    env_file:
+      - ./env/standalone.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./app:/app/app
+    environment:
+      - PORT=8080
+
+  tests:
+    build: 
+      context: .
+      target: tests
+    volumes:
+      - ./reports:/app/reports
+
+  

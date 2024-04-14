@@ -6,6 +6,9 @@ version: "3"
 
 services:
   workflow_management:
+    env_file:
+      - path: ./env/standalone.env
+        required: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -21,8 +24,5 @@ services:
       target: tests
     volumes:
       - ./reports:/app/reports
-    environment:
-      - POSTGRES_TEST_DB=${POSTGRES_TEST_DB:?}
-      - POSTGRES_TEST_USER=${POSTGRES_TEST_USER:?}
-      - POSTGRES_TEST_PASSWORD=${POSTGRES_TEST_PASSWORD:?}
-      - POSTGRES_TEST_HOST=${POSTGRES_TEST_HOST:?}
+
+  
