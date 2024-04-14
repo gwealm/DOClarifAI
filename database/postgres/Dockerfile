@@ -1,2 +1,5 @@
 FROM postgres
-COPY ./data/init-scripts /docker-entrypoint-initdb.d
+
+COPY ./init-scripts/schema.sql /docker-entrypoint-initdb.d/01_schema.sql
+
+EXPOSE 5432

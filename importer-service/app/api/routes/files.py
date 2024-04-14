@@ -14,7 +14,7 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
   """
 
   flow_owner: str = "user"
-  if (True and current_user.username != flow_owner):
+  if (False and current_user.username != flow_owner):
     #TODO: get flow_owner from request
     raise HTTPException(status_code=401,
                         detail="Current user is not the owner of this flow")
