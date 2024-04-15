@@ -14,8 +14,6 @@ services:
       - "8082:8082"
     volumes:
       - ./app:/app/app
-    environment:
-      - PORT=8080
 
   tests:
     build: 

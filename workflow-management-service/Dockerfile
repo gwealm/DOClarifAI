@@ -11,6 +11,7 @@ RUN pip install -r requirements.txt
 
 
 COPY ./app /app/app
+COPY ./ES256 /app/ES256
 
 
 # Stage Tests

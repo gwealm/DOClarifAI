@@ -7,3 +7,10 @@ python-multipart
 uvicorn
 httpx
 pymongo
+sqlalchemy
+python-jose[cryptography]
+passlib[bcrypt]
+sqlmodel
+pydantic-settings
+SQLAlchemy
+psycopg[binary,pool]

@@ -1,0 +1,22 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.9, pytest-8.1.1, pluggy-1.4.0
+rootdir: /app
+plugins: cov-5.0.0, anyio-4.3.0
+collected 1 item
+
+tests/test_main.py .                                                     [100%]
+
+---------- coverage: platform linux, python 3.11.9-final-0 -----------
+Name                            Stmts   Miss  Cover   Missing
+-------------------------------------------------------------
+app/__init__.py                     0      0   100%
+app/api/__init__.py                 0      0   100%
+app/api/deps.py                    29     29     0%   1-43
+app/api/main.py                     4      0   100%
+app/api/routes/hello_world.py       5      0   100%
+app/main.py                         4      0   100%
+-------------------------------------------------------------
+TOTAL                              42     29    31%
+
+
+============================== 1 passed in 1.96s ===============================

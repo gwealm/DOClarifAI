@@ -1,0 +1,15 @@
+authlib
+fastapi
+python-dotenv
+Requests
+urllib3
+python-multipart
+uvicorn
+httpx
+sqlalchemy
+python-jose[cryptography]
+passlib[bcrypt]
+sqlmodel
+pydantic-settings
+SQLAlchemy
+psycopg[binary,pool]

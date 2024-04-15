@@ -1,0 +1,41 @@
+************* Module test_main
+tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.models.tokens
+app/models/tokens.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.models.users
+app/models/users.py:15:0: C0301: Line too long (90/80) (line-too-long)
+app/models/users.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.main
+app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.core.config
+app/core/config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/core/config.py:15:7: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+app/core/config.py:20:0: C0115: Missing class docstring (missing-class-docstring)
+app/core/config.py:38:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module app.core.db
+app/core/db.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/core/db.py:3:0: W0404: Reimport 'create_engine' (imported line 1) (reimported)
+app/core/db.py:8:12: W0613: Unused argument 'session' (unused-argument)
+************* Module app.core.security
+app/core/security.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.api.deps
+app/api/deps.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/api/deps.py:14:48: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+app/api/deps.py:33:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
+************* Module app.api.main
+app/api/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.api.routes.hello_world
+app/api/routes/hello_world.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.api.routes.oauth
+app/api/routes/oauth.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+app/api/routes/oauth.py:7:0: C0412: Imports from package fastapi are not grouped (ungrouped-imports)
+app/api/routes/oauth.py:8:0: C0412: Imports from package app are not grouped (ungrouped-imports)
+app/api/routes/oauth.py:1:0: W0611: Unused Any imported from typing (unused-import)
+************* Module app.api.routes.users
+app/api/routes/users.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.crud.users
+app/crud/users.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+
+-----------------------------------
+Your code has been rated at 8.60/10
+

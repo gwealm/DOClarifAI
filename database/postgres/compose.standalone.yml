@@ -1,0 +1,10 @@
+# This Docker Compose project is not intended to be executed directly.
+# Instead, this project is meant to be merged with the `compose.base.yml`
+# project.
+
+version: "3"
+
+services:
+  database-postgres:
+    ports:
+      - "5432:5432"

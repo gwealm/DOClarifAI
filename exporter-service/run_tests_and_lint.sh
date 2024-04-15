@@ -20,3 +20,4 @@ run_compose() {
 }
 
 run_compose up tests --build
+
