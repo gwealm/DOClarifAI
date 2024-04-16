@@ -5,7 +5,7 @@ import { faBox,faSkullCrossbones, faCheck ,faCircle} from '@fortawesome/free-sol
 const fileTypes = ["JPG", "PNG", "PDF"];
 
 export function DragDrop() {
-    const [file, setFile] = useState(null);
+    const [, setFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('noupload');
     const handleChange = (file) => {
         setUploadStatus('uploading');
