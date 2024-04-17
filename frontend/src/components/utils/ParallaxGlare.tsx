@@ -16,12 +16,7 @@ import {
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-const options = {
-    scale: 1.105,
-    speed: 1000,
-    max: 15,
-    glare: true,
-};
+
 
 interface SocialProps {
     linkedin?: string;
@@ -69,6 +64,7 @@ const LinkList = ({
 
 interface dataProps {
     name: string;
+    role: string;
     linkedin?: string;
     github?: string;
     website?: string;
@@ -88,15 +84,28 @@ export const ParallaxGlare = ({
     border = false,
     size = 200,
 }: GlareEffectProps) => {
-    const { name, linkedin, github, website, twitter, instagram, imagePath } =
-        data;
+    const {
+        name,
+        role,
+        linkedin,
+        github,
+        website,
+        twitter,
+        instagram,
+        imagePath,
+    } = data;
     const tilt = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (tilt.current) {
-            VanillaTilt.init(tilt.current, options);
+            VanillaTilt.init(tilt.current, {
+                scale: 1.105,
+                speed: 1000,
+                max: 15,
+                glare: true,
+            });
         }
-    }, [options]);
+    }, []);
 
     return (
         <div
@@ -112,12 +121,19 @@ export const ParallaxGlare = ({
                 src={imagePath}
                 width={size}
                 height={size}
-                style={{borderRadius: "10px", height: "100%" }}
+                style={{ borderRadius: "10px", height: "100%" }}
                 // className="img-fluid"
                 alt="developer"
             />
-            <LinkList linkedin={linkedin} website={website} github={github} twitter={twitter} instagram={instagram} />
+            <LinkList
+                linkedin={linkedin}
+                website={website}
+                github={github}
+                twitter={twitter}
+                instagram={instagram}
+            />
             <h5 className={HoverGlareEffect.name}>{name}</h5>
+            <h6 className={HoverGlareEffect.role}>{role}</h6>
         </div>
     );
 };
