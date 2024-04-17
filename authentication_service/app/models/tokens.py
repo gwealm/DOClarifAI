@@ -4,16 +4,17 @@
 
 from pydantic import BaseModel
 
-"""
-  The schema for the JWT token returned by the authentication endpoint.
-"""
+
 class Token(BaseModel):
+  """
+    The schema for the JWT token returned by the authentication endpoint.
+  """
   access_token: str
   token_type: str = "bearer"
 
 
-"""
-  The schema for the JWT token payload.
-"""
 class TokenPayload(BaseModel):
+  """
+    The schema for the JWT token payload.
+  """
   sub: int | None = None

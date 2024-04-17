@@ -15,13 +15,14 @@ from app.core.postgres_db import engine
 from app.models.users import User
 from app.models.tokens import TokenPayload
 
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"/oauth/token")
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/oauth/token")
 
 
-"""
-  Get a PostgresDB session
-"""
+
 def get_postgres_db() -> Generator[Session, None, None]:
+  """
+    Get a PostgresDB session
+  """
   with Session(engine) as session:
     yield session
 
@@ -29,10 +30,11 @@ def get_postgres_db() -> Generator[Session, None, None]:
 PostgresDB = Annotated[Session, Depends(get_postgres_db)]
 OAuth2Token = Annotated[str, Depends(reusable_oauth2)]
 
-"""
-  Get the current user from the JWT token
-"""
+
 def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
+  """
+  Get the current user from the JWT token
+  """
   try:
     payload = jwt.decode(token,
                          settings.PUBLIC_KEY,

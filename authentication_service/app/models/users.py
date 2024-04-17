@@ -5,31 +5,36 @@ from sqlmodel import Field, SQLModel
 
 
 
-"""
-  The basic information of a user.
-"""
+
 class UserBase(SQLModel):
+  """
+  The basic information of a user.
+  """
   username: str = Field(unique=True, index=True)
 
 
 
-"""
-  The information needed to create a new user.
-"""
+
 class UserCreate(UserBase):
+  """
+  The information needed to create a new user.
+  """
   password: str
 
-"""
-  The ORM model for the User entity.
-"""
+
 class User(UserBase, table=True):
+  """
+    The ORM model for the User entity.
+  """
   id: int | None = Field(default=None, primary_key=True)
   hashed_password: str
-  #TODO: something like workflows: list["Workflow"] = Relationship(back_populates="owner")
+  #TODO: something like workflows:
+  #   list["Workflow"] = Relationship(back_populates="owner")
 
 
-"""
-  The public information of a user.
-"""
+
 class UserPublic(UserBase):
+  """
+    The public information of a user.
+  """
   id: int

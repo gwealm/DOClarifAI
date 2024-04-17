@@ -8,17 +8,17 @@ collected 0 items / 1 error
 _____________________ ERROR collecting tests/test_main.py ______________________
 tests/test_main.py:3: in <module>
     from app.main import app
-app/main.py:3: in <module>
+app/main.py:9: in <module>
     from app.api.main import api_router
-app/api/main.py:3: in <module>
+app/api/main.py:6: in <module>
     from app.api.routes import users, oauth
-app/api/routes/users.py:3: in <module>
+app/api/routes/users.py:6: in <module>
     from app.crud import users as crud_users
-app/crud/users.py:2: in <module>
+app/crud/users.py:5: in <module>
     from app.core.security import get_password_hash, verify_password
-app/core/security.py:5: in <module>
+app/core/security.py:9: in <module>
     from app.core.config import settings
-app/core/config.py:49: in <module>
+app/core/config.py:60: in <module>
     settings = Settings()
 /usr/local/lib/python3.11/site-packages/pydantic_settings/main.py:84: in __init__
     super().__init__(
@@ -50,25 +50,25 @@ Name                         Stmts   Miss  Cover   Missing
 ----------------------------------------------------------
 app/__init__.py                  0      0   100%
 app/api/__init__.py              0      0   100%
-app/api/deps.py                 28     28     0%   1-43
-app/api/main.py                  5      3    40%   5-7
+app/api/deps.py                 28     28     0%   5-54
+app/api/main.py                  5      3    40%   8-10
 app/api/routes/__init__.py       0      0   100%
-app/api/routes/oauth.py         17     17     0%   1-31
-app/api/routes/users.py         27     24    11%   4-55
+app/api/routes/oauth.py         18     18     0%   6-40
+app/api/routes/users.py         27     24    11%   7-58
 app/core/__init__.py             0      0   100%
-app/core/config.py              27      1    96%   39
-app/core/postgres_db.py          6      6     0%   1-9
-app/core/security.py            16     11    31%   7-25
+app/core/config.py              27      1    96%   50
+app/core/postgres_db.py          3      3     0%   4-7
+app/core/security.py            16     11    31%   11-54
 app/crud/__init__.py             0      0   100%
-app/crud/users.py               20     18    10%   3-29
-app/main.py                      6      3    50%   5-13
+app/crud/users.py               20     18    10%   6-61
+app/main.py                      6      3    50%   11-19
 app/models/__init__.py           0      0   100%
-app/models/tokens.py             6      6     0%   1-10
-app/models/users.py             10     10     0%   1-19
+app/models/tokens.py             6      6     0%   5-20
+app/models/users.py             10     10     0%   4-40
 ----------------------------------------------------------
-TOTAL                          168    127    24%
+TOTAL                          166    125    25%
 
 =========================== short test summary info ============================
 ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 5 va...
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-========================= 1 warning, 1 error in 2.49s ==========================
+========================= 1 warning, 1 error in 2.48s ==========================
