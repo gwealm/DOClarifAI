@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import DeleteWorkflowModal from "./DeleteWorkflowModal";
@@ -7,7 +6,7 @@ import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 const ProcessedFileCard = ({ index, id, name, date, onDelete, onDownload }) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+    // const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
     
     const toggleDeleteModal = () => {
         setIsDeleteModalOpen(!isDeleteModalOpen);
