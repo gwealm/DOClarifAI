@@ -14,7 +14,10 @@ const Header = () => {
                     </a>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                    <a href="/about-us" className="text-sm font-semibold leading-6 text-gray-900">
+                    About Us
+                    </a>
+                    <a href="/" className="text-sm font-semibold leading-6 text-gray-900">
                     Workflows
                     </a>
                 </div>

@@ -6,6 +6,8 @@ import { ThemeProvider } from "./components/ThemeProvider"
 import Workflow from "./pages/Workflow";
 import Header from "./components/Header";
 import ProcessedFiles from "./pages/ProcessedFiles";
+import { AboutUs } from "./pages/AboutUs";
+
 
 function App() {
     //const location = useLocation();
@@ -22,6 +24,7 @@ function App() {
                             path="/processedfiles"
                             element={<ProcessedFiles />}
                         />
+                        <Route path="/about-us" element={<AboutUs />} />
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
