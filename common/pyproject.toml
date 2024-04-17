@@ -27,5 +27,6 @@ dependencies = [
     "sqlalchemy",
     "pydantic-settings",
     "SQLAlchemy",
+    "pymongo",
     "psycopg[binary,pool]",
 ]
