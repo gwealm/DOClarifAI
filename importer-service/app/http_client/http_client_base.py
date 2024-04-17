@@ -1,18 +1,24 @@
+"""
+  This module provides a base class for an HTTP client
+"""
+
 import json
 import logging
 import asyncio
 import httpx
 from .constants import API_STATUS_FIELD, MIN_POLLING_INTERVAL, FAILED_STATUSES, SUCCEEDED_STATUSES
 from .exceptions import ApiException, ClientException, FailedAsynchronousOperationException, \
-    PollingTimeoutException, ServerException, UnauthorizedException, MissingTokenError, TokenExpiredError
+    PollingTimeoutException, ServerException, UnauthorizedException, MissingTokenError, \
+        TokenExpiredError
 from .helpers import make_url, make_oauth_url
-import logging
 import time
 
 
 class CommonClient:
-  """HTTP client designed for handling various requests requiring authentication tokens.
-    This client automatically manages token acquisition, ensuring uninterrupted communication with the API"""
+  """HTTP client designed for handling various requests
+    requiring authentication tokens.
+    This client automatically manages token acquisition, 
+    ensuring uninterrupted communication with the API"""
 
   def __init__(self,
                base_url,
@@ -31,12 +37,18 @@ class CommonClient:
             base_url (str): The base URL for the API.
             client_id (str): The client ID for authentication.
             client_secret (str): The client secret for authentication.
-            uaa_url (str): The URL for UAA (User Account and Authentication) service.
-            polling_sleep (int, optional): The interval between polling attempts in seconds. Defaults to 5.
-            polling_max_attempts (int, optional): The maximum number of polling attempts. Defaults to 120.
-            url_path_prefix (str, optional): Prefix to be added to the base URL. Defaults to ''.
-            logger_name (str, optional): Name of the logger. Defaults to 'CommonClient'.
-            logging_level (int, optional): Logging level. Defaults to logging.WARNING.
+            uaa_url (str): The URL for UAA (User 
+            Account and Authentication) service.
+            polling_sleep (int, optional): The interval between
+              polling attempts in seconds.Defaults to 5.
+            polling_max_attempts (int, optional): The maximum number of
+              polling attempts. Defaults to 120.
+            url_path_prefix (str, optional): Prefix
+              to be added to the base URL. Defaults to ''.
+            logger_name (str, optional): Name of the 
+            logger. Defaults to 'CommonClient'.
+            logging_level (int, optional): Logging level.
+              Defaults to logging.WARNING.
         """
     self.common_logger = logging.getLogger('CommonClient')
     self.common_logger.setLevel(logging_level)
@@ -45,8 +57,8 @@ class CommonClient:
 
     if polling_sleep < MIN_POLLING_INTERVAL:
       self.logger.warning(
-          'The polling interval of {} is too small, the number was set to minimal '
-          'allowed amount of {}'.format(polling_sleep, MIN_POLLING_INTERVAL))
+          'The polling interval of %s is too small, the number was set to minimal '
+          'allowed amount of %s', polling_sleep, MIN_POLLING_INTERVAL)
       polling_sleep = MIN_POLLING_INTERVAL
 
     self.base_url = make_url(base_url, url_path_prefix)
@@ -60,7 +72,8 @@ class CommonClient:
   @property
   async def session(self):
     """
-        Retrieves the asynchronous HTTP session, ensuring singleton pattern for session instances.
+        Retrieves the asynchronous HTTP session, 
+        ensuring singleton pattern for session instances.
 
         Returns:
             httpx.AsyncClient: An asynchronous HTTP session.
@@ -71,7 +84,8 @@ class CommonClient:
 
   async def _get_oauth_session(self):
     """
-        Obtains an OAuth session, ensuring singleton pattern for session instances.
+        Obtains an OAuth session, ensuring 
+        singleton pattern for session instances.
 
         Raises:
             ClientException: If authentication credentials are missing.
@@ -93,10 +107,12 @@ class CommonClient:
             session (httpx.AsyncClient): The HTTP session to use.
 
         Returns:
-            httpx.AsyncClient: The updated HTTP session with the obtained token.
+            httpx.AsyncClient: The updated
+              HTTP session with the obtained token.
 
         Raises:
-            ApiException: If unable to fetch the Bearer Token after specified tries.
+            ApiException: If unable to fetch the
+              Bearer Token after specified tries.
         """
     tries, i = 2, 0
     for i in range(tries):
@@ -109,10 +125,10 @@ class CommonClient:
                                       })
         response_params = response.json()
         if 'access_token' not in response_params:
-          raise MissingTokenError(description="Missing access token parameter.")
-        self.token = response_params["access_token"]
+          raise MissingTokenError(message='Missing access token parameter.')
+        self.token = response_params['access_token']
         # Store the time at which the token expires
-        self._expires_at = time.time() + response_params["expires_in"]
+        self._expires_at = time.time() + response_params['expires_in']
         return session
 
       except MissingTokenError as e:
@@ -131,24 +147,34 @@ class CommonClient:
                      log_msg_after=None,
                      **kwargs):
     """
-        Sends an HTTP request with provided parameters, adding the authorization token to the request headers
+        Sends an HTTP request with provided parameters, 
+        adding the authorization token to the request headers
 
         Args:
-            request_func (callable): The function to execute the HTTP request.
+            request_func (callable): The function
+              to execute the HTTP request.
             path (str): The path to append to the base URL.
-            validate (bool): Flag indicating whether to validate the response status.
-            log_msg_before (str, optional): Message to log before sending the request.
-            log_msg_after (str, optional): Message to log after receiving the response.
-            **kwargs: Additional keyword arguments to pass to the request function.
+            validate (bool): Flag indicating whether
+              to validate the response status.
+            log_msg_before (str, optional): Message to
+              log before sending the request.
+            log_msg_after (str, optional): Message to
+              log after receiving the response.
+            **kwargs: Additional keyword arguments to 
+            pass to the request function.
 
         Returns:
             httpx.Response: The response received from the server.
 
         Raises:
-            UnauthorizedException: If the server returns a 401 status code.
-            ClientException: If the server returns a status code in the range 400-499.
-            ServerException: If the server returns a status code in the range 500-599.
-            ApiException: If there is an issue fetching a new OAuth token.
+            UnauthorizedException: If the server 
+            returns a 401 status code.
+            ClientException: If the server returns a
+              status code in the range 400-499.
+            ServerException: If the server returns a
+              status code in the range 500-599.
+            ApiException: If there is an issue fetching
+              a new OAuth token.
         """
     headers = kwargs.get('headers', {})
     headers['Authorization'] = f'Bearer {self.token}'
@@ -159,11 +185,11 @@ class CommonClient:
 
     try:
       if self._expires_at and self._expires_at < time.time():
-        raise TokenExpiredError()
+        raise TokenExpiredError(message='Token expired')
 
       response = await request_func(self.path_to_url(path), **kwargs)
     except TokenExpiredError:
-      self.logger.warning("OAuth token expired, fetching new token")
+      self.logger.warning('OAuth token expired, fetching new token')
       await self._fetch_session_token(self.session)
       headers['Authorization'] = f'Bearer {self.token}'
       kwargs['headers'] = headers
@@ -190,24 +216,39 @@ class CommonClient:
 
         Args:
             path (str): The URL path to poll.
-            check_json_status (bool, optional): Flag indicating whether to check the JSON status in the response.
-            success_status (int, optional): The HTTP status code indicating a successful response.
-            wait_status (int, optional): The HTTP status code indicating that the polling should wait before trying again.
-            sleep_interval (float, optional): The time interval (in seconds) to wait between polling attempts.
-            get_status (callable, optional): A function to extract the status from the JSON response (defaults to obtaining the API_STATUS_FIELD)
-            log_msg_before (str, optional): Message to log before starting the polling.
-            log_msg_after (str, optional): Message to log after completing the polling.
-            **kwargs: Additional keyword arguments to pass to the request function.
+            check_json_status (bool, optional): Flag indicating
+              whether to check the JSON status in the response.
+            success_status (int, optional): The HTTP status code
+              indicating a successful response.
+            wait_status (int, optional): The HTTP status code 
+            indicating that the polling should wait before trying again.
+            sleep_interval (float, optional): The time interval
+              (in seconds) to wait between polling attempts.
+            get_status (callable, optional): A function to extract
+              the status from the JSON response (defaults to
+                obtaining the API_STATUS_FIELD)
+            log_msg_before (str, optional): Message to log 
+            before starting the polling.
+            log_msg_after (str, optional): Message to log 
+            after completing the polling.
+            **kwargs: Additional keyword arguments to pass 
+            to the request function.
 
         Returns:
-            httpx.Response: The response received from the server upon success.
+            httpx.Response: The response received from the
+              server upon success.
 
         Raises:
-            FailedAsynchronousOperationException: If the asynchronous job fails during polling.
-            PollingTimeoutException: If polling times out after reaching the maximum attempts.
-            UnauthorizedException: If the server returns a 401 status code.
-            ClientException: If the server returns a status code in the range 400-499.
-            ServerException: If the server returns a status code in the range 500-599.
+            FailedAsynchronousOperationException: If the 
+            asynchronous job fails during polling.
+            PollingTimeoutException: If polling times out 
+            after reaching the maximum attempts.
+            UnauthorizedException: If the server returns a 
+            401 status code.
+            ClientException: If the server returns a status
+              code in the range 400-499.
+            ServerException: If the server returns a status
+              code in the range 500-599.
         """
     if not sleep_interval:
       sleep_interval = self.polling_sleep
@@ -230,8 +271,7 @@ class CommonClient:
             return response
           elif response_status in FAILED_STATUSES:
             raise FailedAsynchronousOperationException(
-                "Asynchronous job with URL '{}' failed".format(
-                    self.path_to_url(path)),
+                f"Asynchronous job with URL {self.path_to_url(path)} failed",
                 response=response)
           else:
             await asyncio.sleep(sleep_interval)
@@ -242,19 +282,20 @@ class CommonClient:
       else:
         self.raise_for_status_with_logging(response)
     raise PollingTimeoutException(
-        "Polling for URL '{}' timed out after {} seconds".format(
-            self.path_to_url(path), sleep_interval * self.polling_max_attempts),
+        f"Polling for URL {self.path_to_url(path)} timed out after {sleep_interval * self.polling_max_attempts} seconds",
         response=response)
 
   def path_to_url(self, path):
     """
-        Converts a relative path to a complete URL by prepending the base URL.
+        Converts a relative path to a complete URL by
+          prepending the base URL.
 
         Args:
             path (str): The relative path to be converted.
 
         Returns:
-            str: The complete URL formed by combining the base URL and the relative path.
+            str: The complete URL formed by combining the
+              base URL and the relative path.
         """
     return make_url(self.base_url, path)
 
@@ -264,16 +305,22 @@ class CommonClient:
 
       Args:
           path (str): The URL path to send the request to.
-          validate (bool, optional): Flag indicating whether to validate the response status.
-          **kwargs: Additional keyword arguments to pass to the request function.
+          validate (bool, optional): Flag indicating whether
+            to validate the response status.
+          **kwargs: Additional keyword arguments to pass to
+            the request function.
 
       Returns:
-          httpx.Response: The response received from the server.
+          httpx.Response: The response received from the
+            server.
 
       Raises:
-          UnauthorizedException: If the server returns a 401 status code.
-          ClientException: If the server returns a status code in the range 400-499.
-          ServerException: If the server returns a status code in the range 500-599.
+          UnauthorizedException: If the server returns a
+            401 status code.
+          ClientException: If the server returns a status
+            code in the range 400-499.
+          ServerException: If the server returns a status 
+          code in the range 500-599.
           ApiException: If there is an issue fetching a new OAuth token 
       """
     return await self._request((await self.session).get, path, validate,
@@ -285,17 +332,23 @@ class CommonClient:
 
       Args:
           path (str): The URL path to send the request to.
-          validate (bool, optional): Flag indicating whether to validate the response status.
-          **kwargs: Additional keyword arguments to pass to the request function.
+          validate (bool, optional): Flag indicating whether
+            to validate the response status.
+          **kwargs: Additional keyword arguments to pass to
+            the request function.
 
       Returns:
           httpx.Response: The response received from the server.
 
       Raises:
-          UnauthorizedException: If the server returns a 401 status code.
-          ClientException: If the server returns a status code in the range 400-499.
-          ServerException: If the server returns a status code in the range 500-599.
-          ApiException: If there is an issue fetching a new OAuth token 
+          UnauthorizedException: If the server returns
+            a 401 status code.
+          ClientException: If the server returns a status
+            code in the range 400-499.
+          ServerException: If the server returns a status
+            code in the range 500-599.
+          ApiException: If there is an issue fetching
+            a new OAuth token 
       """
     return await self._request((await self.session).post, path, validate,
                                **kwargs)
@@ -306,17 +359,23 @@ class CommonClient:
 
       Args:
           path (str): The URL path to send the request to.
-          validate (bool, optional): Flag indicating whether to validate the response status.
-          **kwargs: Additional keyword arguments to pass to the request function.
+          validate (bool, optional): Flag indicating 
+          whether to validate the response status.
+          **kwargs: Additional keyword arguments to 
+          pass to the request function.
 
       Returns:
           httpx.Response: The response received from the server.
 
       Raises:
-          UnauthorizedException: If the server returns a 401 status code.
-          ClientException: If the server returns a status code in the range 400-499.
-          ServerException: If the server returns a status code in the range 500-599.
-          ApiException: If there is an issue fetching a new OAuth token 
+          UnauthorizedException: If the server returns
+            a 401 status code.
+          ClientException: If the server returns a
+            status code in the range 400-499.
+          ServerException: If the server returns a
+            status code in the range 500-599.
+          ApiException: If there is an issue
+            fetching a new OAuth token 
       """
     return await self._request((await self.session).delete, path, validate,
                                **kwargs)
@@ -327,17 +386,24 @@ class CommonClient:
 
       Args:
           path (str): The URL path to send the request to.
-          validate (bool, optional): Flag indicating whether to validate the response status.
-          **kwargs: Additional keyword arguments to pass to the request function.
+          validate (bool, optional): Flag indicating
+            whether to validate the response status.
+          **kwargs: Additional keyword arguments to
+            pass to the request function.
 
       Returns:
-          httpx.Response: The response received from the server.
+          httpx.Response: The response received
+            from the server.
 
       Raises:
-          UnauthorizedException: If the server returns a 401 status code.
-          ClientException: If the server returns a status code in the range 400-499.
-          ServerException: If the server returns a status code in the range 500-599.
-          ApiException: If there is an issue fetching a new OAuth token 
+          UnauthorizedException: If the server
+            returns a 401 status code.
+          ClientException: If the server returns
+            a status code in the range 400-499.
+          ServerException: If the server returns
+            a status code in the range 500-599.
+          ApiException: If there is an issue
+            fetching a new OAuth token 
       """
     return await self._request((await self.session).put, path, validate,
                                **kwargs)
@@ -350,9 +416,12 @@ class CommonClient:
           response (httpx.Response): The HTTP response to check.
 
       Raises:
-          UnauthorizedException: If the server returns a 401 status code.
-          ClientException: If the server returns a status code in the range 400-499.
-          ServerException: If the server returns a status code in the range 500-599.
+          UnauthorizedException: If the server 
+          returns a 401 status code.
+          ClientException: If the server returns 
+          a status code in the range 400-499.
+          ServerException: If the server returns 
+          a status code in the range 500-599.
       """
     e = None
     if response.status_code == 401:
@@ -374,6 +443,6 @@ class CommonClient:
 
     if e is not None:
       self.common_logger.warning(
-          f'{response.request.method} request to URL {response.url} failed '
-          f'with body: {response.text}')
+          '%s request to URL %s failed with body: %s',
+          response.request.method, response.url, response.text)
       raise e

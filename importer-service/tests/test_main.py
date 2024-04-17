@@ -1,3 +1,6 @@
+"""
+This file contains the tests for the main.py file.
+"""
 from fastapi.testclient import TestClient
 
 from app.main import app

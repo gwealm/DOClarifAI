@@ -1,3 +1,8 @@
+"""
+This file contains helper functions for 
+the document information extraction client.
+"""
+
 from .constants import API_FIELD_CLIENT_ID, API_FIELD_DOCUMENT_TYPE, API_FIELD_ENRICHMENT, API_FIELD_TEMPLATE_ID, \
     API_FIELD_EXTRACTED_HEADER_FIELDS, API_FIELD_EXTRACTED_LINE_ITEM_FIELDS, API_FIELD_SCHEMA_ID, \
     API_REQUEST_FIELD_EXTRACTED_FIELDS,API_REQUEST_FIELD_RECEIVED_DATE
@@ -17,15 +22,18 @@ def create_document_options(client_id,
     Args:
         client_id (str): The client ID.
         document_type (str): The type of document.
-        header_fields (Union[str, List[str]], optional): The extracted header fields. Defaults to None.
-        line_item_fields (Union[str, List[str]], optional): The extracted line item fields. Defaults to None.
+        header_fields (Union[str, List[str]], optional):
+          The extracted header fields. Defaults to None.
+        line_item_fields (Union[str, List[str]], optional):
+          The extracted line item fields. Defaults to None.
         template_id (str, optional): The template ID. Defaults to None.
         schema_id (str, optional): The schema ID. Defaults to None.
         received_date (str, optional): The received date. Defaults to None.
         enrichment (Any, optional): The enrichment data. Defaults to None.
 
     Raises:
-        TypeError: If the input variable `header_fields` or `line_item_fields` has an invalid type.
+        TypeError: If the input variable `header_fields`
+          or `line_item_fields` has an invalid type.
 
     Returns:
         Dict[str, Any]: The options for document creation.
@@ -41,19 +49,19 @@ def create_document_options(client_id,
     options[API_REQUEST_FIELD_EXTRACTED_FIELDS] = {}
     try:
       header_fields = _convert_string_to_list(header_fields)
-    except TypeError:
+    except TypeError as exc:
       raise TypeError(
           f'Input variable \'header_fields\' has wrong type: {type(header_fields)}. Should be a '
-          f'string of comma separated values or a list of strings')
+          f'string of comma separated values or a list of strings') from exc
     options[API_REQUEST_FIELD_EXTRACTED_FIELDS][
         API_FIELD_EXTRACTED_HEADER_FIELDS] = header_fields
 
     try:
       line_item_fields = _convert_string_to_list(line_item_fields)
-    except TypeError:
+    except TypeError as exc:
       raise TypeError(
           f'Input variable \'line_item_fields\' has wrong type: {type(line_item_fields)}. Should be '
-          f'a string of comma separated values or a list of strings')
+          f'a string of comma separated values or a list of strings') from exc
 
     options[API_REQUEST_FIELD_EXTRACTED_FIELDS][
         API_FIELD_EXTRACTED_LINE_ITEM_FIELDS] = line_item_fields
