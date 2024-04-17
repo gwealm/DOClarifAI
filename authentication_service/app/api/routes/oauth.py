@@ -1,25 +1,34 @@
-from typing import Any, Annotated
-from fastapi import APIRouter, HTTPException, Depends
+"""
+  This module contains the routes for the OAuth2 token generation.
+"""
+
+
+from typing import Annotated
+
 from datetime import timedelta
+
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+
 from app.crud import users as crud_users
 from app.core import security
 from app.core.config import settings
-from fastapi.security import OAuth2PasswordRequestForm
 from app.api.deps import (
     PostgresDB,)
-
 from app.models.tokens import Token
 
 router = APIRouter()
 
-
+"""
+  Given the username and password, return a JWT token.
+"""
 @router.post("/token")
 def login_access_token(
     session: PostgresDB, form_data: Annotated[OAuth2PasswordRequestForm,
                                               Depends()]) -> Token:
   """
     OAuth2 compatible token login, get an access token for future requests
-    """
+  """
   user = crud_users.authenticate(session=session,
                                  username=form_data.username,
                                  password=form_data.password)
