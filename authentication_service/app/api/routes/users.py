@@ -1,3 +1,6 @@
+"""
+  Users routes.
+"""
 from typing import Any
 from fastapi import APIRouter, HTTPException
 from app.crud import users as crud_users
@@ -9,12 +12,11 @@ from app.models.users import (User, UserCreate, UserPublic)
 
 router = APIRouter()
 
-
+"""
+  Create a new user.
+"""
 @router.post("/", response_model=UserPublic)
 def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
-  """
-    Create a new user.
-    """
   user = crud_users.get_user_by_username(session=session,
                                          username=user_in.username)
   if user:
@@ -26,21 +28,19 @@ def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
   user = crud_users.create_user(session=session, user_create=user_create)
   return user
 
-
+"""
+  Get current user.
+"""
 @router.get("/me", response_model=UserPublic)
 def read_user_me(current_user: CurrentUser) -> Any:
-  """
-    Get current user.
-    """
   return current_user
 
-
+"""
+  Delete the user with the provided ID.
+"""
 @router.delete("/{user_id}")
 def delete_user(session: PostgresDB, current_user: CurrentUser,
                 user_id: int) -> Any:
-  """
-    Delete a user.
-    """
   user = session.get(User, user_id)
   if not user:
     raise HTTPException(status_code=404, detail="User not found")

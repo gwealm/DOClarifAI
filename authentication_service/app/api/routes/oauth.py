@@ -1,3 +1,8 @@
+"""
+  This module contains the routes for the OAuth2 token generation.
+"""
+
+
 from typing import Any, Annotated
 from fastapi import APIRouter, HTTPException, Depends
 from datetime import timedelta
@@ -12,7 +17,9 @@ from app.models.tokens import Token
 
 router = APIRouter()
 
-
+"""
+  Given the username and password, return a JWT token.
+"""
 @router.post("/token")
 def login_access_token(
     session: PostgresDB, form_data: Annotated[OAuth2PasswordRequestForm,

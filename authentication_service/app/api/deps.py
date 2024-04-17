@@ -1,3 +1,7 @@
+"""
+  Dependencies for FastAPI endpoints
+"""
+
 from collections.abc import Generator
 from typing import Annotated
 
@@ -14,6 +18,9 @@ from app.models.tokens import TokenPayload
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"/oauth/token")
 
 
+"""
+  Get a PostgresDB session
+"""
 def get_postgres_db() -> Generator[Session, None, None]:
   with Session(engine) as session:
     yield session
@@ -22,7 +29,9 @@ def get_postgres_db() -> Generator[Session, None, None]:
 PostgresDB = Annotated[Session, Depends(get_postgres_db)]
 OAuth2Token = Annotated[str, Depends(reusable_oauth2)]
 
-
+"""
+  Get the current user from the JWT token
+"""
 def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
   try:
     payload = jwt.decode(token,

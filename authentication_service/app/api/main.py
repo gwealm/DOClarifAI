@@ -1,3 +1,6 @@
+"""
+    This file is used to include all the routers in the APIRouter.
+"""
 from fastapi import APIRouter
 
 from app.api.routes import users, oauth
