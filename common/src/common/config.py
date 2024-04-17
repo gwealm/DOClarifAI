@@ -15,7 +15,7 @@ def read_key_from_file(file_path):
 
 
 class Settings(BaseSettings):
-  PUBLIC_KEY_FILE: str = "ES256/public.pem"
+  PUBLIC_KEY_FILE: str = os.getenv("PUBLIC_KEY_FILE")
   PUBLIC_KEY: str = read_key_from_file(PUBLIC_KEY_FILE)
   JWT_ALGORITHM: str = "ES256"
   TOKEN_URL: str = os.getenv("TOKEN_URL")
