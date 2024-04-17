@@ -1,3 +1,4 @@
+"""Global configuration settings for the application."""
 from pydantic_core import MultiHostUrl
 from pydantic import (
     PostgresDsn,
@@ -11,13 +12,23 @@ import os
 load_dotenv()
 
 
-def read_key_from_file(file_path):
-  with open(file_path, "r") as file:
+def read_key_from_file(file_path)->str:
+  """
+  Read a key from a file.
+  Args:
+    file_path: The path to the file
+  Returns:
+    str: The content of the file
+  """
+  with open(file_path, "r",encoding="utf-8") as file:
     key = file.read()
   return key
 
 
 class Settings(BaseSettings):
+  """
+  Global configuration settings for the application.
+  """
   PRIVATE_KEY_FILE: str = "ES256/private.ec.key"
   PUBLIC_KEY_FILE: str = "ES256/public.pem"
   PRIVATE_KEY: str = read_key_from_file(PRIVATE_KEY_FILE)
