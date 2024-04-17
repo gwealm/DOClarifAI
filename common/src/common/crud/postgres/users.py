@@ -3,7 +3,7 @@
 """
 from sqlmodel import Session, select
 from common.security import get_password_hash, verify_password
-from common.postgres.models.users import User, UserCreate
+from common.models.users import User, UserCreate
 
 
 

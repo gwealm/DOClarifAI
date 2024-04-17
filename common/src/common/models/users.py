@@ -1,3 +1,4 @@
+
 """
   This file contains the Pydantic models for the User entity.
 """

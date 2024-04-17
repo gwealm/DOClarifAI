@@ -12,9 +12,9 @@ from jose import JWTError, jwt
 from pydantic import ValidationError
 from sqlmodel import Session
 from common.config import settings
-from common.postgres.engine import engine
-from common.postgres.models.users import User
-from common.postgres.models.tokens import TokenPayload
+from common.postgres import engine
+from common.models.users import User
+from common.models.tokens import TokenPayload
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/oauth/token")
 

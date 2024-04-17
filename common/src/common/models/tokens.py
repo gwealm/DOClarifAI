@@ -1,4 +1,3 @@
-
 """
   This module contains the pydantic models for the JWT tokens.
 """
