@@ -3,7 +3,7 @@
 """
 from typing import Any
 from fastapi import APIRouter, HTTPException
-from common.crud.postgres.users import users as crud_users
+from common.crud.postgres import users as crud_users
 from common.deps import (
     CurrentUser,
     PostgresDB,

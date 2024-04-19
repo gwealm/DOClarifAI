@@ -10,7 +10,7 @@ from datetime import timedelta
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from common.crud.postgres.users import users as crud_users
+from common.crud.postgres import users as crud_users
 from app.core import security
 from common.config import settings
 from common.deps import (
