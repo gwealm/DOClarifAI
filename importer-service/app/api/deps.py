@@ -1,3 +1,7 @@
+"""
+    This module contains the dependencies used in the FastAPI application.
+"""
+
 from collections.abc import Generator
 from typing import Annotated
 from pymongo.database import Database
@@ -11,18 +15,20 @@ from app.core.postgres_db import engine
 from app.models.users import User
 from app.models.tokens import TokenPayload
 from app.document_information_extraction_client.dox_api_client import DoxApiClient
-from app.core.config import settings
 from app.core.mongo_db import client as mongo_client
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
-mongo_db:Database = mongo_client[settings.MONGO_DB]
+mongo_db: Database = mongo_client[settings.MONGO_DB]
+
 
 def get_postgres_db() -> Generator[Session, None, None]:
   with Session(engine) as session:
     yield session
 
+
 def get_mongo_db() -> Database:
   return mongo_db
+
 
 PostgresDB = Annotated[Session, Depends(get_postgres_db)]
 MongoDB = Annotated[Database, Depends(get_mongo_db)]
@@ -58,7 +64,8 @@ class DoxApiClientSingleton:
 
   def __new__(cls):
     """
-        Create a new instance of DoxApiClient if it doesn't exist, otherwise return the existing instance.
+        Create a new instance of DoxApiClient if it doesn't exist,
+          otherwise return the existing instance.
         """
     if cls._instance is None:
       cls._instance = DoxApiClient(settings.SAP_BASE_URL,

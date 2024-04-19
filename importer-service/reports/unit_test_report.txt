@@ -6,55 +6,70 @@ collected 0 items / 1 error
 
 ==================================== ERRORS ====================================
 _____________________ ERROR collecting tests/test_main.py ______________________
-tests/test_main.py:3: in <module>
+tests/test_main.py:6: in <module>
     from app.main import app
-app/main.py:2: in <module>
+app/main.py:7: in <module>
     from app.api.main import api_router
-app/api/main.py:3: in <module>
-    from app.api.routes import files, hello_world
-app/api/routes/files.py:3: in <module>
-    from app.api.deps import CurrentUser, DoxClient
-app/api/deps.py:9: in <module>
+app/api/main.py:7: in <module>
+    from app.api.routes import files
+app/api/routes/files.py:8: in <module>
+    from app.api.deps import MongoDB, CurrentUser, DoxClient, PostgresDB
+app/api/deps.py:13: in <module>
     from app.core.config import settings
-app/core/config.py:45: in <module>
+app/core/config.py:68: in <module>
     settings = Settings()
 /usr/local/lib/python3.11/site-packages/pydantic_settings/main.py:84: in __init__
     super().__init__(
-E   pydantic_core._pydantic_core.ValidationError: 10 validation errors for Settings
+E   pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
 E   SAP_CLIENT_ID
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   SAP_CLIENT_SECRET
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   SAP_BASE_URL
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   SAP_UAA_URL
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   TOKEN_URL
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   POSTGRES_HOST
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   POSTGRES_PORT
 E     Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/int_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/int_type
 E   POSTGRES_USER
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   POSTGRES_PASSWORD
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 E   POSTGRES_DB
 E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.6/v/string_type
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   MONGO_HOST
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   MONGO_PORT
+E     Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/int_type
+E   MONGO_USER
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   MONGO_PASSWORD
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+E   MONGO_DB
+E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
 =============================== warnings summary ===============================
-../usr/local/lib/python3.11/site-packages/pydantic/fields.py:754
-../usr/local/lib/python3.11/site-packages/pydantic/fields.py:754
-  /usr/local/lib/python3.11/site-packages/pydantic/fields.py:754: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.6/migration/
+../usr/local/lib/python3.11/site-packages/pydantic/fields.py:804
+../usr/local/lib/python3.11/site-packages/pydantic/fields.py:804
+  /usr/local/lib/python3.11/site-packages/pydantic/fields.py:804: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.7/migration/
     warn(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -64,21 +79,21 @@ Name                                  Stmts   Miss  Cover   Missing
 -------------------------------------------------------------------
 app/__init__.py                           0      0   100%
 app/api/__init__.py                       0      0   100%
-app/api/deps.py                          37     29    22%   10-67
-app/api/main.py                           5      3    40%   5-7
-app/api/routes/files.py                  18     15    17%   5-44
-app/core/config.py                       29      1    97%   35
+app/api/deps.py                          42     33    21%   14-78
+app/api/main.py                           4      2    50%   9-10
+app/api/routes/files.py                  24     21    12%   9-69
+app/core/config.py                       38      2    95%   43, 61
 app/http_client/__init__.py               0      0   100%
 app/http_client/constants.py             10     10     0%   1-14
 app/http_client/exceptions.py            19     19     0%   1-34
 app/http_client/helpers.py               12     12     0%   1-41
-app/http_client/http_client_base.py     122    122     0%   1-379
-app/main.py                               4      2    50%   4-5
+app/http_client/http_client_base.py     121    121     0%   5-448
+app/main.py                               6      4    33%   8-18
 app/models/document_status.py             5      0   100%
 -------------------------------------------------------------------
-TOTAL                                   261    213    18%
+TOTAL                                   281    224    20%
 
 =========================== short test summary info ============================
-ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 10 v...
+ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 15 v...
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-========================= 2 warnings, 1 error in 2.89s =========================
+========================= 2 warnings, 1 error in 1.73s =========================

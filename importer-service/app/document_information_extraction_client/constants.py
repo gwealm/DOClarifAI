@@ -1,3 +1,7 @@
+"""
+This module contains constants used in the document_information_extraction_client module.
+"""
+
 API_FIELD_CLIENT_ID = 'clientId'
 API_FIELD_CLIENT_LIMIT = 'limit'
 API_FIELD_CLIENT_NAME = 'clientName'
@@ -57,7 +61,7 @@ CONTENT_TYPE_PDF = 'application/pdf'
 CONTENT_TYPE_PNG = 'image/png'
 CONTENT_TYPE_TIFF = 'image/tiff'
 CONTENT_TYPE_UNKNOWN = 'unknown'
-DATA_TYPE_BUSINESS_ENTITY = "businessEntity"
+DATA_TYPE_BUSINESS_ENTITY = 'businessEntity'
 DOCUMENT_TYPE_ADVICE = 'paymentAdvice'
 FILE_TYPE_EXCEL = 'Excel'
 
