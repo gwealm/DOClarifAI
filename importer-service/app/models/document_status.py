@@ -1,3 +1,7 @@
+"""
+  Model representing the status of a document.
+"""
+
 from pydantic import BaseModel, Field
 
 

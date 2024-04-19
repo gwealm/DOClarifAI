@@ -1,3 +1,7 @@
+"""
+This module contains the endpoints for the Document Information Extraction API.
+"""
+
 CAPABILITIES_ENDPOINT = '/capabilities'
 CLIENT_ENDPOINT = '/clients'
 CLIENT_MAPPING_ENDPOINT = '/identifier'
