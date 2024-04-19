@@ -8,7 +8,7 @@ from common.deps import (
     CurrentUser,
     PostgresDB,
 )
-from app.models.users import (User, UserCreate, UserPublic)
+from common.models.users import (User, UserCreate, UserPublic)
 
 router = APIRouter()
 

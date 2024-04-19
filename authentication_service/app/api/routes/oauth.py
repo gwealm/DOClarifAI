@@ -15,7 +15,7 @@ from app.core import security
 from app.core.config import settings
 from common.deps import (
     PostgresDB,)
-from app.models.tokens import Token
+from common.models.tokens import Token
 
 router = APIRouter()
 
