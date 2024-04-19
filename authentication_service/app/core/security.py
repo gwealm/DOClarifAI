@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from jose import jwt
 from passlib.context import CryptContext
-from app.core.config import settings
+from common.config import settings
 
 ALGORITHM = "ES256"
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
