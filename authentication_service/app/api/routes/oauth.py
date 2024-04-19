@@ -13,7 +13,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from common.crud.postgres.users import users as crud_users
 from app.core import security
 from app.core.config import settings
-from app.api.deps import (
+from common.deps import (
     PostgresDB,)
 from app.models.tokens import Token
 
