@@ -8,6 +8,8 @@ services:
   authentication_service:
     build:
       context: .
+      additional_contexts:
+         common: ../common
       target: app
       dockerfile: Dockerfile
     restart: unless-stopped
