@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
 
 const Header = ( {isLoggedIn, onLogout} ) => {
@@ -8,7 +10,7 @@ const Header = ( {isLoggedIn, onLogout} ) => {
             <nav className="flex max-w-8xl items-center justify-between p-6 lg:px-8 lg:py-3" aria-label="Global">
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
-                    <span className="sr-only">Your Company</span>
+                    <span className="sr-only">WeClarifai</span>
                     <img className="h-12 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
                     </a>
                 </div>
@@ -16,6 +18,9 @@ const Header = ( {isLoggedIn, onLogout} ) => {
                 { isLoggedIn ? (
                     <>
                     <div className="hidden lg:flex lg:gap-x-12">
+                        <a href="/about-us" className="text-sm font-semibold leading-6 text-gray-900">
+                        About Us
+                        </a>
                         <Link to="/workflows" className="text-sm font-semibold leading-6 text-gray-900">
                         Workflows
                         </Link>
@@ -42,6 +47,9 @@ const Header = ( {isLoggedIn, onLogout} ) => {
                         </Link>
                     </div>
                 )}
+                <div className="hidden flex lg:flex lg:gap-x-12 px-2">
+                    <ModeToggle />
+                </div>
             </nav>
       </header>
     );

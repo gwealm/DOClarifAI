@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 const DeleteWorkflowModal = ({ onClose, onDelete }) => {
     return (
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">

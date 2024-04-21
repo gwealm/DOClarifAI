@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
 import { DragDrop } from '../components/DragDrop.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
-import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
-import { Link } from 'react-router-dom';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -23,20 +20,6 @@ const marks: SliderSingleProps['marks'] = {
 };
 
 function Workflow() {
-  // State for file upload and confidence interval
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [confidenceInterval, setConfidenceInterval] = useState({ min: 35, max: 75 });
-
-  // Handlers for file upload and confidence interval
-  const handleFileUpload = (files) => {
-    // Implement file upload logic
-    setUploadedFiles(files);
-  };
-
-  const handleConfidenceChange = (event) => {
-    const { name, value } = event.target;
-    setConfidenceInterval({ ...confidenceInterval, [name]: value });
-  };
 
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">

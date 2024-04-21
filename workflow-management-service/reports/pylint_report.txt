@@ -1,9 +1,10 @@
 ************* Module test_main
 tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module app.main
-app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/main.py:16:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module config
+app/core/config.py:49:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module app.api.deps
+app/api/deps.py:44:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
 
 -----------------------------------
-Your code has been rated at 9.38/10
+Your code has been rated at 9.65/10
 

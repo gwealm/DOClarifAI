@@ -11,4 +11,3 @@ services:
       target: app
       dockerfile: Dockerfile
     restart: unless-stopped
-

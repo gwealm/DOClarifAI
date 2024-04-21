@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "common"
+version = "0.0.1"
+description = "Common Functionalities used between services"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "sqlmodel",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "fastapi",
+    "authlib",
+    "python-dotenv",
+    "Requests",
+    "urllib3",
+    "python-multipart",
+    "uvicorn",
+    "httpx",
+    "sqlalchemy",
+    "pydantic-settings",
+    "SQLAlchemy",
+    "pymongo",
+    "psycopg[binary,pool]",
+]
