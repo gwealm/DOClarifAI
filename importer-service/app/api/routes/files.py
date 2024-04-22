@@ -5,8 +5,9 @@ file to be processed by the document extraction service.
 
 from fastapi import APIRouter, HTTPException, UploadFile, BackgroundTasks
 from app.models.document_status import DocumentStatus
-from app.api.deps import MongoDB, CurrentUser, DoxClient, PostgresDB
+from app.api.deps import MongoDB, DoxClient
 from app.crud import documents as crud_documents
+from common.deps import CurrentUser, PostgresDB
 
 router = APIRouter()
 
