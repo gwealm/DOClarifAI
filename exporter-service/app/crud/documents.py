@@ -1,5 +1,5 @@
 from pymongo.database import Database
-from app.models.users import User
+from common.models.users import User
 import pandas as pd
 import tempfile
 
