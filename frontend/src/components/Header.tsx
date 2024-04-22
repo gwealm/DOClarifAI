@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { ModeToggle } from './ModeToggle';
+
 const Header = () => {
 
     return (
@@ -7,12 +9,15 @@ const Header = () => {
             <nav className="flex max-w-8xl items-center justify-between p-6 lg:px-8 lg:py-3" aria-label="Global">
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
-                    <span className="sr-only">Your Company</span>
+                    <span className="sr-only">WeClarifai</span>
                     <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="" />
                     </a>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
-                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                    <a href="/about-us" className="text-sm font-semibold leading-6 text-gray-900">
+                    About Us
+                    </a>
+                    <a href="/" className="text-sm font-semibold leading-6 text-gray-900">
                     Workflows
                     </a>
                 </div>
@@ -29,6 +34,10 @@ const Header = () => {
                     <button className="text-sm font-semibold leading-6 text-gray-900 px-4 py-2 rounded-md bg-[#B65EED] border border-gray-300 hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Log out
                     </button>
+                </div>
+
+                <div className="hidden flex lg:flex lg:gap-x-12 px-2">
+                    <ModeToggle />
                 </div>
             </nav>
       </header>
