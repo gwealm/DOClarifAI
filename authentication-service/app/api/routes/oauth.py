@@ -10,12 +10,12 @@ from datetime import timedelta
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.crud import users as crud_users
+from common.crud.postgres import users as crud_users
 from app.core import security
-from app.core.config import settings
-from app.api.deps import (
+from common.config import settings
+from common.deps import (
     PostgresDB,)
-from app.models.tokens import Token
+from common.models.tokens import Token
 
 router = APIRouter()
 

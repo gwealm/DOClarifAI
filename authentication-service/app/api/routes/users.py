@@ -3,12 +3,12 @@
 """
 from typing import Any
 from fastapi import APIRouter, HTTPException
-from app.crud import users as crud_users
-from app.api.deps import (
+from common.crud.postgres import users as crud_users
+from common.deps import (
     CurrentUser,
     PostgresDB,
 )
-from app.models.users import (User, UserCreate, UserPublic)
+from common.models.users import (User, UserCreate, UserPublic)
 
 router = APIRouter()
 
