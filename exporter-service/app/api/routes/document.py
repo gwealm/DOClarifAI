@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.api.deps import MongoDB,CurrentUser
+from app.api.deps import MongoDB
+from common.deps import CurrentUser
 from fastapi import HTTPException, Path
 from fastapi.responses import FileResponse
 from app.crud import documents as crud_documents
