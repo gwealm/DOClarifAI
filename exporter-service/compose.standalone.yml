@@ -16,6 +16,8 @@ services:
       - ./app:/app/app
 
   tests:
+    env_file:
+      - ./env/standalone.env
     build: 
       context: .
       additional_contexts:
