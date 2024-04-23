@@ -11,7 +11,7 @@ In the authentication service, create a folder ES256 and inside it place:
 - the private key, in a file named "private.ec.key"
 - the public key, in a file named "public.pem"
 
-For all the other services, create a folder named ES256 and inside it place a copy of the authentication service's public key, in a filed named "public.pem"
+For all the other services, create a folder named ES256 and inside it place a copy of the authentication service's public key, in a file named "public.pem"
 
 
 ## How to use
