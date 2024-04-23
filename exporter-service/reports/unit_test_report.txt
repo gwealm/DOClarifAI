@@ -1,22 +1,43 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.11.9, pytest-8.1.1, pluggy-1.4.0
+platform linux -- Python 3.11.9, pytest-8.1.1, pluggy-1.5.0
 rootdir: /app
 plugins: cov-5.0.0, anyio-4.3.0
-collected 1 item
+collected 0 items / 1 error
 
-tests/test_main.py .                                                     [100%]
+==================================== ERRORS ====================================
+_____________________ ERROR collecting tests/test_main.py ______________________
+tests/test_main.py:3: in <module>
+    from app.main import app
+app/main.py:5: in <module>
+    from app.api.main import api_router
+app/api/main.py:6: in <module>
+    from app.api.routes import document
+app/api/routes/document.py:8: in <module>
+    from common.deps import CurrentUser
+/usr/local/lib/python3.11/site-packages/common/deps.py:15: in <module>
+    from common.postgres import engine
+/usr/local/lib/python3.11/site-packages/common/postgres.py:8: in <module>
+    engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
+/usr/local/lib/python3.11/site-packages/common/config.py:53: in SQLALCHEMY_DATABASE_URI
+    return MultiHostUrl.build(
+E   ValueError: expected either `host` or `hosts` to be set
 
 ---------- coverage: platform linux, python 3.11.9-final-0 -----------
-Name                            Stmts   Miss  Cover   Missing
--------------------------------------------------------------
-app/__init__.py                     0      0   100%
-app/api/__init__.py                 0      0   100%
-app/api/deps.py                    29     29     0%   1-43
-app/api/main.py                     4      0   100%
-app/api/routes/hello_world.py       5      0   100%
-app/main.py                         4      0   100%
--------------------------------------------------------------
-TOTAL                              42     29    31%
+Name                         Stmts   Miss  Cover   Missing
+----------------------------------------------------------
+app/__init__.py                  0      0   100%
+app/api/__init__.py              0      0   100%
+app/api/deps.py                  9      9     0%   5-18
+app/api/main.py                  4      2    50%   8-9
+app/api/routes/document.py      19     14    26%   9-49
+app/core/__init__.py             0      0   100%
+app/core/config.py              34     34     0%   2-58
+app/core/mongo_db.py             3      3     0%   4-7
+app/main.py                      4      2    50%   7-8
+----------------------------------------------------------
+TOTAL                           73     64    12%
 
-
-============================== 1 passed in 1.96s ===============================
+=========================== short test summary info ============================
+ERROR tests/test_main.py - ValueError: expected either `host` or `hosts` to b...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 1.42s ===============================

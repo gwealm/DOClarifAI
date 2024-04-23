@@ -1,31 +1,68 @@
 ************* Module test_main
 tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module tokens
-app/models/tokens.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module users
-app/models/users.py:15:0: C0301: Line too long (90/80) (line-too-long)
-app/models/users.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module app.main
-app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module config
-app/core/config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/core/config.py:12:7: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-app/core/config.py:17:0: C0115: Missing class docstring (missing-class-docstring)
-app/core/config.py:30:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/core/config.py:2:0: W0611: Unused HttpUrl imported from pydantic (unused-import)
-************* Module db
-app/core/db.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/core/db.py:3:0: W0404: Reimport 'create_engine' (imported line 1) (reimported)
-app/core/db.py:8:12: W0613: Unused argument 'session' (unused-argument)
-************* Module app.api.deps
-app/api/deps.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/api/deps.py:12:0: W0404: Reimport 'settings' (imported line 8) (reimported)
-app/api/deps.py:33:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
-************* Module app.api.main
-app/api/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module hello_world
-app/api/routes/hello_world.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module documents
+app/crud/documents.py:12:0: C0301: Line too long (90/80) (line-too-long)
+app/crud/documents.py:14:0: C0301: Line too long (81/80) (line-too-long)
+app/crud/documents.py:53:0: C0301: Line too long (81/80) (line-too-long)
+app/crud/documents.py:46:0: W1405: Quote delimiter ' is inconsistent with the rest of the file (inconsistent-quotes)
+app/crud/documents.py:38:42: W0613: Unused argument 'current_user' (unused-argument)
+app/crud/documents.py:51:44: W0613: Unused argument 'current_user' (unused-argument)
+app/crud/documents.py:52:30: W0613: Unused argument 'workflow_id' (unused-argument)
+************* Module app.core.config
+app/core/config.py:13:7: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+app/core/config.py:18:0: C0115: Missing class docstring (missing-class-docstring)
+app/core/config.py:32:2: C0103: Attribute name "POSTGRES_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+app/core/config.py:50:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module common.postgres
+common/src/common/postgres.py:8:0: C0304: Final newline missing (missing-final-newline)
+************* Module common.security
+common/src/common/security.py:12:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/security.py:20:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/security.py:24:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/security.py:31:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+************* Module common.deps
+common/src/common/deps.py:45:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
+************* Module common.config
+common/src/common/config.py:17:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:24:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:25:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/config.py:26:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:27:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/config.py:28:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:32:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:35:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:36:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:37:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:38:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:39:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:42:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:44:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:45:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:46:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:47:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:48:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:50:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:51:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:52:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:53:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/config.py:62:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:63:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:64:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:65:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:66:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:67:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:69:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:70:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:71:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/config.py:72:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/config.py:52:4: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+common/src/common/config.py:71:4: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module common.mongo
+common/src/common/mongo.py:4:0: C0304: Final newline missing (missing-final-newline)
+common/src/common/mongo.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module common.crud.postgres.users
+common/src/common/crud/postgres/users.py:61:0: C0304: Final newline missing (missing-final-newline)
 
 -----------------------------------
-Your code has been rated at 8.06/10
+Your code has been rated at 7.48/10
 
