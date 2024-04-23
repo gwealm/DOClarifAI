@@ -1,0 +1,10 @@
+{
+    "pylint.args": [
+        "--rcfile=.pylintrc"
+    ],
+    "pylint.importStrategy": "fromEnvironment",
+    "yapf.args": [
+        "--style=.style.yapf"
+    ],
+    "yapf.importStrategy": "fromEnvironment",
+}
