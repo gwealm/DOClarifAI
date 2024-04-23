@@ -9,6 +9,8 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
+COPY --from=common . /app/common
+RUN pip install /app/common
 
 COPY ./app /app/app
 COPY ./ES256 /app/ES256
