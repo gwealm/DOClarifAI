@@ -7,4 +7,7 @@
         "--style=.style.yapf"
     ],
     "yapf.importStrategy": "fromEnvironment",
+    "[python]": {
+        "editor.defaultFormatter": "eeyore.yapf"
+    }
 }
