@@ -1,10 +1,7 @@
-
 """
   This file contains the Pydantic models for the User entity.
 """
 from sqlmodel import Field, SQLModel
-
-
 
 
 class UserBase(SQLModel):
@@ -12,8 +9,6 @@ class UserBase(SQLModel):
   The basic information of a user.
   """
   username: str = Field(unique=True, index=True)
-
-
 
 
 class UserCreate(UserBase):
@@ -31,7 +26,6 @@ class User(UserBase, table=True):
   hashed_password: str
   #TODO: something like workflows:
   #   list["Workflow"] = Relationship(back_populates="owner")
-
 
 
 class UserPublic(UserBase):

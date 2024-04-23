@@ -6,7 +6,6 @@ from common.security import get_password_hash, verify_password
 from common.models.users import User, UserCreate
 
 
-
 def create_user(*, session: Session, user_create: UserCreate) -> User:
   """
   Create a new user.
@@ -25,7 +24,6 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
   return db_obj
 
 
-
 def get_user_by_username(*, session: Session, username: str) -> User | None:
   """
     Get a user by username.
@@ -38,7 +36,6 @@ def get_user_by_username(*, session: Session, username: str) -> User | None:
   statement = select(User).where(User.username == username)
   session_user = session.exec(statement).first()
   return session_user
-
 
 
 def authenticate(*, session: Session, username: str,
