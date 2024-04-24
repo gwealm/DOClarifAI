@@ -1,4 +1,3 @@
-
 """
   Dependencies for FastAPI endpoints
 """
@@ -17,7 +16,6 @@ from common.models.users import User
 from common.models.tokens import TokenPayload
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
-
 
 
 def get_postgres_db() -> Generator[Session, None, None]:

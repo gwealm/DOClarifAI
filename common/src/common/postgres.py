@@ -1,4 +1,3 @@
-
 """
   This file is used to initialize the database connection.
 """
