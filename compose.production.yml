@@ -2,10 +2,10 @@ version: "3"
 
 include:
   # workflow-management-service
-  - path:
-      - "/workflow-management-service/compose.base.yml"
-      - "/workflow-management-service/compose.production.yml"
-    env_file: "workflow-management-service/standalone.env"
+  # - path:
+  #     - "/workflow-management-service/compose.base.yml"
+  #     - "/workflow-management-service/compose.production.yml"
+  #   env_file: "workflow-management-service/standalone.env"
 
   # importer-service
   - path:
