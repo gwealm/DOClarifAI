@@ -9,7 +9,8 @@ import tempfile
 
 def format_document(data: dict):
   """
-    This function formats the document data into a DataFrame, for invoice data extraction.
+    This function formats the document data into a DataFrame, for invoice data
+    extraction.
     """
   header_data = {field["name"]: field["value"] for field in data["headerFields"]}
 
@@ -43,7 +44,7 @@ def get_document_by_id_xlsx(db: Database, current_user: User,
     return None
   document_data = document[0]["extraction"]
   formatted_document = format_document(document_data)
-  _, path = tempfile.mkstemp(suffix='.xlsx')
+  _, path = tempfile.mkstemp(suffix=".xlsx")
   formatted_document.to_excel(path, index=False)
   return path
 
