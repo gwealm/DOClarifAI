@@ -1,0 +1,57 @@
+name: Build and Push to Artifact Registry
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GAR_LOCATION }}
+          username: _json_key
+          password: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Create environment files
+        working-directory: env
+        run: |
+          echo -e "${{ secrets.EXPORTER_SERVICE }}" | base64 -d - > exporter-service/standalone.env
+          echo -e "${{ secrets.IMPORTER_SERVICE }}" | base64 -d - > importer-service/standalone.env
+          echo -e "${{ secrets.AUTHENTICATION_SERVICE }}" | base64 -d - > importer-service/standalone.env
+          echo -e "${{ secrets.MONGODB }}" | base64 -d - > database/.env
+          echo -e "${{ secrets.POSTGRES }}" | base64 -d - > postgres/.env
+          echo -e "${{ secrets.FRONTEND }}" | base64 -d - > frontend/standalone.env
+
+      - name: Create networking environment file (main)
+        if: github.ref == 'refs/heads/main'
+        working-directory: env
+        run: echo -e "${{ secrets.NETWORKING_ENV_MAIN }}" | base64 -d - > networking.env
+
+      - name: Create networking environment file (staging)
+        if: github.ref == 'refs/heads/staging'
+        working-directory: env
+        run: echo -e "${{ secrets.NETWORKING_ENV_STAGING }}" | base64 -d - > networking.env
+
+      - name: Create canonical Compose configuration
+        run: VERSION=${{ github.sha }} docker compose -f compose.production.yml config > compose.canonical.yml
+
+      - name: Build Compose project and push images
+        run: docker compose -f compose.canonical.yml build --push
+
+
+env:
+  PROJECT_ID: weclarifai-420214 
+  REGION: europe-southwest1
+  GAR_LOCATION: europe-southwest1-docker.pkg.dev
