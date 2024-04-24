@@ -5,10 +5,7 @@ set -e
 ENV_FILE="env/standalone.env"
 
 run_compose_without_env() {
-    docker compose \
-        -f compose.base.yml \
-        -f compose.standalone.yml \
-        $@
+    docker compose
 }
 
 run_compose() {
