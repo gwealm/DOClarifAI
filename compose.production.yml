@@ -3,39 +3,39 @@ version: "3"
 include:
   # workflow-management-service
   # - path:
-  #     - "/workflow-management-service/compose.base.yml"
-  #     - "/workflow-management-service/compose.production.yml"
+  #     - "workflow-management-service/compose.base.yml"
+  #     - "workflow-management-service/compose.production.yml"
   #   env_file: "workflow-management-service/standalone.env"
 
   # importer-service
   - path:
-      - "/importer-service/compose.base.yml"
-      - "/importer-service/compose.standalone.yml"
-    env_file: "importer-service/standalone.env"  
+      - "importer-service/compose.base.yml"
+      - "importer-service/compose.standalone.yml"
+    env_file: "importer-service/env/standalone.env"  
     
     # exporter-service
   - path:
-      - "/exporter-service/compose.base.yml"
-      - "/exporter-service/compose.standole.yml"
-    env_file: "exporter-service/standalone.env"  
+      - "exporter-service/compose.base.yml"
+      - "exporter-service/compose.standalone.yml"
+    env_file: "exporter-service/env/standalone.env"  
     
     # authentication-service
   - path:
-      - "/authentication-service/compose.base.yml"
-      - "/authentication-service/compose.standalone.yml"
-    env_file: "authentication-service/standalone.env"  
+      - "authentication-service/compose.base.yml"
+      - "authentication-service/compose.standalone.yml"
+    env_file: "authentication-service/env/standalone.env"  
     
-    # mongodb
+  #   # mongodb
   - path:
-      - "/database/mongodb/docker-compose.yml"
+      - "database/mongodb/docker-compose.yml"
     env_file: "database/.env"
     
-    # postgres
+  #   # postgres
   - path:
-      - "/database/postgres/docker-compose.yml"
+      - "database/postgres/docker-compose.yml"
     env_file: "database/postgres/.env"
 
   # frontend 
   - path:
-      - "/frontend/docker-compose.yml"
+      - "frontend/docker-compose.yml"
     env_file: "frontend/standalone.env"
