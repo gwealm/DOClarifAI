@@ -19,5 +19,5 @@ run_compose() {
     fi
 }
 
-run_compose up exporter -d --build --remove-orphans
-run_compose logs exporter -f 
+run_compose up exporter-service -d --build --remove-orphans
+run_compose logs exporter-service -f 
