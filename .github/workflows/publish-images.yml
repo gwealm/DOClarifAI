@@ -26,7 +26,6 @@ jobs:
           password: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
       - name: Create environment files
-        working-directory: env
         run: |
           echo -e "${{ secrets.EXPORTER_SERVICE }}" | base64 -d - > exporter-service/standalone.env
           echo -e "${{ secrets.IMPORTER_SERVICE }}" | base64 -d - > importer-service/standalone.env

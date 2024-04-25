@@ -7,12 +7,12 @@ on:
     branches:
       - develop
       - main
-  pull_request:
-    paths:
-      - 'exporter-service/**'
-    branches:
-      - develop
-      - main
+  # pull_request:
+  #   paths:
+  #     - 'exporter-service/**'
+  #   branches:
+  #     - develop
+  #     - main
 
 env:
   DIR_PATH: exporter-service/

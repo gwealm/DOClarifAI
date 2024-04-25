@@ -7,12 +7,12 @@ on:
     branches:
       - develop
       - main
-  pull_request:
-    paths:
-      - 'workflow-management-service/**'
-    branches:
-      - develop
-      - main
+  # pull_request:
+  #   paths:
+  #     - 'workflow-management-service/**'
+  #   branches:
+  #     - develop
+  #     - main
 
 env:
   DIR_PATH: workflow-management-service/
