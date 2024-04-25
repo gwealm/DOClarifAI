@@ -17,11 +17,3 @@ services:
     environment:
       - PORT=8080
 
-  importer-service-tests:
-    build: 
-      context: .
-      target: tests
-    volumes:
-      - ./reports:/app/reports
-
-  

@@ -19,5 +19,5 @@ run_compose() {
     fi
 }
 
-run_compose up importer -d --build --remove-orphans
-run_compose logs importer -f 
+run_compose up importer-service -d --build --remove-orphans
+run_compose logs importer-service -f 
