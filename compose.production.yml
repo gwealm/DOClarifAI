@@ -39,3 +39,7 @@ include:
   - path:
       - "frontend/docker-compose.yml"
     # env_file: "frontend/standalone.env"
+
+networks:
+  lgp-network:
+    external: true
