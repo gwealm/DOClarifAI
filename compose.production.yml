@@ -10,25 +10,25 @@ include:
   # importer-service
   - path:
       - "importer-service/compose.base.yml"
-      - "importer-service/compose.standalone.yml"
+      - "importer-service/compose.prod.yml"
     env_file: "importer-service/env/standalone.env"  
     
     # exporter-service
   - path:
       - "exporter-service/compose.base.yml"
-      - "exporter-service/compose.standalone.yml"
+      - "exporter-service/compose.prod.yml"
     env_file: "exporter-service/env/standalone.env"  
     
     # authentication-service
   - path:
       - "authentication-service/compose.base.yml"
-      - "authentication-service/compose.standalone.yml"
+      - "authentication-service/compose.prod.yml"
     env_file: "authentication-service/env/standalone.env"  
     
   #   # mongodb
   - path:
       - "database/mongodb/docker-compose.yml"
-    env_file: "database/.env"
+    env_file: "database/mongodb/.env"
     
   #   # postgres
   - path:
@@ -38,4 +38,4 @@ include:
   # frontend 
   - path:
       - "frontend/docker-compose.yml"
-    env_file: "frontend/standalone.env"
+    # env_file: "frontend/standalone.env"
