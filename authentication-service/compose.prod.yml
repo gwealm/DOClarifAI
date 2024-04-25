@@ -14,12 +14,3 @@ services:
       - "8083:8083"
     volumes:
       - ./app:/app/app
-
-  authentication-service-tests:
-    build: 
-      context: .
-      target: tests
-    volumes:
-      - ./reports:/app/reports
-
-  

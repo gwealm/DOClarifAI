@@ -19,5 +19,5 @@ run_compose() {
     fi
 }
 
-run_compose up authentication_service -d --build --remove-orphans
-run_compose logs authentication_service -f 
+run_compose up authentication-service -d --build --remove-orphans
+run_compose logs authentication-service -f 
