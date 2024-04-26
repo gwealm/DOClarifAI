@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import APIRouter
 
 from common.crud.postgres import files as crud_files
-from common.models.workflows import (File, FileCreate)
+from common.models.files import (File, FileCreate)
 from common.deps import PostgresDB
 
 from app.deps import PathWorkflow
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/{workflow_id}/file")
 def create_file(*, session: PostgresDB, file_in: FileCreate,
                 workflow: PathWorkflow) -> Any:
   """
-  Create a new workflow.
+  Create a new file.
   """
 
   file_in = FileCreate.model_validate(file_in)
@@ -26,7 +26,7 @@ def create_file(*, session: PostgresDB, file_in: FileCreate,
 
 
 @router.get("/")
-def read_user_me(workflow: PathWorkflow) -> list[File]:
+def get_workflow_files(workflow: PathWorkflow) -> list[File]:
   #TODO: Paginate Results
   """
   Get current workflow's files.
@@ -35,7 +35,7 @@ def read_user_me(workflow: PathWorkflow) -> list[File]:
 
 
 @router.delete("/{file_id}")
-def delete_user(session: PostgresDB, workflow: PathWorkflow,
+def delete_file(session: PostgresDB, workflow: PathWorkflow,
                 file_id: int) -> Any:
   """
   Delete the file with the provided ID.

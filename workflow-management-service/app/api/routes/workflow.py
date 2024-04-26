@@ -8,23 +8,25 @@ from common.deps import (
     CurrentUser,
     PostgresDB,
 )
-from common.models.workflows import (Workflow,WorkflowCreate)
+from common.models.workflows import (Workflow, WorkflowCreate)
 
 router = APIRouter()
 
 
 @router.post("/", response_model=Workflow)
-def create_workflow(*, session: PostgresDB, workflow_in: WorkflowCreate) -> Any:
+def create_workflow(*, session: PostgresDB, current_user: CurrentUser,
+                    workflow_in: WorkflowCreate) -> Any:
   """
   Create a new workflow.
   """
   workflow_create = WorkflowCreate.model_validate(workflow_in)
-  workflow = crud_workflows.create_user(session=session, user_create=workflow_create)
+  workflow = crud_workflows.create_user(session=session,
+                                        user_create=workflow_create)
   return workflow
 
 
 @router.get("/", response_model=Workflow)
-def read_user_me(current_user: CurrentUser) -> Any:
+def get_user_workflows(current_user: CurrentUser) -> Any:
   #TODO: Paginate Results
   """
   Get current user's workflows.
@@ -33,8 +35,8 @@ def read_user_me(current_user: CurrentUser) -> Any:
 
 
 @router.delete("/{workflow_id}")
-def delete_user(session: PostgresDB, current_user: CurrentUser,
-                workflow_id: int) -> Any:
+def delete_workflow(session: PostgresDB, current_user: CurrentUser,
+                    workflow_id: int) -> Any:
   """
   Delete the workflow with the provided ID.
   """

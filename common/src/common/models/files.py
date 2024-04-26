@@ -27,7 +27,7 @@ class File(SQLModel, table=True):
   """
     The ORM model for the Files entity.
   """
-  id: int | None = Field(default=None, index=True)
+  id: int | None = Field(default=None,primary_key=True)
   name: str | None
   raw: str
   process_status: FileProcesingStatus
