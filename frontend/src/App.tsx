@@ -9,6 +9,8 @@ import LogIn from "./pages/LogIn";
 import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import { AboutUs } from "./pages/AboutUs";
+import Profile from "./pages/Profile";
+
 
 
 function App() {
@@ -38,6 +40,7 @@ function App() {
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/login" element={<LogIn onLogin={handleLogin} />} />
                         <Route path="/register" element={<Register onLogin={handleLogin}/>} />
+                        <Route path="/profile" element={<Profile />} />
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>

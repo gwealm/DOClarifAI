@@ -26,6 +26,7 @@ const Header = ( {isLoggedIn, onLogout} ) => {
                         </Link>
                     </div>
                     <div className="flex lg:flex-1 justify-end items-center space-x-8">
+                        <Link to="/profile">
                         <div className="flex flex-col items-center space-y-2">
                             <div className="h-8 w-8 bg-gray-300 rounded-full flex items-center justify-center">
                                 <svg className="h-4 w-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -35,6 +36,8 @@ const Header = ( {isLoggedIn, onLogout} ) => {
                             </div>
                             <span className="text-sm text-gray-900">John Doe</span>
                         </div>
+                        </Link>
+            
                         <Link to="/login" onClick={onLogout} className="text-sm font-semibold leading-6 text-white px-4 py-2 rounded-md bg-[#447282] border border-gray-300 hover:bg-opacity-70 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                             Log out
                         </Link>
