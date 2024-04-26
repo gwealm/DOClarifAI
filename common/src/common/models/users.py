@@ -1,8 +1,11 @@
 """
   This file contains the Pydantic models for the User entity.
 """
-from sqlmodel import Field, SQLModel,Relationship
-from common.models.workflows import Workflows
+from sqlmodel import Field, SQLModel, Relationship
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+  from .workflows import Workflow
 
 
 class UserBase(SQLModel):
@@ -25,7 +28,7 @@ class User(UserBase, table=True):
   """
   id: int | None = Field(default=None, primary_key=True)
   hashed_password: str
-  workflows: list[Workflows]= Relationship(back_populates="user")
+  workflows: list["Workflow"] = Relationship(back_populates="user")
 
 
 class UserPublic(UserBase):

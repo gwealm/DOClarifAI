@@ -3,8 +3,11 @@
 """
 from pydantic import BaseModel
 from sqlmodel import Field, SQLModel, Relationship
-from common.models.workflows import Workflow
 from enum import Enum
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+  from .workflows import Workflow
 
 
 class FileProcesingStatus(Enum):
