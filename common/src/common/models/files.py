@@ -1,6 +1,7 @@
 """
   This file contains the Pydantic models for the File entity.
 """
+from pydantic import BaseModel
 from sqlmodel import Field, SQLModel, Relationship
 from common.models.workflows import Workflow
 from enum import Enum
@@ -11,6 +12,12 @@ class FileProcesingStatus(Enum):
   PROCESSING = 1
   FAILED = 2
   SUCCESS = 3
+
+
+class FileCreate(BaseModel):
+  name: str | None
+  workflow_id: int
+  raw: str
 
 
 class File(SQLModel, table=True):

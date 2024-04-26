@@ -7,10 +7,10 @@ from common.models.workflows import Workflow, WorkflowCreate
 
 def create_workflow(*, session: Session, workflow: WorkflowCreate) -> Workflow:
   """
-  Create a new user.
+  Create a new workflow.
   Args:
     session: PostgresDB session
-    user_create: New workflow information
+    workflow: New workflow information
   Returns:
     Workflow: The created workflow
   """
@@ -26,7 +26,7 @@ def get_workflows_by_id(*, session: Session, user_id: int) -> list[Workflow]:
     Get a user by username.
     Args:
       session: PostgresDB session
-      username: The username to search
+      user_id: The user_id to search
     Returns:
       list[Workflow]: The User Workflows
   """
