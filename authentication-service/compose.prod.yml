@@ -13,4 +13,5 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - ./app:/app/app
+      - ./app:/app/app 
+    image: europe-southwest1-docker.pkg.dev/weclarifai-420214/doclarifai/authentication-service:latest

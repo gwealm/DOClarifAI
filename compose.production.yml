@@ -13,19 +13,19 @@ include:
       - "importer-service/compose.prod.yml"
     env_file: "importer-service/env/standalone.env"  
     
-    # exporter-service
+  # exporter-service
   - path:
       - "exporter-service/compose.base.yml"
       - "exporter-service/compose.prod.yml"
     env_file: "exporter-service/env/standalone.env"  
     
-    # authentication-service
+  # authentication-service
   - path:
       - "authentication-service/compose.base.yml"
       - "authentication-service/compose.prod.yml"
     env_file: "authentication-service/env/standalone.env"  
     
-  #   # mongodb
+  # mongodb
   - path:
       - "database/mongodb/docker-compose.yml"
     env_file: "database/mongodb/.env"
@@ -38,8 +38,11 @@ include:
   # frontend 
   - path:
       - "frontend/docker-compose.yml"
-    # env_file: "frontend/standalone.env"
 
-networks:
-  lgp-network:
-    external: true
+# networks:
+#   default:
+#     name: lgp-network
+
+
+#   lgp-network:
+    # external: true

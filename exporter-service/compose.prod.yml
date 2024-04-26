@@ -14,3 +14,4 @@ services:
       - "8082:8082"
     volumes:
       - ./app:/app/app
+    image: europe-southwest1-docker.pkg.dev/weclarifai-420214/doclarifai/exporter-service:latest
