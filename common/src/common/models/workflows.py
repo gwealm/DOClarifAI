@@ -3,12 +3,11 @@
 """
 from pydantic import BaseModel
 from sqlmodel import Field, SQLModel, Relationship
-
+from .templates import Template
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from .users import User
   from .files import File
-  from .templates import Template
 
 
 class WorkflowCreate(BaseModel):

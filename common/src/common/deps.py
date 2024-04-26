@@ -34,6 +34,7 @@ def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
   """
   Get the current user from the JWT token
   """
+  print("Getting current user")
   try:
     payload = jwt.decode(token,
                          settings.PUBLIC_KEY,

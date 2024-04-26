@@ -13,4 +13,4 @@ class Template(TemplateCreate, table=True):
   """
     The ORM model for the Template entity.
   """
-  id: int | None = Field(default=None, index=True)
+  id: int | None = Field(default=None,primary_key=True)
