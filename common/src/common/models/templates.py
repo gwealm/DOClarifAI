@@ -4,10 +4,13 @@
 from sqlmodel import Field, SQLModel
 
 
-class Template(SQLModel, table=True):
+class TemplateCreate(SQLModel):
+  name: str
+  description: str
+
+
+class Template(TemplateCreate, table=True):
   """
     The ORM model for the Template entity.
   """
   id: int | None = Field(default=None, index=True)
-  name: str | None
-  description: str | None
