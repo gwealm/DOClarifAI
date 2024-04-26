@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import DeleteProfileModal from "../components/DeleteProfileModal";
 
 const Profile = () => {
     const [editMode, setEditMode] = useState(false);
@@ -10,7 +11,14 @@ const Profile = () => {
         setEditMode(!editMode);
     }
 
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const toggleDeleteModal = () => {
+        setIsDeleteModalOpen(!isDeleteModalOpen);
+    }
+
     return (
+        <>
         <div className="flex justify-center">
             <div className="flex flex-col items-center w-[900px] my-8">
                 <div className="flex justify-between items-center w-[900px]">
@@ -21,7 +29,7 @@ const Profile = () => {
                         </svg>
                     </div>
                     <div className="flex items-center">
-                        <button className="text-sm font-semibold leading-6 text-black flex items-center px-4 py-2 mr-3 rounded-md bg-white bg-opacity-80 border-2 border-[#D9D9D9] hover:bg-gray-100 focus:outline-none" >
+                        <button onClick={toggleDeleteModal} className="text-sm font-semibold leading-6 text-black flex items-center px-4 py-2 mr-3 rounded-md bg-white bg-opacity-80 border-2 border-[#D9D9D9] hover:bg-gray-100 focus:outline-none" >
                             Delete Profile
                             <FontAwesomeIcon icon={faTrashCan} className="ml-3" />
                         </button>
@@ -100,6 +108,9 @@ const Profile = () => {
                 </div>
             </div>
         </div>
+        {/* Render NewWorkflowModal component if isModalOpen is true */}
+        {isDeleteModalOpen && <DeleteProfileModal onDelete={toggleDeleteModal} />}
+        </>
     );
 }
 
