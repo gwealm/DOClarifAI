@@ -6,6 +6,8 @@ version: "3"
 
 services:
   init-postgres:
+    env_file:
+      - ./env/standalone.env
     depends_on:
       - database-postgres
     build:
@@ -13,7 +15,6 @@ services:
       additional_contexts:
         common: ../../common
       dockerfile: Dockerfile
-    restart: unless-stopped
   database-postgres:
     image: postgres
     restart: unless-stopped
