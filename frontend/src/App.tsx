@@ -9,6 +9,7 @@ import LogIn from "./pages/LogIn";
 import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import { AboutUs } from "./pages/AboutUs";
+import HomePage from "./pages/HomePage";
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
                     <Header isLoggedIn={isLoggedIn} onLogout={handleLogout}/>
                     <Routes location={location} key={location.pathname}>
                         <Route path="/workflows" element={<Workflows />} />
-                        <Route path="/" element={<Workflows />} />
+                        <Route path="/home" element={<HomePage />} />
                         <Route path="/workflow/:id" element={<Workflow />} />
                         <Route
                             path="/processedfiles"
@@ -38,6 +39,7 @@ function App() {
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/login" element={<LogIn onLogin={handleLogin} />} />
                         <Route path="/register" element={<Register onLogin={handleLogin}/>} />
+
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
