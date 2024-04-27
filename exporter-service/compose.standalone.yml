@@ -7,7 +7,7 @@ version: "3"
 services:
   exporter-service:
     env_file:
-      - ./env/standalone.env
+      - ./env/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -17,7 +17,7 @@ services:
 
   exporter-service-tests:
     env_file:
-      - ./env/standalone.env
+      - ./env/.env
     build: 
       context: .
       additional_contexts:

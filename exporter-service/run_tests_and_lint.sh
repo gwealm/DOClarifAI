@@ -2,7 +2,7 @@
 
 set -e
 
-ENV_FILE="env/standalone.env"
+ENV_FILE="env/.env"
 
 run_compose_without_env() {
     docker compose \
