@@ -3,7 +3,6 @@ services:
   mongo:
     image: mongo
     hostname: mongo
-    container_name: lgp-mongo
     restart: always
     ports:
       - "27017:27017"
@@ -17,7 +16,6 @@ services:
     #   - lgp-network
   mongo-express:
     image: mongo-express
-    container_name: lgp-mongo-express
     restart: always
     ports:
       - $ME_CONFIG_PORT:8081
