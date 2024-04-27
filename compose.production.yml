@@ -5,39 +5,42 @@ include:
   # - path:
   #     - "workflow-management-service/compose.base.yml"
   #     - "workflow-management-service/compose.production.yml"
-  #   env_file: "workflow-management-service/standalone.env"
+  #   env_file: "workflow-management-service/env/.env"
 
   # importer-service
   - path:
       - "importer-service/compose.base.yml"
       - "importer-service/compose.prod.yml"
-    env_file: "importer-service/env/standalone.env"  
+    env_file: "importer-service/env/.env"  
     
   # exporter-service
   - path:
       - "exporter-service/compose.base.yml"
       - "exporter-service/compose.prod.yml"
-    env_file: "exporter-service/env/standalone.env"  
+    env_file: "exporter-service/env/.env"  
     
   # authentication-service
   - path:
       - "authentication-service/compose.base.yml"
       - "authentication-service/compose.prod.yml"
-    env_file: "authentication-service/env/standalone.env"  
+    env_file: "authentication-service/env/.env"  
     
   # mongodb
   - path:
-      - "database/mongodb/docker-compose.yml"
-    env_file: "database/mongodb/.env"
+      - "database/mongodb/compose.base.yml"
+      - "database/mongodb/compose.prod.yml"
+    env_file: "database/mongodb/env/.env"
     
   #   # postgres
   - path:
-      - "database/postgres/docker-compose.yml"
-    env_file: "database/postgres/.env"
+      - "database/postgres/compose.base.yml"
+      - "database/postgres/compose.prod.yml"
+    env_file: "database/postgres/env/.env"
 
   # frontend 
   - path:
-      - "frontend/docker-compose.yml"
+      - "frontend/compose.base.yml"
+      - "frontend/compose.prod.yml"
 
 # networks:
 #   default:
