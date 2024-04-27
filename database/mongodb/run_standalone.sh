@@ -20,4 +20,4 @@ run_compose() {
 }
 
 run_compose up -d --build --remove-orphans
-run_compose logs mongo -f 
+run_compose logs database-mongo -f 

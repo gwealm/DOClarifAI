@@ -5,11 +5,11 @@
 version: "3"
 
 services:
-  mongo:
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+  database-mongo:
     image: europe-southwest1-docker.pkg.dev/weclarifai-420214/doclarifai/mongo:latest
-  mongo-express:
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    image: europe-southwest1-docker.pkg.dev/weclarifai-420214/doclarifai/mongo-express:latest
+  # mongo-express:
+  #   image: europe-southwest1-docker.pkg.dev/weclarifai-420214/doclarifai/mongo-express:latest
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
