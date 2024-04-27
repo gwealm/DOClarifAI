@@ -1,0 +1,13 @@
+# This Docker Compose project is not intended to be executed directly.
+# Instead, this project is meant to be merged with the `compose.base.yml`
+# project.
+
+version: "3"
+
+services:
+  mongo:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  mongo-express:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

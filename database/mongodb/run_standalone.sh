@@ -7,6 +7,7 @@ ENV_FILE="env/.env"
 run_compose_without_env() {
     docker compose \
         -f compose.base.yml \
+        -f compose.standalone.yml \
         $@
 }
 
@@ -18,5 +19,5 @@ run_compose() {
     fi
 }
 
-run_compose up database-postgres -d --build --remove-orphans
-run_compose logs database-postgres -f 
+run_compose up -d --build --remove-orphans
+run_compose logs mongo -f 

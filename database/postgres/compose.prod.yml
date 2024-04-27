@@ -1,0 +1,9 @@
+# This Docker Compose project is not intended to be executed directly.
+# Instead, this project is meant to be merged with the `compose.base.yml`
+# project.
+
+version: "3"
+
+services:
+  database-postgres:
+    image: europe-southwest1-docker.pkg.dev/weclarifai-420214/doclarifai/postgres:latest
