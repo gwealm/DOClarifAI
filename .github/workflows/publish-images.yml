@@ -30,8 +30,8 @@ jobs:
           echo -e "${{ secrets.EXPORTER_SERVICE }}" | base64 -d - > exporter-service/env/.env
           echo -e "${{ secrets.IMPORTER_SERVICE }}" | base64 -d - > importer-service/env/.env
           echo -e "${{ secrets.AUTHENTICATION_SERVICE }}" | base64 -d - > authentication-service/env/.env
-          echo -e "${{ secrets.MONGO }}" | base64 -d - > database/mongodb/.env
-          echo -e "${{ secrets.POSTGRES }}" | base64 -d - > database/postgres/.env
+          echo -e "${{ secrets.MONGO }}" | base64 -d - > database/mongodb/env/.env
+          echo -e "${{ secrets.POSTGRES }}" | base64 -d - > database/postgres/env/.env
 
       # - name: Create networking environment file (main)
       #   if: github.ref == 'refs/heads/main'
