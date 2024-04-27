@@ -7,7 +7,7 @@ version: "3"
 services:
   workflow-management-service:
     env_file:
-      - ./env/standalone.env
+      - ./env/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -15,7 +15,7 @@ services:
     volumes:
       - ./app:/app/app
 
-  workflow-management-tests-service:
+  workflow-management-service-tests:
     build: 
       context: .
       target: tests
