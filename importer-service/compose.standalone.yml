@@ -7,7 +7,7 @@ version: "3"
 services:
   importer-service:
     env_file:
-      - ./env/standalone.env
+      - ./env/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
