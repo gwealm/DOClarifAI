@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel, Relationship
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from .workflows import Workflow
+  from .templates import Template
 
 
 class UserBase(SQLModel):
@@ -29,6 +30,7 @@ class User(UserBase, table=True):
   id: int | None = Field(default=None, primary_key=True)
   hashed_password: str
   workflows: list["Workflow"] = Relationship(back_populates="user")
+  templates: list["Template"] = Relationship(back_populates="user")
 
 
 class UserPublic(UserBase):
