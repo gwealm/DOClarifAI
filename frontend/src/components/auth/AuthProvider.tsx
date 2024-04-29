@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 
 const AuthContext = React.createContext();
 
@@ -10,6 +10,15 @@ function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [isLogedIn, setIsLogedIn] = useState(false);
+
+    const authFetch = (url, params) => {
+        if (!isLogedIn || token == null) {
+            console.error("User Is not Logged in!");
+            return false;
+        }
+        params.headers['Authorization'] = `Bearer ${JSON.stringify(token)}`;
+        return fetch(url, params);
+    }
 
     const onLogIn = () => {
         setIsLogedIn(true);
