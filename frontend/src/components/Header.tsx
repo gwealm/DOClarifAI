@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
 import { useAuth } from './auth/AuthProvider';
+import MiniAboutMe from './MiniAboutMe';
 
 const Header = () => {
-
     const auth = useAuth();
-
     return (
         <header className="bg-[#C8EDFD] shadow-md">
             <nav className="flex max-w-8xl items-center justify-between p-6 lg:px-8 lg:py-3" aria-label="Global">
@@ -36,7 +35,7 @@ const Header = () => {
                                         <path d="M12 14a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"></path>
                                     </svg>
                                 </div>
-                                <span className="text-sm text-gray-900">{auth.user.name}</span>
+                                <MiniAboutMe />
                             </div>
                             <Link to="/login" onClick={auth.onLogout} className="text-sm font-semibold leading-6 text-white px-4 py-2 rounded-md bg-[#447282] border border-gray-300 hover:bg-opacity-70 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                                 Log out

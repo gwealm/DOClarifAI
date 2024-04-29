@@ -16,18 +16,23 @@ function AuthProvider(props) {
             console.error("User Is not Logged in!");
             return false;
         }
-        params.headers['Authorization'] = `Bearer ${JSON.stringify(token)}`;
+        if (!params) {
+            params = {};
+        }
+        if (!params.headers) {
+            params.headers = {};
+        }
+        params.headers['Authorization'] = `Bearer ${token.access_token}`;
         return fetch(url, params);
     }
 
-    const onLogIn = () => {
+    const onLogIn = (token) => {
         setIsLogedIn(true);
-        setUser({ name: "Marcelo", lastname: "Rebelo de Sussa" });
+        setToken(token)
     }
     const onLogout = () => { setIsLogedIn(false); }
     const onRegister = () => {
         setIsLogedIn(true);
-        setUser({ name: "Marcelo", lastname: "Rebelo de Sussa" });
     }
     const logIn = async (email: string, password: string) => {
         const data = new FormData();
@@ -79,12 +84,14 @@ function AuthProvider(props) {
     }
     const value = {
         user: user,
+        setUser: setUser,
         isLoggedIn: isLogedIn,
         logIn: logIn,
         register: register,
         onLogout: onLogout,
         onRegister: onRegister,
         onLogIn: onLogIn,
+        fetch: authFetch,
     };
 
     return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
