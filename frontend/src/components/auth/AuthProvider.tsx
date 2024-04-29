@@ -7,15 +7,25 @@ export function useAuth() {
 }
 
 function AuthProvider(props) {
-    const [authUser, setAuthUser] = useState(null);
+    const [user, setUser] = useState(null);
     const [isLogedIn, setIsLogedIn] = useState(false);
 
-    const value = [
-        authUser,
-        setAuthUser,
-        isLogedIn,
-        setIsLogedIn
-    ];
+    const onLogIn = () => {
+        setIsLogedIn(true);
+        setUser({ name: "Marcelo", lastname: "Rebelo de Sussa" });
+    }
+    const onLogout = () => { setIsLogedIn(false); }
+    const onRegister = () => {
+        setIsLogedIn(true);
+        setUser({ name: "Marcelo", lastname: "Rebelo de Sussa" });
+    }
+    const value = {
+        user: user,
+        isLoggedIn: isLogedIn,
+        onLogout: onLogout,
+        onRegister: onRegister,
+        onLogIn: onLogIn,
+    };
 
     return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
 }
