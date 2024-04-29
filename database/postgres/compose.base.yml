@@ -5,10 +5,18 @@
 version: "3"
 
 services:
-  database-postgres:
+  init-postgres:
+    env_file:
+      - ./env/standalone.env
+    depends_on:
+      - database-postgres
     build:
       context: .
+      additional_contexts:
+        common: ../../common
       dockerfile: Dockerfile
+  database-postgres:
+    image: postgres
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
