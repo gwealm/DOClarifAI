@@ -18,6 +18,8 @@ services:
   tests:
     build: 
       context: .
+      additional_contexts:
+        common: ../common
       target: tests
     volumes:
       - ./reports:/app/reports
