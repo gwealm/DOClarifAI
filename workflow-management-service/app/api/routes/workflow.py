@@ -25,8 +25,8 @@ def create_workflow(*, session: PostgresDB, current_user: CurrentUser,
   return workflow
 
 
-@router.get("/", response_model=Workflow)
-def get_user_workflows(current_user: CurrentUser) -> Any:
+@router.get("/")
+def get_user_workflows(current_user: CurrentUser) -> list[Workflow]:
   #TODO: Paginate Results
   """
   Get current user's workflows.
