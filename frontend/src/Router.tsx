@@ -7,15 +7,13 @@ import LogIn from "./pages/LogIn";
 import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import { AboutUs } from "./pages/AboutUs";
+import { useAuth } from "./components/auth/AuthProvider";
 
 function Router(props) {
-    const isLoggedIn = false;
-    const handleLogout = false;
-    const handleLogin = false;
-
+    const auth = useAuth();
     return (
         <BrowserRouter>
-            <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+            <Header />
             <Routes location={location} key={location.pathname}>
                 <Route path="/workflows" element={<Workflows />} />
                 <Route path="/" element={<Workflows />} />
@@ -25,8 +23,8 @@ function Router(props) {
                     element={<ProcessedFiles />}
                 />
                 <Route path="/about-us" element={<AboutUs />} />
-                <Route path="/login" element={<LogIn onLogin={handleLogin} />} />
-                <Route path="/register" element={<Register onLogin={handleLogin} />} />
+                <Route path="/login" element={<LogIn />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         </BrowserRouter>
     );
