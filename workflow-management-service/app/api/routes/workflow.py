@@ -8,20 +8,23 @@ from common.deps import (
     CurrentUser,
     PostgresDB,
 )
-from common.models.workflows import (Workflow, WorkflowCreate)
+from common.models.workflows import (Workflow, WorkflowIn, WorkflowCreate)
 
 router = APIRouter()
 
 
 @router.post("/", response_model=Workflow)
 def create_workflow(*, session: PostgresDB, current_user: CurrentUser,
-                    workflow_in: WorkflowCreate) -> Any:
+                    workflow_in: WorkflowIn) -> Any:
   """
   Create a new workflow.
   """
-  workflow_create = WorkflowCreate.model_validate(workflow_in)
-  workflow = crud_workflows.create_user(session=session,
-                                        user_create=workflow_create)
+  # TODO: less verbose way of doing this
+  workflow_create = WorkflowCreate.model_construct(**workflow_in.model_dump(),
+                                                   user_id=current_user.id)
+  workflow_create = WorkflowCreate.model_validate(workflow_create)
+  workflow = crud_workflows.create_workflow(session=session,
+                                            workflow=workflow_create)
   return workflow
 
 

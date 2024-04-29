@@ -10,10 +10,13 @@ if TYPE_CHECKING:
   from .files import File
 
 
-class WorkflowCreate(BaseModel):
+class WorkflowIn(BaseModel):
   name: str | None
   description: str | None
   template_id: int
+
+
+class WorkflowCreate(WorkflowIn):
   user_id: int
 
 
