@@ -1,10 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../components/auth/AuthProvider";
 const LogIn = () => {
 
     const auth = useAuth();
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [triedLogIn, setTriedLogIn] = useState(false);
+    const [logInError, setLogInError] = useState(false);
+    const [logInErrorMsg, setLogInErrorMsg] = useState(null);
+
+    const onClickLogIn = async () => {
+        if (email == null || password == null) {
+            setLogInError(true);
+            setLogInErrorMsg("Email and Password are mandatory");
+            return;
+        }
+        await auth.logIn(email, password);
+
+
+    }
+    const LogInFeedBack = () => {
+        if (logInError) {
+            return <></>
+        }
+        return (
+            <p>{logInErrorMsg}</p>
+        );
+
+    }
     return (
         <div className="flex justify-center items-center">
             <div className="border-[3px] border-[#C8EDFD] rounded-lg w-[600px] min-h-[500px] h-auto mx-20 my-12 p-3 flex flex-col">
@@ -28,6 +53,7 @@ const LogIn = () => {
                             id="Email"
                             type="text"
                             placeholder="Enter your email"
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -38,14 +64,15 @@ const LogIn = () => {
                             id="Password"
                             type="text"
                             placeholder="Enter your password"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
 
-                    <Link to="/workflows" onClick={auth.onLogIn} className="text-md font-semibold leading-6 text-white mx-6 mt-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <Link to="/workflows" onClick={onClickLogIn} className="text-md font-semibold leading-6 text-white mx-6 mt-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Log In
                     </Link>
                 </div>
-
+                <LogInFeedBack />
                 <div className="relative my-6 mx-14 mt-12">
                     <div className="w-full h-0.5 bg-[#C8EDFD]"></div>
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2">Or</div>
