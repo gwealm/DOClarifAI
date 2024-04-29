@@ -8,10 +8,13 @@ if TYPE_CHECKING:
   from .users import User
 
 
-class TemplateCreate(SQLModel):
+class TemplateIn(SQLModel):
   name: str
   description: str
-  user_id: int | None
+
+
+class TemplateCreate(TemplateIn):
+  user_id: int | None = Field(default=None, foreign_key="user.id")
 
 
 class Template(TemplateCreate, table=True):
@@ -19,5 +22,4 @@ class Template(TemplateCreate, table=True):
     The ORM model for the Template entity.
   """
   id: int | None = Field(default=None, primary_key=True)
-  user_id: int | None = Field(default=None, foreign_key="user.id")
   user: "User" = Relationship(back_populates="templates")

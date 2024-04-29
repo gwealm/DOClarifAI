@@ -5,36 +5,43 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 
 from common.crud.postgres import templates as crud_templates
-from common.models.templates import (Template, TemplateCreate)
+from common.models.templates import (Template, TemplateCreate, TemplateIn)
 from common.deps import PostgresDB, CurrentUser
 
 from sqlmodel import select
 
-router = APIRouter()
+router = APIRouter(prefix="/template")
 
 
 @router.post("/")
 def create_template(
     *,
     session: PostgresDB,
-    template_in: TemplateCreate,
+    template_in: TemplateIn,
+    current_user: CurrentUser,
 ) -> Any:
   """
   Create a new template.
   """
-  template_in = TemplateCreate.model_validate(template_in)
+  # TODO: less verbose way of doing this
+  template_create = TemplateCreate.model_construct(**template_in.model_dump(),
+                                                   user_id=current_user.id)
+  template_create = Template.model_validate(template_create)
   template = crud_templates.create_template(session=session,
-                                            template=template_in)
+                                            template=template_create)
   return template
 
 
 @router.get("/")
-def get_templates(session: PostgresDB) -> list[Template]:
+def get_templates(session: PostgresDB, user_only: bool | None,
+                  current_user: CurrentUser) -> list[Template]:
   """
   Get templates.
   """
   #TODO: add option to filter query by user templates
   #TODO: Paginate Results
+  if user_only:
+    return current_user.templates
   return session.exec(select(Template)).fetchall()
 
 

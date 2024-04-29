@@ -10,7 +10,6 @@ services:
       - ./env/standalone.env
     depends_on:
       - database-postgres
-    restart: unless-stopped
     build:
       context: .
       additional_contexts:
