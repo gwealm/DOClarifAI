@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth } from "../components/auth/AuthProvider";
+const Register = ( {onLogin} ) => {
 
-const Register = () => {
-    const auth = useAuth();
     return (
         <div className="flex justify-center items-center">
             <div className="border-[3px] border-[#C8EDFD] rounded-lg w-[600px] min-h-[600px] h-auto mx-20 my-5 p-3 flex flex-col">
@@ -64,7 +62,7 @@ const Register = () => {
                         </label>
                     </div>
 
-                    <Link to="/workflows" onClick={auth.onRegister} className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <Link to="/workflows" onClick={onLogin} className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Register
                     </Link>
                 </div>
