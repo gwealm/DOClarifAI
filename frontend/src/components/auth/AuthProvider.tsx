@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./Auth";
 
-
-function AuthProvider(props:any) {
+type Props = {children:React.ReactNode};
+function AuthProvider(props:Props) {
     const savedToken = localStorage.getItem("jwtToken");
     const startLoggedIn = savedToken !== null;
 
@@ -38,19 +38,22 @@ function AuthProvider(props:any) {
     const onRegister = () => {
         setIsLogedIn(true);
     }
-    const authFetch = async (url: string, params: any) => {
+    async function authFetch(url: RequestInfo, params: RequestInit) {
         if (!isLogedIn || token == null) {
             // TODO: ERROR MESSAGES
             console.error("User Is not Logged in!");
             return false;
         }
-        if (!params) {
+        if (params === null || params === undefined) {
             params = {};
         }
         if (!params.headers) {
-            params.headers = {};
+            params.headers = new Headers();
         }
-        params.headers['Authorization'] = `Bearer ${token}`;
+        else {
+            params.headers = new Headers(params.headers);
+        }
+        params.headers.set("Authorization", `Bearer ${token}`);
         const res = await fetch(url, params);
         if (res.status == 403) {
             onLogout();
