@@ -8,10 +8,8 @@ import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import AuthProvider from "./components/auth/AuthProvider";
 import { AboutUs } from "./pages/AboutUs";
-import { useAuth } from "./components/auth/AuthProvider";
 
-function Router(props) {
-    const auth = useAuth();
+function Router() {
     return (
         <BrowserRouter>
             <AuthProvider>

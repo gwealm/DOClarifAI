@@ -7,7 +7,6 @@ const LogIn = () => {
     const auth = useAuth();
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
-    const [triedLogIn, setTriedLogIn] = useState(false);
     const [logInError, setLogInError] = useState(false);
     const [logInErrorMsg, setLogInErrorMsg] = useState(null);
 

@@ -22,7 +22,7 @@ const MiniAboutMe = () => {
             }
         }
         fetchUserInfo();
-    }, []);
+    });
     return (
         <span className="text-sm text-gray-900">
             {auth.user?.username ?? ""}
