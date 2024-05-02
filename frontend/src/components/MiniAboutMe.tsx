@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAuth } from './auth/AuthProvider';
+import { useAuth } from './auth/Auth';
 
 const MiniAboutMe = () => {
     /**

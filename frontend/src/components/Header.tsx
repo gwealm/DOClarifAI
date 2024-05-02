@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
-import { useAuth } from './auth/AuthProvider';
+import { useAuth } from './auth/Auth';
 import MiniAboutMe from './MiniAboutMe';
 
 const Header = () => {

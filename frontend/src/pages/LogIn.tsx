@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth } from "../components/auth/AuthProvider";
+import { useAuth } from "../components/auth/Auth";
 const LogIn = () => {
 
     const auth = useAuth();
