@@ -1,5 +1,12 @@
 import React, { useContext, useState } from "react";
 
+/*
+* TODO: 
+*   - Save session on localstorage
+*   - Make fetch request redirect to login page
+*   - Format the code 
+*   - Typescriptify the code
+*/
 const AuthContext = React.createContext();
 
 export function useAuth() {
@@ -7,9 +14,18 @@ export function useAuth() {
 }
 
 function AuthProvider(props) {
+    const savedToken = localStorage.getItem("jwtToken");
+    const startLoggedIn = savedToken !== null;
+
+
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
-    const [isLogedIn, setIsLogedIn] = useState(false);
+    const [token, setToken] = useState(savedToken);
+    const [isLogedIn, setIsLogedIn] = useState(startLoggedIn);
+
+    const saveToken = (token) => {
+        localStorage.setItem("jwtToken", token);
+        setToken(token);
+    }
 
     const authFetch = (url, params) => {
         if (!isLogedIn || token == null) {
@@ -22,15 +38,19 @@ function AuthProvider(props) {
         if (!params.headers) {
             params.headers = {};
         }
-        params.headers['Authorization'] = `Bearer ${token.access_token}`;
+        params.headers['Authorization'] = `Bearer ${token}`;
         return fetch(url, params);
     }
 
     const onLogIn = (token) => {
         setIsLogedIn(true);
-        setToken(token)
+        saveToken(token)
     }
-    const onLogout = () => { setIsLogedIn(false); }
+    const onLogout = () => {
+        setIsLogedIn(false);
+        setUser(null);
+        saveToken(null);
+    }
     const onRegister = () => {
         setIsLogedIn(true);
     }
@@ -47,11 +67,10 @@ function AuthProvider(props) {
         if (res.ok) {
             console.log("Log In Success");
             const token = await res.json();
-            onLogIn(token);
+            onLogIn(token.access_token);
             return true;
         } else {
-            // TODO
-            setToken(null);
+            saveToken(null);
             setIsLogedIn(false);
             console.log("Log In Failed")
             console.log(res.status)
@@ -71,11 +90,11 @@ function AuthProvider(props) {
             body: JSON.stringify(data),
         });
         if (res.ok) {
-            console.log("Successefully Created account");
+            console.log("Successefully Created account!");
             const logRes = await logIn(email, password);
             return logRes;
         } else {
-            // TODO
+            console.log("Register Failed!");
             console.log(res.status)
             console.log(res.statusText)
             return false;
