@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { redirect } from "react-router-dom";
 
 /*
 * TODO: 
@@ -94,6 +95,9 @@ function AuthProvider(props) {
             const logRes = await logIn(email, password);
             return logRes;
         } else {
+            if (res.status == 403) {
+                throw redirect("/login");
+            }
             console.log("Register Failed!");
             console.log(res.status)
             console.log(res.statusText)
