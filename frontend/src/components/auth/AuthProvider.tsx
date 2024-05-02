@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /*
 * TODO: 
@@ -22,13 +22,13 @@ function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(savedToken);
     const [isLogedIn, setIsLogedIn] = useState(startLoggedIn);
-
+    const navigate = useNavigate();
     const saveToken = (token) => {
         localStorage.setItem("jwtToken", token);
         setToken(token);
     }
 
-    const authFetch = (url, params) => {
+    const authFetch = async (url, params) => {
         if (!isLogedIn || token == null) {
             console.error("User Is not Logged in!");
             return false;
@@ -40,7 +40,12 @@ function AuthProvider(props) {
             params.headers = {};
         }
         params.headers['Authorization'] = `Bearer ${token}`;
-        return fetch(url, params);
+        const res = await fetch(url, params);
+        if (res.status == 403) {
+            console.log("Oi");
+            navigate("/login");
+        }
+        return res;
     }
 
     const onLogIn = (token) => {
@@ -95,9 +100,6 @@ function AuthProvider(props) {
             const logRes = await logIn(email, password);
             return logRes;
         } else {
-            if (res.status == 403) {
-                throw redirect("/login");
-            }
             console.log("Register Failed!");
             console.log(res.status)
             console.log(res.statusText)
