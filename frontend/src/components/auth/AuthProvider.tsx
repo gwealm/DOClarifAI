@@ -1,13 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/*
-* TODO: 
-*   - Save session on localstorage
-*   - Make fetch request redirect to login page
-*   - Format the code 
-*   - Typescriptify the code
-*/
 const AuthContext = React.createContext();
 
 export function useAuth() {
@@ -28,26 +21,6 @@ function AuthProvider(props) {
         setToken(token);
     }
 
-    const authFetch = async (url, params) => {
-        if (!isLogedIn || token == null) {
-            console.error("User Is not Logged in!");
-            return false;
-        }
-        if (!params) {
-            params = {};
-        }
-        if (!params.headers) {
-            params.headers = {};
-        }
-        params.headers['Authorization'] = `Bearer ${token}`;
-        const res = await fetch(url, params);
-        if (res.status == 403) {
-            console.log("Oi");
-            navigate("/login");
-        }
-        return res;
-    }
-
     const onLogIn = (token) => {
         setIsLogedIn(true);
         saveToken(token)
@@ -60,6 +33,27 @@ function AuthProvider(props) {
     const onRegister = () => {
         setIsLogedIn(true);
     }
+    const authFetch = async (url, params) => {
+        if (!isLogedIn || token == null) {
+            // TODO: ERROR MESSAGES
+            console.error("User Is not Logged in!");
+            return false;
+        }
+        if (!params) {
+            params = {};
+        }
+        if (!params.headers) {
+            params.headers = {};
+        }
+        params.headers['Authorization'] = `Bearer ${token}`;
+        const res = await fetch(url, params);
+        if (res.status == 403) {
+            onLogout();
+            navigate("/login");
+        }
+        return res;
+    }
+
     const logIn = async (email: string, password: string) => {
         const data = new FormData();
         data.append("username", email);
@@ -71,6 +65,7 @@ function AuthProvider(props) {
             body: data,
         });
         if (res.ok) {
+            // TODO: ERROR MESSAGES
             console.log("Log In Success");
             const token = await res.json();
             onLogIn(token.access_token);
@@ -78,6 +73,7 @@ function AuthProvider(props) {
         } else {
             saveToken(null);
             setIsLogedIn(false);
+            // TODO: ERROR Messages
             console.log("Log In Failed")
             console.log(res.status)
             console.log(res.statusText)
@@ -86,7 +82,6 @@ function AuthProvider(props) {
     }
     const register = async (email, password) => {
         const data = { "username": email, "password": password };
-        console.log(JSON.stringify(data));
         const res = await fetch("http://localhost:8083/users", {
             method: 'post',
             mode: 'cors',
@@ -96,10 +91,12 @@ function AuthProvider(props) {
             body: JSON.stringify(data),
         });
         if (res.ok) {
+            // TODO: error messages
             console.log("Successefully Created account!");
             const logRes = await logIn(email, password);
             return logRes;
         } else {
+            // TODO: error messages
             console.log("Register Failed!");
             console.log(res.status)
             console.log(res.statusText)

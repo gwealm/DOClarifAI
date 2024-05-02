@@ -20,9 +20,6 @@ const MiniAboutMe = () => {
                 const userInfo = await r.json();
                 auth.setUser(userInfo);
             }
-            else {
-                console.log("No login");
-            }
         }
         fetchUserInfo();
     }, []);
