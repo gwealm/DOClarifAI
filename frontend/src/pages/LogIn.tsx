@@ -5,10 +5,10 @@ import { useAuth } from "../components/auth/Auth";
 const LogIn = () => {
 
     const auth = useAuth();
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
-    const [logInError, setLogInError] = useState(false);
-    const [logInErrorMsg, setLogInErrorMsg] = useState(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [password, setPassword] = useState<string | null>(null);
+    const [logInError, setLogInError] = useState<boolean>(false);
+    const [logInErrorMsg, setLogInErrorMsg] = useState<string | null>(null);
 
     const onClickLogIn = async () => {
         if (email == null || password == null) {

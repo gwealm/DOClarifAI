@@ -6,11 +6,11 @@ import { useAuth } from "../components/auth/Auth";
 const Register = () => {
 
     const auth = useAuth();
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [password, setPassword] = useState<string | null>(null);
 
     const onClickRegister = async () => {
-        if (email == null || password == null) {
+        if (email === null || password === null) {
             return;
         }
         await auth.register(email, password);

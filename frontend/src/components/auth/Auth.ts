@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-const AuthContext = React.createContext();
+const AuthContext = React.createContext({});
 
 function useAuth() {
     return useContext(AuthContext);

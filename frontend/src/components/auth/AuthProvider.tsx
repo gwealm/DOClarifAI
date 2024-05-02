@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./Auth";
 
 
-function AuthProvider(props) {
+function AuthProvider(props:any) {
     const savedToken = localStorage.getItem("jwtToken");
     const startLoggedIn = savedToken !== null;
 
+    type User = {
+        email: string,
+        name?: string,
+    };
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState(savedToken);
     const [isLogedIn, setIsLogedIn] = useState(startLoggedIn);
     const navigate = useNavigate();
-    const saveToken = (token) => {
-        localStorage.setItem("jwtToken", token);
+    const saveToken = (token: string | null) => {
+        if (token === null) {
+            localStorage.removeItem("jwtToken");
+        }
+        else {
+            localStorage.setItem("jwtToken", token);
+        }
         setToken(token);
     }
 
-    const onLogIn = (token) => {
+    const onLogIn = (token: string) => {
         setIsLogedIn(true);
         saveToken(token)
     }
@@ -29,7 +38,7 @@ function AuthProvider(props) {
     const onRegister = () => {
         setIsLogedIn(true);
     }
-    const authFetch = async (url, params) => {
+    const authFetch = async (url: string, params: any) => {
         if (!isLogedIn || token == null) {
             // TODO: ERROR MESSAGES
             console.error("User Is not Logged in!");
@@ -76,7 +85,7 @@ function AuthProvider(props) {
             return false;
         }
     }
-    const register = async (email, password) => {
+    const register = async (email: string, password: string) => {
         const data = { "username": email, "password": password };
         const res = await fetch("http://localhost:8083/users", {
             method: 'post',
