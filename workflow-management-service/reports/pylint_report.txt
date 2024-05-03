@@ -1,10 +1,24 @@
-************* Module test_main
-tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module config
-app/core/config.py:49:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-************* Module app.api.deps
-app/api/deps.py:44:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
+************* Module file
+app/api/routes/file.py:18:16: W0613: Unused argument 'workflow' (unused-argument)
+app/api/routes/file.py:39:16: W0613: Unused argument 'file_id' (unused-argument)
+************* Module app.deps
+app/deps.py:12:22: W0613: Unused argument 'workflow_id' (unused-argument)
+app/deps.py:12:40: W0613: Unused argument 'current_user' (unused-argument)
+app/deps.py:6:0: W0611: Unused HTTPException imported from fastapi (unused-import)
+app/deps.py:6:0: W0611: Unused status imported from fastapi (unused-import)
+************* Module common.deps
+common/src/common/deps.py:43:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
+************* Module common.config
+common/src/common/config.py:52:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+common/src/common/config.py:71:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module common.mongo
+common/src/common/mongo.py:4:0: C0304: Final newline missing (missing-final-newline)
+common/src/common/mongo.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module common.crud.postgres.users
+common/src/common/crud/postgres/users.py:11:0: W0611: Unused Template imported from common.models.templates (unused-import)
+common/src/common/crud/postgres/users.py:12:0: W0611: Unused File imported from common.models.files (unused-import)
+common/src/common/crud/postgres/users.py:13:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
 
 -----------------------------------
-Your code has been rated at 9.65/10
+Your code has been rated at 9.55/10
 
