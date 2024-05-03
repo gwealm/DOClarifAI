@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Register = ( {onLogin} ) => {
+import { useAuth } from "../components/auth/Auth";
 
+const Register = () => {
+
+    const auth = useAuth();
+    const [email, setEmail] = useState<string | null>(null);
+    const [password, setPassword] = useState<string | null>(null);
+
+    const onClickRegister = async () => {
+        if (email === null || password === null) {
+            return;
+        }
+        await auth.register(email, password);
+    }
     return (
         <div className="flex justify-center items-center">
             <div className="border-[3px] border-[#C8EDFD] rounded-lg w-[600px] min-h-[600px] h-auto mx-20 my-5 p-3 flex flex-col">
                 <div className="flex justify-start items-center max-w-8xl bg-[#C8EDFD] rounded-md p-2">
                     <div className="flex">
                         <a href="#" className="-m-1.5 p-1.5">
-                        <span className="sr-only">Your Company</span>
-                        <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
+                            <span className="sr-only">Your Company</span>
+                            <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
                         </a>
                     </div>
                     <div className="flex px-4">
@@ -21,31 +33,33 @@ const Register = ( {onLogin} ) => {
                 <div className="flex flex-col justify-center mx-8">
                     <div className="px-4 sm:px-6 py-4">
                         <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Name"> Name </label>
-                        <input 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="Name" 
-                            type="text" 
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="Name"
+                            type="text"
                             placeholder="Enter your name"
                         />
                     </div>
 
                     <div className="px-4 sm:px-6 py-4">
                         <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Email"> Email address </label>
-                        <input 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="Email" 
-                            type="text" 
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="Email"
+                            type="text"
                             placeholder="Enter your email"
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </div>
 
                     <div className="px-4 sm:px-6 py-4">
                         <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Password"> Password </label>
-                        <input 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="Password" 
-                            type="text" 
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="Password"
+                            type="text"
                             placeholder="Enter your password"
+                            onChange={e => setPassword(e.target.value)}
                         />
                     </div>
 
@@ -57,12 +71,12 @@ const Register = ( {onLogin} ) => {
                             id="checkboxDefault" />
                         <label
                             className="text-xs inline-block ps-[0.15rem] hover:cursor-pointer mx-2">
-                            I agree to the 
+                            I agree to the
                             <a href="#" className="text-gray-700 underline"> terms & policy</a>
                         </label>
                     </div>
 
-                    <Link to="/workflows" onClick={onLogin} className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <Link to="/workflows" onClick={onClickRegister} className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Register
                     </Link>
                 </div>
