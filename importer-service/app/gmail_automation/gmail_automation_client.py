@@ -5,6 +5,7 @@ from fastapi import UploadFile
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import tempfile
+from starlette.datastructures import Headers as Headers
 
 
 def _get_message_info(service, user_id, msg_id):
@@ -44,7 +45,8 @@ def _get_message_info(service, user_id, msg_id):
                 temp_file = tempfile.SpooledTemporaryFile()
                 temp_file.write(file_data)
                 temp_file.seek(0)
-                attachment_files.append(UploadFile(temp_file,filename=filename))
+                
+                attachment_files.append(UploadFile(temp_file,filename=filename,headers={"content-type":content_type}))
 
     except HttpError as error:
         print(f'An error occurred: {error}')
