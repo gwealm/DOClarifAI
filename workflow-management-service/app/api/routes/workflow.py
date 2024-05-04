@@ -57,3 +57,20 @@ def delete_workflow(session: PostgresDB, current_user: CurrentUser,
   session.delete(workflow)
   session.commit()
   return {"message": "Workflow deleted successfully"}
+
+@router.post("/{workflow_id}/email")
+def add_email_to_workflow(session: PostgresDB, current_user: CurrentUser,
+                          workflow_id: int, email: str) -> Any:
+  """
+  Add an email to the workflow.
+  """
+  workflow = session.get(Workflow, workflow_id)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+
+  workflow.email = email
+  session.commit()
+  return {"message": "Email added successfully"}
