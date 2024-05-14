@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
 
 const Header = ( {isLoggedIn, onLogout} ) => {
+    const [currentURL, setCurrentURL] = useState("");
+    useEffect(() => {
+        setCurrentURL(window.location.pathname);
+    }, []);
 
     return (
-        <header className="bg-[#C8EDFD] shadow-md">
+        <header className={`${currentURL == "/home" ? "bg-transparent" : "bg-[#C8EDFD]" }`}>
             <nav className="flex max-w-8xl items-center justify-between p-6 lg:px-8 lg:py-3" aria-label="Global">
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
@@ -42,12 +46,15 @@ const Header = ( {isLoggedIn, onLogout} ) => {
                     </>
                 ) : (
                     <div className="flex lg:flex-1 justify-end items-center space-x-8">
-                        <Link to="/login" className="text-sm font-semibold leading-6 text-white px-4 py-2 rounded-md bg-[#447282] border border-gray-300 hover:bg-opacity-70 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        <Link to="/login" className="bg-blue-500 text-white px-6 py-2 rounded  hover:bg-opacity-70">
                             Log in
+                        </Link>
+                        <Link to="/signup" className="text-sm font-semibold leading-6 text-blue-500 px-4 py-2 rounded-md bg-white border hover:bg-opacity-70 focus:outline-none focus:border-blue-500 focus:ring">
+                            Sign up
                         </Link>
                     </div>
                 )}
-                <div className="hidden flex lg:flex lg:gap-x-12 px-2">
+                <div className="flex md:hidden lg:gap-x-12 px-2">
                     <ModeToggle />
                 </div>
             </nav>

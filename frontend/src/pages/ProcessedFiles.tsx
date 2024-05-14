@@ -52,6 +52,7 @@ function ProcessedFiles() {
   };
 
   return (
+    <div className='w-full h-full bg-white p-8'>
     <div className="mx-20 my-5">
        <div className="flex max-w-8xl items-center justify-between pl-6 mb-4">
       <div className="flex lg:flex-1 items-center">
@@ -98,7 +99,7 @@ function ProcessedFiles() {
           </button>
         </div>
       </div>
-    </div>
+    </div></div>
   );
 }
 

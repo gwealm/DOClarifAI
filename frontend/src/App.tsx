@@ -27,20 +27,21 @@ function App() {
         <>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <BrowserRouter>
-                    <Header isLoggedIn={isLoggedIn} onLogout={handleLogout}/>
-                    <Routes location={location} key={location.pathname}>
-                        <Route path="/workflows" element={<Workflows />} />
-                        <Route path="/home" element={<HomePage />} />
-                        <Route path="/workflow/:id" element={<Workflow />} />
-                        <Route
-                            path="/processedfiles"
-                            element={<ProcessedFiles />}
-                        />
-                        <Route path="/about-us" element={<AboutUs />} />
-                        <Route path="/login" element={<LogIn onLogin={handleLogin} />} />
-                        <Route path="/register" element={<Register onLogin={handleLogin}/>} />
-
-                    </Routes>
+                    <div className="w-full h-full bg-gradient-to-r from-[#f9fdfef8] to-[#65BEE5]">
+                        <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+                        <Routes location={location} key={location.pathname}>
+                            <Route path="/home" element={<HomePage />} />
+                            <Route path="/workflows" element={<Workflows />} />
+                            <Route path="/workflow/:id" element={<Workflow />} />
+                            <Route
+                                path="/processedfiles"
+                                element={<ProcessedFiles />}
+                            />
+                            <Route path="/about-us" element={<AboutUs />} />
+                            <Route path="/login" element={<LogIn onLogin={handleLogin} />} />
+                            <Route path="/register" element={<Register onLogin={handleLogin}/>} />
+                        </Routes>
+                    </div>
                 </BrowserRouter>
             </ThemeProvider>
         </>
