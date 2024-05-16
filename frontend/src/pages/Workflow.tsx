@@ -4,7 +4,7 @@ import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams , Link} from 'react-router-dom';
 import { useAuth } from "../components/auth/Auth";
 import { useState, useEffect } from 'react';
 
@@ -115,10 +115,10 @@ function Workflow() {
           <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Stop Workflow
           </button>
-          <a href="/processedfiles" className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          <Link to={`/workflow/${id}/processed-files`} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           
           Processed Files
-          </a>
+          </Link>
             
 
         </div>

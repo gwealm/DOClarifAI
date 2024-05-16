@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProcessedFileCard from '../components/ProcessedFileCard';
 import { faPenToSquare, faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
+import {useParams} from 'react-router-dom';
 
 function ProcessedFiles() {
   const [files, setUploadedFiles] = useState([]);
+  const { id } = useParams();
 
   const handleDeleteFiles = (index) => {
     const updatedFiles = files.filter((_, i) => i !== index);
@@ -37,13 +39,17 @@ function ProcessedFiles() {
   }, []);
 
   const fetchDocuments = async () => {
-    const url = 'http://localhost:8082/list-documents';
+    const url = 'http://localhost:8082/documents/' + id;
+    console.log(url);
     fetch(url, {
       method: 'GET',
-      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+      }
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setUploadedFiles(data);
       })
       .catch((error) => {
