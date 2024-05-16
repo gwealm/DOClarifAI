@@ -16,9 +16,7 @@ export function DragDrop( {workflowId} ) {
             method: "POST",
             mode: 'cors',
             headers: {
-                'accept': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
-                'Content-Type': 'multipart/form-data'
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
             },
             body: formData,
         })
