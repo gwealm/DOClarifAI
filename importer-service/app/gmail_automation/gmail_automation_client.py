@@ -6,7 +6,33 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import tempfile
 from starlette.datastructures import Headers as Headers
+from app.document_information_extraction_client.dox_api_client import DoxApiClient
+from app.core.config import settings
+import app.crud.documents as crud_documents
+from app.api.deps import get_mongo_db
+from common.deps import get_postgres_db
+import re
+import asyncio
 
+dox_client:DoxApiClient = DoxApiClient(settings.SAP_BASE_URL,
+                                   settings.SAP_CLIENT_ID,
+                                   settings.SAP_CLIENT_SECRET,
+                                   settings.SAP_UAA_URL)
+mongo_db = get_mongo_db()
+postgres_db = get_postgres_db()
+
+
+DEFAULT_CLIENT_ID = "default"
+DEFAULT_DOCUMENT_TYPE = "invoice"
+DEFAULT_HEADER_FIELDS = [
+    "documentNumber", "taxId", "purchaseOrderNumber", "shippingAmount",
+    "netAmount", "senderAddress", "senderName", "grossAmount", "currencyCode",
+    "receiverContact", "documentDate", "taxAmount", "taxRate", "receiverName",
+    "receiverAddress"
+]
+DEFAULT_LINE_ITEM_FIELDS = [
+    "description", "netAmount", "quantity", "unitPrice", "materialNumber"
+]
 
 def _get_message_info(service, user_id, msg_id):
     """Get attachments and other information from a Message with given id.
@@ -54,6 +80,20 @@ def _get_message_info(service, user_id, msg_id):
     return sender, receiver, attachment_files
         
 
+def document_extracted_callback_partial(mongo_db,
+                                        postgres_db,
+                                        workflow_id: int,
+                                        file_contents: bytes,
+                                        file_name: str):
+
+    def store_structured_info(document_extraction: dict):
+        return crud_documents.upload_document_extraction(
+            mongo_db, postgres_db, workflow_id, document_extraction,
+            file_contents, file_name)
+
+    return store_structured_info
+
+
 class GmailAutomationClient:
     def __init__(self):
         self._creds = None
@@ -73,7 +113,7 @@ class GmailAutomationClient:
                 raise Exception("Google OAuth2 token is invalid")
 
     
-    def get_docs_from_email(self):
+    async def get_docs_from_email(self):
         self._fetch_token()
         try:
             service = build("gmail", "v1", credentials=self._creds)
@@ -82,10 +122,29 @@ class GmailAutomationClient:
                 for message in messages["messages"]:
                     msg_id = message["id"]
                     sender, receiver, message_attachments = _get_message_info(service, "me", msg_id)
-                    print(f"sender: {sender}, receiver: {receiver}, nrAttachments: {message_attachments}")
-                    raise Exception(f"sender: {sender}, receiver: {receiver}, nrAttachments: {message_attachments}")
-                    service.users().messages().modify(userId="me", id=msg_id, body={'removeLabelIds': ['UNREAD']}).execute()
+                    pattern = r"(?<=\+)[^+@]+(?=@)"
+                    match = re.search(pattern, receiver)
+                    if not match:
+                        continue
+                    
+                    #TODO: verify sender can send for this workflow, get workflow id and document template from db
+                    workflow_id = int(match[0])
+                    for attachment in message_attachments:
+                        file_contents = await attachment.read()
 
+                        document_extracted_callback = document_extracted_callback_partial(
+                            mongo_db, postgres_db, workflow_id, file_contents, attachment.filename
+                        )
+                        def create_background_task(get_extraction_for_document, document_id,
+                                                    document_extracted_callback):
+                            asyncio.create_task(get_extraction_for_document(document_id,document_extracted_callback))
+                        
+                        await dox_client.upload_document(
+                            attachment, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, create_background_task,
+                            document_extracted_callback, DEFAULT_HEADER_FIELDS,
+                            DEFAULT_LINE_ITEM_FIELDS
+                        )
+                    service.users().messages().modify(userId="me", id=msg_id, body={'removeLabelIds': ['UNREAD']}).execute()
 
         except HttpError as error:
             print(f"An error occurred: {error}")

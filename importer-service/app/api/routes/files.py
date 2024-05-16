@@ -61,8 +61,9 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
     document_extracted_callback = document_extracted_callback_partial(
         mongo_db, postgres_db, workflow_id, file_contents, file.filename)
 
+
     extracted_info = await dox_client.upload_document(
-        file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks,
+        file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks.add_task,
         document_extracted_callback, DEFAULT_HEADER_FIELDS,
         DEFAULT_LINE_ITEM_FIELDS)
     return extracted_info

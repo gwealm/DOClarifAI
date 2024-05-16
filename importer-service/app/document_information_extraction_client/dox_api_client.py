@@ -58,7 +58,7 @@ class DoxApiClient(CommonClient):
                             document: UploadFile,
                             client_id,
                             document_type: str,
-                            background_tasks: BackgroundTasks,
+                            create_background_task_callback,
                             document_extracted_callback,
                             header_fields: Union[str, List[str]] = None,
                             line_item_fields: Union[str, List[str]] = None,
@@ -114,8 +114,8 @@ class DoxApiClient(CommonClient):
     if 'id' not in response_json:
       raise HTTPException(status_code=500)
 
-    document_id: int = response_json['id']
-    background_tasks.add_task(self.get_extraction_for_document, document_id,
+    document_id: str = response_json['id']
+    create_background_task_callback(self.get_extraction_for_document, document_id,
                               document_extracted_callback)
     return response_json
 
@@ -140,6 +140,7 @@ class DoxApiClient(CommonClient):
             dict: A dictionary containing
               the extraction results for the document.
         """
+    
     params = {API_FIELD_RETURN_NULL: return_null_values}
 
     response = await self._poll_for_url(
