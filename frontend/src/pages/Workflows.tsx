@@ -44,22 +44,31 @@ const Workflows = () => {
         }
     };
 
-    const handleAddWorkflow = (workflowName) => {
-        const currentDate = new Date();
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
-        const day = String(currentDate.getDate()).padStart(2, '0'); // Add leading zero if needed
-        const hours = String(currentDate.getHours()).padStart(2, '0'); // Add leading zero if needed
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0'); // Add leading zero if needed
-    
-        const formattedDate = `${month}/${day}/${currentDate.getFullYear()} ${hours}:${minutes}`;
-    
-        const newWorkflow = {
-            name: workflowName,
-            date: formattedDate
-        };
-    
-        setWorkflows([...workflows, newWorkflow]); // Add the new workflow to the list
-        setIsNewWorkflowModalOpen(false); // Close the modal
+    const handleAddWorkflow = async (workflowName) => {
+        try {
+            const response = await fetch('http://localhost:8085/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
+                },
+                body: JSON.stringify({
+                    name: workflowName,
+                    description: "",
+                    template_id: 1
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add workflow');
+            }
+
+            const newWorkflow = await response.json();
+            setWorkflows([...workflows, newWorkflow]); // Add the new workflow to the list
+            setIsNewWorkflowModalOpen(false); // Close the modal
+        } catch (error) {
+            console.error('Error adding workflow:', error);
+        }
     };
     
     const handleDeleteWorkflow = (index) => {
@@ -77,13 +86,13 @@ const Workflows = () => {
                         <h2 className="text-lg font-semibold text-black">Name</h2>
                     </div>
                     <div className="flex lg:flex-1 justify-left">
-                        <h2 className="text-lg font-semibold text-black">Last Modified</h2>
+                        <h2 className="text-lg font-semibold text-black">Description</h2>
                     </div>
                 </div>
                 <div className="border-b border-blue-[#F5F5F5] my-4"></div>
 
                 {workflows.map((workflow, index) => (
-                    <WorkflowCard key={index} index={index} name={workflow.name}  onDelete={handleDeleteWorkflow}/>
+                    <WorkflowCard key={index} index={index} name={workflow.name} description={workflow.description} id={workflow.id} onDelete={handleDeleteWorkflow}/>
                 ))}
             </div>
             <div className="flex items-center justify-start">
