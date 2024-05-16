@@ -6,6 +6,7 @@ import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../components/auth/Auth";
+import { useState, useEffect } from 'react';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -22,19 +23,48 @@ const marks: SliderSingleProps['marks'] = {
 };
 
 function Workflow() {
+  const [workflow, setWorkflow] = useState({} as Workflow); // Assuming the response contains a single workflow object
   const { id } = useParams<{ id: string }>();
-  console.log(id);
   const auth = useAuth();
   if (!auth.isLoggedIn) {
     console.error('User is not logged in');
     return <div>Forbidden User is not logged in</div>;
   }
+
+  useEffect(() => {
+    fetchWorkflow();
+  }, []);
+
+
+  const fetchWorkflow = async () => {
+    try {
+      const response = await fetch(`http://localhost:8085/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch workflow');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setWorkflow(data);
+    } catch (error) {
+      console.error('Error fetching workflow:', error);
+    }
+  }
+
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
     
       <div className="flex max-w-8xl items-center justify-between pl-6">
       <div className="flex lg:flex-1 items-center">
-      <h2 className="text-lg font-semibold text-black">Workflow 1 </h2>
+      <h2 className="text-lg font-semibold text-black">{workflow.name}</h2>
+      <h3 className="text-md font-semibold text-gray-500 ml-4">{workflow.description}</h3>
       <FontAwesomeIcon icon={faPenToSquare} className="ml-4" /> 
         </div>
         <div className="flex lg:flex justify-left">
@@ -55,7 +85,7 @@ function Workflow() {
             {/* Add more options here */}
           </select>
         </div>
-        <DragDrop/>
+        <DragDrop workflowId={id} />
         <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
           <label className="text-md font-semibold flex text-black pl-6 ">
             Confidence Interval

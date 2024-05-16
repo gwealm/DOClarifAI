@@ -4,17 +4,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox,faSkullCrossbones, faCheck ,faCircle} from '@fortawesome/free-solid-svg-icons';
 const fileTypes = ["JPG", "PNG", "PDF"];
 
-export function DragDrop() {
+export function DragDrop( {workflowId} ) {
     const [, setFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('noupload');
     const handleChange = (file) => {
         setUploadStatus('uploading');
         const formData = new FormData();
         formData.append("file", file);
-        const url = "http://localhost:8081/upload-file";
+        const url = "http://localhost:8081/files/" + workflowId;
         fetch(url, {
             method: "POST",
             mode: 'cors',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
+                'Content-Type': 'multipart/form-data'
+            },
             body: formData,
         })
             .then((response) => {
