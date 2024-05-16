@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class WorkflowIn(BaseModel):
   name: str
   description: str
-  confidence_interval:float|None = Field(default=0.9)
+  confidence_interval:float|None = Field(default=0.7)
   template_id: int|None = Field(default=None, foreign_key="template.id")
 
 

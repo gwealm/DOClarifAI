@@ -71,20 +71,22 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
     # Upload the file and initiate document extraction
 
   def document_extracted_callback_partial(mongo_db: MongoDB,
-                                          postgres_db: PostgresDB,
                                           workflow: Workflow,
-                                          file_metadata: File
+                                          file_metadata_id: int,
+                                          file_path:str
                                           ):
 
     def store_structured_info(document_extraction: dict):
       return crud_documents.upload_document_extraction(
-          mongo_db, postgres_db, document_extraction,
-          workflow, file_metadata)
+          mongo_db, document_extraction, workflow, 
+          file_metadata_id, file_path
+      )
 
     return store_structured_info
 
   document_extracted_callback = document_extracted_callback_partial(
-      mongo_db, postgres_db, workflow, file_metadata)
+      mongo_db, workflow, file_metadata.id,file_metadata.unprocessed_path
+  )
 
   extracted_info = await dox_client.upload_document(
       file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks,

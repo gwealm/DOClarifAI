@@ -35,3 +35,9 @@ def get_files_by_workflow_id(*, session: Session,
   # TODO: Paginate Results
   files = session.exec(statement).all()
   return files
+
+def get_file_by_id(*, session: Session,
+                             file_id: int) -> File:
+  statement = select(File).where(File.id == file_id)
+  file = session.exec(statement).first()
+  return file

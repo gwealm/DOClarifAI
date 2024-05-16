@@ -5,9 +5,14 @@ from fastapi import APIRouter
 from fastapi import BackgroundTasks
 from fastapi import HTTPException, Path
 from fastapi.responses import FileResponse
-from common.deps import CurrentUser
+from common.deps import CurrentUser,PostgresDB
 from app.api.deps import MongoDB
 from app.crud import documents as crud_documents
+from common.crud.postgres import files as crud_files
+from common.crud.postgres import workflows as crud_workflows
+from common.models.workflows import Workflow
+from common.models.files import File
+
 import os
 
 router = APIRouter()
@@ -39,11 +44,19 @@ async def export_document_excel(
 
 @router.get("/{workflow_id}")
 async def list_documents(
-    db: MongoDB,
-    user: CurrentUser,
+    postgres_db:PostgresDB,
+    current_user: CurrentUser,
     workflow_id: int = Path(
-        ..., description="The ID of the workflow for which to list documents")):
+        ..., description="The ID of the workflow for which to list documents")) -> list[File]:
   """
         This endpoint returns a list of all documents in the database.
-      """
-  return crud_documents.get_documents_by_workflow(db, user, workflow_id)
+  """
+  workflow:Workflow = crud_workflows.get_workflow_by_id(session=postgres_db,workflow_id=workflow_id)
+  
+  if not workflow:
+    raise HTTPException(status_code=404,detail="Workflow doesn't exist")
+  if (workflow.user!=current_user):
+    raise HTTPException(status_code=401,
+                        detail="Current user is not the owner of this flow")
+  
+  return crud_files.get_files_by_workflow_id(session=postgres_db,workflow_id=workflow_id)

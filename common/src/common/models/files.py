@@ -29,6 +29,6 @@ class File(SQLModel, table=True):
   name: str | None
   unprocessed_path: str | None
   process_status: FileProcesingStatus | None = Field(default=FileProcesingStatus.QUEUED)
-  processed_mongo_id: str | None = Field(default=None)
+  dox_id: str | None = Field(default=None)
   workflow_id: int = Field(default=None, foreign_key="workflow.id")
   workflow: "Workflow" = Relationship(back_populates="files")
