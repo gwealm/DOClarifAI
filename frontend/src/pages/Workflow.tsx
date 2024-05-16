@@ -4,6 +4,7 @@ import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
+import { useParams } from 'react-router-dom';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -20,7 +21,8 @@ const marks: SliderSingleProps['marks'] = {
 };
 
 function Workflow() {
-
+  const { id } = useParams<{ id: string }>();
+  console.log(id);
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
     

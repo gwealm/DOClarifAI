@@ -1,19 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import WorkflowCard from '../components/WorkflowCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import NewWorkflowModal from '../components/NewWorkflowModal';
+import { useAuth } from "../components/auth/Auth";
 
 const Workflows = () => {
     const [isNewWorkflowModalOpen, setIsNewWorkflowModalOpen] = useState(false);
-    const [workflows, setWorkflows] = useState([
-        { name: 'Workflow 1', date: '10/03/2024 17:45' },
-        { name: 'Workflow 2', date: '10/04/2024 09:30' },
-        { name: 'Workflow 3', date: '10/05/2024 14:20' },
-    ]);
+    const [workflows, setWorkflows] = useState([]);
+    const auth = useAuth();
 
     const toggleNewWorkflowModal = () => {
         setIsNewWorkflowModalOpen(!isNewWorkflowModalOpen);
+    };
+
+    useEffect(() => {
+        fetchWorkflows();
+    }, []);
+
+    const fetchWorkflows = async () => {
+        if (!auth.isLoggedIn) {
+            console.error('User is not logged in');
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:8085/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch workflows');
+            }
+
+            const data = await response.json();
+            console.log(data);
+            setWorkflows(data); // Assuming the response contains workflows array
+        } catch (error) {
+            console.error('Error fetching workflows:', error);
+        }
     };
 
     const handleAddWorkflow = (workflowName) => {
@@ -55,7 +83,7 @@ const Workflows = () => {
                 <div className="border-b border-blue-[#F5F5F5] my-4"></div>
 
                 {workflows.map((workflow, index) => (
-                    <WorkflowCard key={index} index={index} name={workflow.name} date={workflow.date} onDelete={handleDeleteWorkflow}/>
+                    <WorkflowCard key={index} index={index} name={workflow.name}  onDelete={handleDeleteWorkflow}/>
                 ))}
             </div>
             <div className="flex items-center justify-start">
