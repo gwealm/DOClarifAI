@@ -4,6 +4,10 @@ This module contains the functions to interact with the database.
 
 from pymongo.database import Database
 from sqlmodel import Session
+from common.models.users import User
+from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.files import File,FileProcesingStatus
 import os
 
 
@@ -39,32 +43,32 @@ def check_confidence_level(document_extraction: dict,
   return irregular_fields
 
 
-def upload_document_extraction(mongo_db: Database, postgres_session: Session,
-                               workflow_id: int, document_extraction: dict,
-                               fileContents: bytes, filename: str):
+def upload_document_extraction(mongo_db: Database, postgres_db: Session,
+                              document_extraction: dict, workflow:Workflow,file_metadata: File):
   """
     Stores the extracted information from a document in the database.
     Checks if all fields have a confidence
       level above the minimum required.
     If not, the document is stored in the file system.
     """
-  #TODO: Store metadata about the workflow to which the document belongs
   #TODO: Extract the minimum confidence level from the workflow configuration.
   #TODO: In the future, we will substitute the filesystem storage with a cloud storage service.
   min_confidence = 0.9  #TODO: obtain from workflow configuration
   document_data = document_extraction["extraction"]
   irregular_fields = check_confidence_level(document_data, min_confidence)
   if irregular_fields:
-    #Check if the workflow directory exists
-    workflow_dir = f"files/{workflow_id}"
-    if not os.path.exists(workflow_dir):
-      os.makedirs(workflow_dir)
-    file_path = f"files/{workflow_id}/{filename}"
-    with open(file_path, "wb") as f:
-      f.write(fileContents)
+    file_metadata.process_status = FileProcesingStatus.FAILED
     document_extraction["processed"] = False
   else:
-    #mark the document as processed
+    file_metadata.process_status = FileProcesingStatus.SUCCESS
+    os.remove(file_metadata.unprocessed_path)
+    file_metadata.unprocessed_path = None
     document_extraction["processed"] = True
+
   collection = mongo_db["documents"]
-  collection.insert_one(document_extraction)
+  
+  inserted_document = collection.insert_one(document_extraction)
+  inserted_id = inserted_document.inserted_id
+  file_metadata.processed_mongo_id = inserted_id
+  postgres_db.commit()
+

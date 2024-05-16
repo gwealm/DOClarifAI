@@ -7,7 +7,8 @@ version: "3"
 services:
   init-postgres:
     depends_on:
-      - database-postgres
+      database-postgres:
+        condition: service_healthy
     build:
       context: .
       additional_contexts:
