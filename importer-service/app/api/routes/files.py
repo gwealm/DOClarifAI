@@ -7,10 +7,32 @@ from fastapi import APIRouter, HTTPException, UploadFile, BackgroundTasks
 from app.models.document_status import DocumentStatus
 from app.api.deps import MongoDB, DoxClient
 from app.crud import documents as crud_documents
+from common.crud.postgres import workflows as crud_workflows
+from common.crud.postgres import files as crud_files
 from common.deps import CurrentUser, PostgresDB
+from pathlib import Path
+from common.models.users import User
+from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.files import File,FileCreate,FileProcesingStatus
 
 router = APIRouter()
 
+def store_unprocessed_file(workflow_id:int, file: UploadFile):
+    workflow_dir = Path(f"files/{workflow_id}")
+    workflow_dir.mkdir(parents=True, exist_ok=True)
+    
+    file_path = workflow_dir / file.filename
+
+    try:
+        with open(file_path, "wb") as f:
+            content = file.file.read()  # Read the file content
+            f.write(content)
+    except Exception as e:
+        print(f"An error occurred while saving the file: {e}")
+        return ""
+    
+    return str(file_path)
 
 @router.post("/{workflow_id}", status_code=202)
 async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
@@ -22,11 +44,16 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
       submit a pdf document for processing. 
   """
 
-  flow_owner: str = "user"
-  if (False and current_user.username != flow_owner):
-    #TODO: get flow_owner from request
+  workflow:Workflow = crud_workflows.get_workflow_by_id(session=postgres_db,workflow_id=workflow_id)
+  
+  if not workflow:
+    raise HTTPException(status_code=404,detail="Workflow doesn't exist")
+  if (workflow.user!=current_user):
     raise HTTPException(status_code=401,
                         detail="Current user is not the owner of this flow")
+
+  file_path = store_unprocessed_file(workflow_id,file)
+  file_metadata = crud_files.create_file(session=postgres_db,file=FileCreate(workflow_id=workflow_id,name=file.filename,unprocessed_path=file_path))
 
   # Default values TODO: obtain them from db according to flow
   DEFAULT_CLIENT_ID = "default"
@@ -41,30 +68,34 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
       "description", "netAmount", "quantity", "unitPrice", "materialNumber"
   ]
 
-  try:
     # Upload the file and initiate document extraction
 
-    def document_extracted_callback_partial(mongo_db: MongoDB,
-                                            postgres_db: PostgresDB,
-                                            workflow_id: int,
-                                            file_contents: bytes,
-                                            file_name: str):
+  def document_extracted_callback_partial(mongo_db: MongoDB,
+                                          postgres_db: PostgresDB,
+                                          workflow: Workflow,
+                                          file_metadata: File
+                                          ):
 
-      def store_structured_info(document_extraction: dict):
-        return crud_documents.upload_document_extraction(
-            mongo_db, postgres_db, workflow_id, document_extraction,
-            file_contents, file_name)
+    def store_structured_info(document_extraction: dict):
+      return crud_documents.upload_document_extraction(
+          mongo_db, postgres_db, document_extraction,
+          workflow, file_metadata)
 
-      return store_structured_info
+    return store_structured_info
 
-    file_contents = await file.read()
-    document_extracted_callback = document_extracted_callback_partial(
-        mongo_db, postgres_db, workflow_id, file_contents, file.filename)
+  document_extracted_callback = document_extracted_callback_partial(
+      mongo_db, postgres_db, workflow, file_metadata)
 
-    extracted_info = await dox_client.upload_document(
-        file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks,
-        document_extracted_callback, DEFAULT_HEADER_FIELDS,
-        DEFAULT_LINE_ITEM_FIELDS)
-    return extracted_info
-  except Exception as e:
-    raise HTTPException(status_code=500, detail=str(e)) from e
+  extracted_info = await dox_client.upload_document(
+      file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks,
+      document_extracted_callback, DEFAULT_HEADER_FIELDS,
+      DEFAULT_LINE_ITEM_FIELDS)
+  
+  match extracted_info["status"]:
+      case "PENDING":
+        file_metadata.process_status = FileProcesingStatus.PROCESSING
+      case _:
+        file_metadata.process_status = FileProcesingStatus.FAILED
+        
+  postgres_db.commit()
+  return extracted_info

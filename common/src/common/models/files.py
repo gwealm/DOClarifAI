@@ -1,10 +1,9 @@
 """
   This file contains the Pydantic models for the File entity.
 """
-from pydantic import BaseModel
 from sqlmodel import Field, SQLModel, Relationship
 from enum import Enum
-
+from pydantic import BaseModel
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from .workflows import Workflow
@@ -18,10 +17,9 @@ class FileProcesingStatus(Enum):
 
 
 class FileCreate(BaseModel):
+  workflow_id: int = Field(default=None, foreign_key="workflow.id")
   name: str | None
-  workflow_id: int
-  raw: str
-
+  unprocessed_path: str | None
 
 class File(SQLModel, table=True):
   """
@@ -29,9 +27,8 @@ class File(SQLModel, table=True):
   """
   id: int | None = Field(default=None, primary_key=True)
   name: str | None
-  raw: str
-  process_status: FileProcesingStatus
-  processed_link: str | None
-
+  unprocessed_path: str | None
+  process_status: FileProcesingStatus | None = Field(default=FileProcesingStatus.QUEUED)
+  processed_mongo_id: str | None = Field(default=None)
   workflow_id: int = Field(default=None, foreign_key="workflow.id")
   workflow: "Workflow" = Relationship(back_populates="files")
