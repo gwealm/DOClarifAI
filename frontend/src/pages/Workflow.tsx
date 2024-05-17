@@ -1,12 +1,11 @@
 import { DragDrop } from '../components/DragDrop.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faFloppyDisk, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
-import { useParams , Link} from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from "../components/auth/Auth";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -23,20 +22,11 @@ const marks: SliderSingleProps['marks'] = {
 };
 
 function Workflow() {
-  useEffect(() => {
-    fetchWorkflow();
-  }, []);
-  const [workflow, setWorkflow] = useState({} as Workflow); // Assuming the response contains a single workflow object
+  const [workflow, setWorkflow] = useState({} as Workflow);
   const { id } = useParams<{ id: string }>();
   const auth = useAuth();
-  if (!auth.isLoggedIn) {
-    console.error('User is not logged in');
-    return <div>Forbidden User is not logged in</div>;
-  }
 
-
-
-  const fetchWorkflow = async () => {
+  const fetchWorkflow = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8085/${id}`, {
         method: 'GET',
@@ -56,8 +46,16 @@ function Workflow() {
     } catch (error) {
       console.error('Error fetching workflow:', error);
     }
-  }
+  }, [id]);
 
+  useEffect(() => {
+    fetchWorkflow();
+  }, [fetchWorkflow]);
+
+  if (!auth.isLoggedIn) {
+    console.error('User is not logged in');
+    return <div>Forbidden User is not logged in</div>;
+  }
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
     

@@ -47,16 +47,21 @@ async def list_documents(
     postgres_db:PostgresDB,
     current_user: CurrentUser,
     workflow_id: int = Path(
-        ..., description="The ID of the workflow for which to list documents")) -> list[File]:
+        ..., description=
+        "The ID of the workflow for which to list documents")) -> list[File]:
   """
         This endpoint returns a list of all documents in the database.
   """
-  workflow:Workflow = crud_workflows.get_workflow_by_id(session=postgres_db,workflow_id=workflow_id)
-  
+  workflow:Workflow = crud_workflows.get_workflow_by_id(
+    session=postgres_db,workflow_id=workflow_id
+  )
+
   if not workflow:
     raise HTTPException(status_code=404,detail="Workflow doesn't exist")
-  if (workflow.user!=current_user):
+  if workflow.user!=current_user:
     raise HTTPException(status_code=401,
                         detail="Current user is not the owner of this flow")
-  
-  return crud_files.get_files_by_workflow_id(session=postgres_db,workflow_id=workflow_id)
+
+  return crud_files.get_files_by_workflow_id(
+    session=postgres_db,workflow_id=workflow_id
+    )

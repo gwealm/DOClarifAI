@@ -442,7 +442,7 @@ class CommonClient:
                           status_code=response.status_code)
 
     if e is not None:
-      self.common_logger.warning(
-          '%s request to URL %s failed with body: %s',
-          response.request.method, response.url, response.text)
+      self.common_logger.warning('%s request to URL %s failed with body: %s',
+                                 response.request.method, response.url,
+                                 response.text)
       raise e

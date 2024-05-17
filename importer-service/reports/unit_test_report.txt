@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.11.9, pytest-8.1.1, pluggy-1.4.0
+platform linux -- Python 3.11.9, pytest-8.2.0, pluggy-1.5.0
 rootdir: /app
 plugins: cov-5.0.0, anyio-4.3.0
 collected 0 items / 1 error
@@ -13,8 +13,8 @@ app/main.py:7: in <module>
 app/api/main.py:7: in <module>
     from app.api.routes import files
 app/api/routes/files.py:8: in <module>
-    from app.api.deps import MongoDB, CurrentUser, DoxClient, PostgresDB
-app/api/deps.py:13: in <module>
+    from app.api.deps import MongoDB, DoxClient
+app/api/deps.py:7: in <module>
     from app.core.config import settings
 app/core/config.py:68: in <module>
     settings = Settings()
@@ -79,9 +79,9 @@ Name                                  Stmts   Miss  Cover   Missing
 -------------------------------------------------------------------
 app/__init__.py                           0      0   100%
 app/api/__init__.py                       0      0   100%
-app/api/deps.py                          42     33    21%   14-78
+app/api/deps.py                          17     13    24%   8-41
 app/api/main.py                           4      2    50%   9-10
-app/api/routes/files.py                  24     21    12%   9-69
+app/api/routes/files.py                  51     48     6%   9-108
 app/core/config.py                       38      2    95%   43, 61
 app/http_client/__init__.py               0      0   100%
 app/http_client/constants.py             10     10     0%   1-14
@@ -91,9 +91,9 @@ app/http_client/http_client_base.py     121    121     0%   5-448
 app/main.py                               6      4    33%   8-18
 app/models/document_status.py             5      0   100%
 -------------------------------------------------------------------
-TOTAL                                   281    224    20%
+TOTAL                                   283    231    18%
 
 =========================== short test summary info ============================
 ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 15 v...
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-========================= 2 warnings, 1 error in 1.73s =========================
+========================= 2 warnings, 1 error in 2.14s =========================

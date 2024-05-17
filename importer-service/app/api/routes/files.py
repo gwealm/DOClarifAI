@@ -14,25 +14,27 @@ from pathlib import Path
 from common.models.users import User
 from common.models.workflows import Workflow
 from common.models.templates import Template
-from common.models.files import File,FileCreate,FileProcesingStatus
+from common.models.files import File, FileCreate, FileProcesingStatus
 
 router = APIRouter()
 
-def store_unprocessed_file(workflow_id:int, file: UploadFile):
-    workflow_dir = Path(f"files/{workflow_id}")
-    workflow_dir.mkdir(parents=True, exist_ok=True)
-    
-    file_path = workflow_dir / file.filename
 
-    try:
-        with open(file_path, "wb") as f:
-            content = file.file.read()  # Read the file content
-            f.write(content)
-    except Exception as e:
-        print(f"An error occurred while saving the file: {e}")
-        return ""
-    
-    return str(file_path)
+def store_unprocessed_file(workflow_id: int, file: UploadFile):
+  workflow_dir = Path(f"files/{workflow_id}")
+  workflow_dir.mkdir(parents=True, exist_ok=True)
+
+  file_path = workflow_dir / file.filename
+
+  try:
+    with open(file_path, "wb") as f:
+      content = file.file.read()  # Read the file content
+      f.write(content)
+  except Exception as e:
+    print(f"An error occurred while saving the file: {e}")
+    return ""
+
+  return str(file_path)
+
 
 @router.post("/{workflow_id}", status_code=202)
 async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
@@ -44,16 +46,21 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
       submit a pdf document for processing. 
   """
 
-  workflow:Workflow = crud_workflows.get_workflow_by_id(session=postgres_db,workflow_id=workflow_id)
-  
+  workflow: Workflow = crud_workflows.get_workflow_by_id(
+      session=postgres_db, workflow_id=workflow_id)
+
   if not workflow:
-    raise HTTPException(status_code=404,detail="Workflow doesn't exist")
-  if (workflow.user!=current_user):
+    raise HTTPException(status_code=404, detail="Workflow doesn't exist")
+  if (workflow.user != current_user):
     raise HTTPException(status_code=401,
                         detail="Current user is not the owner of this flow")
 
-  file_path = store_unprocessed_file(workflow_id,file)
-  file_metadata = crud_files.create_file(session=postgres_db,file=FileCreate(workflow_id=workflow_id,name=file.filename,unprocessed_path=file_path))
+  file_path = store_unprocessed_file(workflow_id, file)
+  file_metadata = crud_files.create_file(session=postgres_db,
+                                         file=FileCreate(
+                                             workflow_id=workflow_id,
+                                             name=file.filename,
+                                             unprocessed_path=file_path))
 
   # Default values TODO: obtain them from db according to flow
   DEFAULT_CLIENT_ID = "default"
@@ -68,36 +75,34 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
       "description", "netAmount", "quantity", "unitPrice", "materialNumber"
   ]
 
-    # Upload the file and initiate document extraction
+  # Upload the file and initiate document extraction
 
-  def document_extracted_callback_partial(mongo_db: MongoDB,
-                                          workflow: Workflow,
+  def document_extracted_callback_partial(mongo_db: MongoDB, workflow: Workflow,
                                           file_metadata_id: int,
-                                          file_path:str
-                                          ):
+                                          file_path: str):
 
     def store_structured_info(document_extraction: dict):
-      return crud_documents.upload_document_extraction(
-          mongo_db, document_extraction, workflow, 
-          file_metadata_id, file_path
-      )
+      return crud_documents.upload_document_extraction(mongo_db,
+                                                       document_extraction,
+                                                       workflow,
+                                                       file_metadata_id,
+                                                       file_path)
 
     return store_structured_info
 
   document_extracted_callback = document_extracted_callback_partial(
-      mongo_db, workflow, file_metadata.id,file_metadata.unprocessed_path
-  )
+      mongo_db, workflow, file_metadata.id, file_metadata.unprocessed_path)
 
   extracted_info = await dox_client.upload_document(
       file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks,
       document_extracted_callback, DEFAULT_HEADER_FIELDS,
       DEFAULT_LINE_ITEM_FIELDS)
-  
+
   match extracted_info["status"]:
-      case "PENDING":
-        file_metadata.process_status = FileProcesingStatus.PROCESSING
-      case _:
-        file_metadata.process_status = FileProcesingStatus.FAILED
-        
+    case "PENDING":
+      file_metadata.process_status = FileProcesingStatus.PROCESSING
+    case _:
+      file_metadata.process_status = FileProcesingStatus.FAILED
+
   postgres_db.commit()
   return extracted_info

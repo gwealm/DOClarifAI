@@ -6,7 +6,7 @@ from pymongo.database import Database
 from common.models.users import User
 from common.models.workflows import Workflow
 from common.models.templates import Template
-from common.models.files import File,FileProcesingStatus
+from common.models.files import File, FileProcesingStatus
 from common.crud.postgres import files as crud_files
 from common.postgres import engine
 
@@ -46,8 +46,13 @@ def check_confidence_level(document_extraction: dict,
   return irregular_fields
 
 
-def upload_document_extraction(mongo_db: Database, document_extraction: dict, 
-                               workflow:Workflow,file_metadata_id: int, file_path: str, ):
+def upload_document_extraction(
+    mongo_db: Database,
+    document_extraction: dict,
+    workflow: Workflow,
+    file_metadata_id: int,
+    file_path: str,
+):
   """
     Stores the extracted information from a document in the database.
     Checks if all fields have a confidence
@@ -59,9 +64,9 @@ def upload_document_extraction(mongo_db: Database, document_extraction: dict,
   min_confidence = 0.3  #TODO: obtain from workflow configuration
   document_data = document_extraction["extraction"]
   irregular_fields = check_confidence_level(document_data, min_confidence)
-    
-  status:FileProcesingStatus
-  
+
+  status: FileProcesingStatus
+
   if irregular_fields:
     status = FileProcesingStatus.FAILED
     document_extraction["processed"] = False
@@ -71,17 +76,16 @@ def upload_document_extraction(mongo_db: Database, document_extraction: dict,
     document_extraction["processed"] = True
 
   collection = mongo_db["documents"]
-  
+
   collection.insert_one(document_extraction)
   dox_id = document_extraction["id"]
-  
 
   with Session(engine) as session:
-    file_metadata = crud_files.get_file_by_id(session=session,file_id=file_metadata_id)
+    file_metadata = crud_files.get_file_by_id(session=session,
+                                              file_id=file_metadata_id)
     file_metadata.process_status = status
     file_metadata.dox_id = dox_id
-    if status==FileProcesingStatus.SUCCESS:
+    if status == FileProcesingStatus.SUCCESS:
       file_metadata.unprocessed_path = None
     session.add(file_metadata)
     session.commit()
-

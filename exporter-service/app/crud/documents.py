@@ -12,7 +12,8 @@ def format_document(data: dict):
     This function formats the document data into a DataFrame, for invoice data
     extraction.
     """
-  header_data = {field["name"]: field["value"] for field in data["headerFields"]}
+  header_data = {field["name"]:
+                 field["value"] for field in data["headerFields"]}
 
   # Extract line items
   line_items_data = []
@@ -36,7 +37,7 @@ def get_document_by_id(db: Database, document_id: str) -> dict:
   return document
 
 
-def get_document_by_id_xlsx(db: Database, current_user: User,
+def get_document_by_id_xlsx(db: Database, _: User,
                             document_id: str) -> str:
   #TODO: If the document doesn't belong to the user, return 401 unauthorized
   document = get_document_by_id(db, document_id)
@@ -48,23 +49,3 @@ def get_document_by_id_xlsx(db: Database, current_user: User,
   formatted_document.to_excel(path, index=False)
   return path
 
-
-def get_documents_by_workflow(db: Database, current_user: User,
-                              workflow_id: int):
-  #TODO: In the future it must only return the documents for a specific workflow.
-  #TODO: If the workflow doesn't belong to the user, return 401 unauthorized
-  collection = db["documents"]
-  pipeline = [{
-      "$sort": {
-          "finished": -1
-      }
-  }, {
-      "$project": {
-          "_id": 0,
-          "id": "$id",
-          "timestamp": "$finished",
-          "filename": "$fileName"
-      }
-  }]
-  documents = collection.aggregate(pipeline)
-  return list(documents)

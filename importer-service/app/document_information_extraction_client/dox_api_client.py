@@ -91,10 +91,8 @@ class DoxApiClient(CommonClient):
                                       line_item_fields, template_id, schema_id)
 
     client_id = options.get(API_FIELD_CLIENT_ID)
-    self.logger.debug(
-        'Starting upload of %s documents for client %s',
-        document.filename, client_id
-    )
+    self.logger.debug('Starting upload of %s documents for client %s',
+                      document.filename, client_id)
 
     response = await self.post(
         DOCUMENT_ENDPOINT,
@@ -104,10 +102,8 @@ class DoxApiClient(CommonClient):
         },
         data={API_REQUEST_FIELD_OPTIONS: json.dumps(options)})
 
-    self.logger.info(
-        'Successfully uploaded document %s for client %s',
-        document.filename, client_id
-    )
+    self.logger.info('Successfully uploaded document %s for client %s',
+                     document.filename, client_id)
 
     response_json = response.json()
 
