@@ -57,7 +57,7 @@ const Register = () => {
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="Password"
-                            type="text"
+                            type="password"
                             placeholder="Enter your password"
                             onChange={e => setPassword(e.target.value)}
                         />

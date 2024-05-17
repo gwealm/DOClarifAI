@@ -3,6 +3,13 @@ This module contains the functions to interact with the database.
 """
 
 from pymongo.database import Database
+from common.models.users import User
+from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.files import File, FileProcesingStatus
+from common.crud.postgres import files as crud_files
+from common.postgres import engine
+
 from sqlmodel import Session
 import os
 
@@ -39,32 +46,46 @@ def check_confidence_level(document_extraction: dict,
   return irregular_fields
 
 
-def upload_document_extraction(mongo_db: Database, postgres_session: Session,
-                               workflow_id: int, document_extraction: dict,
-                               fileContents: bytes, filename: str):
+def upload_document_extraction(
+    mongo_db: Database,
+    document_extraction: dict,
+    workflow: Workflow,
+    file_metadata_id: int,
+    file_path: str,
+):
   """
     Stores the extracted information from a document in the database.
     Checks if all fields have a confidence
       level above the minimum required.
     If not, the document is stored in the file system.
     """
-  #TODO: Store metadata about the workflow to which the document belongs
   #TODO: Extract the minimum confidence level from the workflow configuration.
   #TODO: In the future, we will substitute the filesystem storage with a cloud storage service.
-  min_confidence = 0.9  #TODO: obtain from workflow configuration
+  min_confidence = 0.3  #TODO: obtain from workflow configuration
   document_data = document_extraction["extraction"]
   irregular_fields = check_confidence_level(document_data, min_confidence)
+
+  status: FileProcesingStatus
+
   if irregular_fields:
-    #Check if the workflow directory exists
-    workflow_dir = f"files/{workflow_id}"
-    if not os.path.exists(workflow_dir):
-      os.makedirs(workflow_dir)
-    file_path = f"files/{workflow_id}/{filename}"
-    with open(file_path, "wb") as f:
-      f.write(fileContents)
+    status = FileProcesingStatus.FAILED
     document_extraction["processed"] = False
   else:
-    #mark the document as processed
+    status = FileProcesingStatus.SUCCESS
+    os.remove(file_path)
     document_extraction["processed"] = True
+
   collection = mongo_db["documents"]
+
   collection.insert_one(document_extraction)
+  dox_id = document_extraction["id"]
+
+  with Session(engine) as session:
+    file_metadata = crud_files.get_file_by_id(session=session,
+                                              file_id=file_metadata_id)
+    file_metadata.process_status = status
+    file_metadata.dox_id = dox_id
+    if status == FileProcesingStatus.SUCCESS:
+      file_metadata.unprocessed_path = None
+    session.add(file_metadata)
+    session.commit()

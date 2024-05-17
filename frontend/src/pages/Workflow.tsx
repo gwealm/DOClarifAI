@@ -1,9 +1,11 @@
 import { DragDrop } from '../components/DragDrop.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faFloppyDisk} from '@fortawesome/free-regular-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faFloppyDisk, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
+import { useParams, Link } from 'react-router-dom';
+import { useAuth } from "../components/auth/Auth";
+import { useState, useEffect, useCallback } from 'react';
 
 const marks: SliderSingleProps['marks'] = {
   0: '0%',
@@ -20,13 +22,47 @@ const marks: SliderSingleProps['marks'] = {
 };
 
 function Workflow() {
+  const [workflow, setWorkflow] = useState({} as Workflow);
+  const { id } = useParams<{ id: string }>();
+  const auth = useAuth();
 
+  const fetchWorkflow = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:8085/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch workflow');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setWorkflow(data);
+    } catch (error) {
+      console.error('Error fetching workflow:', error);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchWorkflow();
+  }, [fetchWorkflow]);
+
+  if (!auth.isLoggedIn) {
+    console.error('User is not logged in');
+    return <div>Forbidden User is not logged in</div>;
+  }
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
     
       <div className="flex max-w-8xl items-center justify-between pl-6">
       <div className="flex lg:flex-1 items-center">
-      <h2 className="text-lg font-semibold text-black">Workflow 1 </h2>
+      <h2 className="text-lg font-semibold text-black">{workflow.name}</h2>
+      <h3 className="text-md font-semibold text-gray-500 ml-4">{workflow.description}</h3>
       <FontAwesomeIcon icon={faPenToSquare} className="ml-4" /> 
         </div>
         <div className="flex lg:flex justify-left">
@@ -47,7 +83,7 @@ function Workflow() {
             {/* Add more options here */}
           </select>
         </div>
-        <DragDrop/>
+        <DragDrop workflowId={id} />
         <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
           <label className="text-md font-semibold flex text-black pl-6 ">
             Confidence Interval
@@ -77,10 +113,10 @@ function Workflow() {
           <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Stop Workflow
           </button>
-          <a href="/processedfiles" className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          <Link to={`/workflow/${id}/processed-files`} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           
           Processed Files
-          </a>
+          </Link>
             
 
         </div>
