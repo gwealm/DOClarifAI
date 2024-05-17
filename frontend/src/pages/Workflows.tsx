@@ -54,8 +54,7 @@ const Workflows = () => {
                 },
                 body: JSON.stringify({
                     name: workflowName,
-                    description: "",
-                    template_id: 1
+                    description: ""
                 }),
             });
 

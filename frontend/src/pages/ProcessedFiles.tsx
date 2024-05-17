@@ -14,10 +14,13 @@ function ProcessedFiles() {
   };
 
   const handleDownloadFiles = (id) => {
-    const url = 'http://localhost:8082/export-document-excel?document_id=' + id;
+    const url = 'http://localhost:8082/documents/'+id+'/xlsx';
     fetch(url, {
       method: 'GET',
       mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+      }
     })
       .then((response) => response.blob())
       .then((blob) => {
@@ -88,7 +91,7 @@ function ProcessedFiles() {
           <div className="border-b border-blue-200 mb-4"></div>
 
           {files.map((file, index) => (
-            <ProcessedFileCard key={index} id={file.id} index={index} name={file.filename} date={file.timestamp} onDelete={handleDeleteFiles} onDownload={handleDownloadFiles} />
+            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} onDelete={handleDeleteFiles} onDownload={handleDownloadFiles} />
           ))}
         </div>
 

@@ -5,6 +5,8 @@ from sqlmodel import Field, SQLModel, Relationship
 from enum import Enum
 from pydantic import BaseModel
 from typing import TYPE_CHECKING
+from datetime import datetime
+
 if TYPE_CHECKING:
   from .workflows import Workflow
 
@@ -30,5 +32,6 @@ class File(SQLModel, table=True):
   unprocessed_path: str | None
   process_status: FileProcesingStatus | None = Field(default=FileProcesingStatus.QUEUED)
   dox_id: str | None = Field(default=None)
+  uploaded_at: datetime = Field(default_factory=datetime.now)
   workflow_id: int = Field(default=None, foreign_key="workflow.id")
   workflow: "Workflow" = Relationship(back_populates="files")
