@@ -23,6 +23,9 @@ const marks: SliderSingleProps['marks'] = {
 };
 
 function Workflow() {
+  useEffect(() => {
+    fetchWorkflow();
+  }, []);
   const [workflow, setWorkflow] = useState({} as Workflow); // Assuming the response contains a single workflow object
   const { id } = useParams<{ id: string }>();
   const auth = useAuth();
@@ -31,9 +34,6 @@ function Workflow() {
     return <div>Forbidden User is not logged in</div>;
   }
 
-  useEffect(() => {
-    fetchWorkflow();
-  }, []);
 
 
   const fetchWorkflow = async () => {
