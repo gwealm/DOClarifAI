@@ -11,10 +11,8 @@ from common.crud.postgres import workflows as crud_workflows
 from common.crud.postgres import files as crud_files
 from common.deps import CurrentUser, PostgresDB
 from pathlib import Path
-from common.models.users import User
 from common.models.workflows import Workflow
-from common.models.templates import Template
-from common.models.files import File, FileCreate, FileProcesingStatus
+from common.models.files import FileCreate, FileProcesingStatus
 
 router = APIRouter()
 
@@ -51,7 +49,7 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
 
   if not workflow:
     raise HTTPException(status_code=404, detail="Workflow doesn't exist")
-  if (workflow.user != current_user):
+  if workflow.user != current_user:
     raise HTTPException(status_code=401,
                         detail="Current user is not the owner of this flow")
 
