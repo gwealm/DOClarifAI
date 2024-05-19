@@ -19,7 +19,7 @@ function Router() {
                     <Route path="/" element={<Workflows />} />
                     <Route path="/workflow/:id" element={<Workflow />} />
                     <Route
-                        path="/processedfiles"
+                        path="/workflow/:id/processed-files"
                         element={<ProcessedFiles />}
                     />
                     <Route path="/about-us" element={<AboutUs />} />

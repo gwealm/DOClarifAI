@@ -2,7 +2,7 @@
 This file is the entry point of the FastAPI application. 
 It creates the FastAPI instance and includes the API routes.
 """
-from fastapi import FastAPI,BackgroundTasks
+from fastapi import FastAPI
 from app.api.main import api_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.gmail_automation.gmail_automation_client import GmailAutomationClient
@@ -11,17 +11,6 @@ from contextlib import asynccontextmanager
 
 gmail_automation_client:GmailAutomationClient = GmailAutomationClient()
     
-
-app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=['*'],
-)
-app.include_router(api_router)
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler = AsyncIOScheduler()
@@ -31,4 +20,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(api_router)
+
 

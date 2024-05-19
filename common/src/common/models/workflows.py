@@ -11,13 +11,14 @@ if TYPE_CHECKING:
 
 
 class WorkflowIn(BaseModel):
-  name: str | None
-  description: str | None
-  template_id: int
+  name: str
+  description: str
+  confidence_interval:float|None = Field(default=0.7)
+  template_id: int|None = Field(default=None, foreign_key="template.id")
 
 
 class WorkflowCreate(WorkflowIn):
-  user_id: int
+  user_id: int = Field(default=None, foreign_key="user.id")
 
 
 class Workflow(SQLModel, table=True):
@@ -28,9 +29,11 @@ class Workflow(SQLModel, table=True):
   name: str
   description: str
   email: str | None
+  confidence_interval:float
+  
   files: list["File"] = Relationship(back_populates="workflow")
-
-  template_id: int = Field(default=None, foreign_key="template.id")
+  
+  template_id: int|None = Field(default=None, foreign_key="template.id")
   template: "Template" = Relationship()
 
   user_id: int = Field(default=None, foreign_key="user.id")

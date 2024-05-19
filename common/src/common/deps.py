@@ -13,6 +13,12 @@ from sqlmodel import Session
 from common.config import settings
 from common.postgres import engine
 from common.models.users import User
+
+# DO NOT DELETE. User needs templates and workflows, workflows need files
+from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.files import File
+
 from common.models.tokens import TokenPayload
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)

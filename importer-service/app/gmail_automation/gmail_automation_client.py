@@ -10,16 +10,24 @@ from app.document_information_extraction_client.dox_api_client import DoxApiClie
 from app.core.config import settings
 import app.crud.documents as crud_documents
 from app.api.deps import get_mongo_db
-from common.deps import get_postgres_db
+from sqlmodel import Session
 import re
 import asyncio
+from pymongo.database import Database as MongoDB
+from common.models.workflows import Workflow
+from common.models.files import FileCreate, FileProcesingStatus
+from common.crud.postgres import workflows as crud_workflows
+from common.crud.postgres import files as crud_files
+from common.postgres import engine
+from pathlib import Path
+
+
 
 dox_client:DoxApiClient = DoxApiClient(settings.SAP_BASE_URL,
                                    settings.SAP_CLIENT_ID,
                                    settings.SAP_CLIENT_SECRET,
                                    settings.SAP_UAA_URL)
 mongo_db = get_mongo_db()
-postgres_db = get_postgres_db()
 
 
 DEFAULT_CLIENT_ID = "default"
@@ -80,18 +88,36 @@ def _get_message_info(service, user_id, msg_id):
     return sender, receiver, attachment_files
         
 
-def document_extracted_callback_partial(mongo_db,
-                                        postgres_db,
-                                        workflow_id: int,
-                                        file_contents: bytes,
-                                        file_name: str):
+def store_unprocessed_file(workflow_id: int, file: UploadFile):
+  workflow_dir = Path(f"files/{workflow_id}")
+  workflow_dir.mkdir(parents=True, exist_ok=True)
+
+  file_path = workflow_dir / file.filename
+
+  try:
+    with open(file_path, "wb") as f:
+      content = file.file.read()  # Read the file content
+      f.write(content)
+  except Exception as e:
+    print(f"An error occurred while saving the file: {e}")
+    return ""
+
+  return str(file_path)
+
+
+def document_extracted_callback_partial(mongo_db: MongoDB, workflow: Workflow,
+                                        file_metadata_id: int,
+                                        file_path: str):
 
     def store_structured_info(document_extraction: dict):
-        return crud_documents.upload_document_extraction(
-            mongo_db, postgres_db, workflow_id, document_extraction,
-            file_contents, file_name)
+        return crud_documents.upload_document_extraction(mongo_db,
+                                                        document_extraction,
+                                                        workflow,
+                                                        file_metadata_id,
+                                                        file_path)
 
     return store_structured_info
+
 
 
 class GmailAutomationClient:
@@ -127,23 +153,41 @@ class GmailAutomationClient:
                     if not match:
                         continue
                     
-                    #TODO: verify sender can send for this workflow, get workflow id and document template from db
                     workflow_id = int(match[0])
                     for attachment in message_attachments:
-                        file_contents = await attachment.read()
 
-                        document_extracted_callback = document_extracted_callback_partial(
-                            mongo_db, postgres_db, workflow_id, file_contents, attachment.filename
-                        )
-                        def create_background_task(get_extraction_for_document, document_id,
-                                                    document_extracted_callback):
-                            asyncio.create_task(get_extraction_for_document(document_id,document_extracted_callback))
+                        file_path = store_unprocessed_file(workflow_id, attachment)
+                        with Session(engine) as session:
+                            workflow: Workflow = crud_workflows.get_workflow_by_id(
+                                session=session, workflow_id=workflow_id)
+
+                            file_metadata = crud_files.create_file(session=session,
+                                                                    file=FileCreate(
+                                                                        workflow_id=workflow_id,
+                                                                        name=attachment.filename,
+                                                                        unprocessed_path=file_path))
+
+                            document_extracted_callback = document_extracted_callback_partial(
+                                mongo_db, workflow, file_metadata.id, file_metadata.unprocessed_path
+                            )
+
+                            def create_background_task(get_extraction_for_document, document_id,
+                                                        document_extracted_callback):
+                                asyncio.create_task(get_extraction_for_document(document_id,document_extracted_callback))
+                            
+                            extracted_info = await dox_client.upload_document(
+                                attachment, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, create_background_task,
+                                document_extracted_callback, DEFAULT_HEADER_FIELDS,
+                                DEFAULT_LINE_ITEM_FIELDS
+                            )
                         
-                        await dox_client.upload_document(
-                            attachment, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, create_background_task,
-                            document_extracted_callback, DEFAULT_HEADER_FIELDS,
-                            DEFAULT_LINE_ITEM_FIELDS
-                        )
+                            match extracted_info["status"]:
+                                case "PENDING":
+                                    file_metadata.process_status = FileProcesingStatus.PROCESSING
+                                case _:
+                                    file_metadata.process_status = FileProcesingStatus.FAILED
+                            session.commit()
+                        
                     service.users().messages().modify(userId="me", id=msg_id, body={'removeLabelIds': ['UNREAD']}).execute()
 
         except HttpError as error:

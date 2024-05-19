@@ -8,3 +8,43 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+include:
+  # mongodb
+  - path:
+      - "database/mongodb/docker-compose.yml"
+    env_file:
+      - "database/mongodb/.env"
+  # postgres
+  - path:
+      - "database/postgres/compose.base.yml"
+      - "database/postgres/compose.standalone.yml"
+    env_file:
+      - "database/postgres/env/standalone.env"
+
+  # authentication-service
+  - path:
+      - "authentication-service/compose.base.yml"
+      - "authentication-service/compose.standalone.yml"
+    env_file:
+      - "authentication-service/env/standalone.env"
+
+  # exporter-service
+  - path:
+      - "exporter-service/compose.base.yml"
+      - "exporter-service/compose.standalone.yml"
+    env_file:
+      - "exporter-service/env/standalone.env"
+
+  # importer-service
+  - path:
+      - "importer-service/compose.base.yml"
+      - "importer-service/compose.standalone.yml"
+    env_file:
+      - "importer-service/env/standalone.env"
+
+  # workflow-management-service
+  - path:
+      - "workflow-management-service/compose.base.yml"
+      - "workflow-management-service/compose.standalone.yml"
+    env_file:
+      - "workflow-management-service/env/standalone.env"

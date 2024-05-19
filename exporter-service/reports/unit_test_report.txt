@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.11.9, pytest-8.1.1, pluggy-1.5.0
+platform linux -- Python 3.11.9, pytest-8.2.0, pluggy-1.5.0
 rootdir: /app
 plugins: cov-5.0.0, anyio-4.3.0
 collected 0 items
@@ -13,10 +13,10 @@ app/api/__init__.py        0      0   100%
 app/api/deps.py            9      9     0%   5-18
 app/api/main.py            4      4     0%   4-9
 app/core/__init__.py       0      0   100%
-app/core/config.py        34     34     0%   2-58
+app/core/config.py        34     34     0%   2-61
 app/core/mongo_db.py       3      3     0%   4-7
-app/main.py                4      4     0%   4-8
+app/main.py                6      6     0%   4-16
 ----------------------------------------------------
-TOTAL                     54     54     0%
+TOTAL                     56     56     0%
 
 ============================ no tests ran in 0.04s =============================

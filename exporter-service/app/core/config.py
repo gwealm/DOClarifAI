@@ -10,12 +10,15 @@ load_dotenv()
 
 
 def read_key_from_file(file_path):
-  with open(file_path, "r") as file:
+  with open(file_path, "r", encoding="utf-8") as file:
     key = file.read()
   return key
 
 
 class Settings(BaseSettings):
+  """
+  Global configuration settings for the application.
+  """
   PUBLIC_KEY_FILE: str = "ES256/public.pem"
   PUBLIC_KEY: str = read_key_from_file(PUBLIC_KEY_FILE)
   JWT_ALGORITHM: str = "ES256"

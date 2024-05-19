@@ -5,7 +5,7 @@
 version: "3"
 
 services:
-  workflow_management:
+  workflow-management:
     env_file:
       - ./env/standalone.env
     extra_hosts:
@@ -15,7 +15,7 @@ services:
     volumes:
       - ./app:/app/app
 
-  tests:
+  workflow-management-tests:
     build: 
       context: .
       additional_contexts:
