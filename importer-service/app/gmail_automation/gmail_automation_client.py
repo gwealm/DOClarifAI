@@ -67,6 +67,13 @@ def _get_message_info(service, user_id, msg_id):
             elif header['name'] == 'To':
                 receiver = header['value']
 
+        email_pattern = r'<(.*?)>'
+        sender_email = re.search(email_pattern, sender)
+        if sender_email:
+            sender_email = sender_email.group(1)
+        else:
+            sender_email = sender
+
         for part in message['payload']['parts']:
             if part['filename']:
                 if 'data' in part['body']:
@@ -87,7 +94,7 @@ def _get_message_info(service, user_id, msg_id):
     except HttpError as error:
         print(f'An error occurred: {error}')
 
-    return sender, receiver, attachment_files
+    return sender_email, receiver, attachment_files
         
 
 def store_unprocessed_file(workflow_id: int, file: UploadFile):
@@ -204,7 +211,7 @@ class GmailAutomationClient:
                     workflow_id = int(match[0])
                     for attachment in message_attachments:
 
-                        #file_path = store_unprocessed_file(workflow_id, attachment)
+                        file_path = store_unprocessed_file(workflow_id, attachment)
                         with Session(engine) as session:
                             workflow: Workflow = crud_workflows.get_workflow_by_id(
                                 session=session, workflow_id=workflow_id)
@@ -217,7 +224,6 @@ class GmailAutomationClient:
                                 reply_to_email(service,msg_id,error_msg,workflow_id)
                                 break
 
-                            """
                             file_metadata = crud_files.create_file(session=session,
                                                                     file=FileCreate(
                                                                         workflow_id=workflow_id,
@@ -244,7 +250,6 @@ class GmailAutomationClient:
                                 case _:
                                     file_metadata.process_status = FileProcesingStatus.FAILED
                             session.commit()
-                            """
                         
                     service.users().messages().modify(userId="me", id=msg_id, body={'removeLabelIds': ['UNREAD']}).execute()
 
