@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class WorkflowIn(BaseModel):
   name: str
   description: str
-  confidence_interval:float|None = Field(default=0.7)
+  confidence_interval:float|None = Field(default=0.3)
   template_id: int|None = Field(default=None, foreign_key="template.id")
 
 
@@ -28,6 +28,7 @@ class Workflow(SQLModel, table=True):
   id: int | None = Field(default=None, primary_key=True)
   name: str
   description: str
+  email: str | None
   confidence_interval:float
   
   files: list["File"] = Relationship(back_populates="workflow")

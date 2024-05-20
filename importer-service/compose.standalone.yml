@@ -17,7 +17,7 @@ services:
     environment:
       - PORT=8080
 
-  tests:
+  importer-tests:
     build: 
       context: .
       additional_contexts:

@@ -1,31 +1,32 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
+
 const LogIn = () => {
 
     const auth = useAuth();
-    const [email, setEmail] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const {state} = useLocation();
+    const [username, setUsername] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
-    const [logInError, setLogInError] = useState<boolean>(false);
-    const [logInErrorMsg, setLogInErrorMsg] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(state && state.errorMsg?state.errorMsg:null);
+
 
     const onClickLogIn = async () => {
-        if (email == null || password == null) {
-            setLogInError(true);
-            setLogInErrorMsg("Email and Password are mandatory");
+        if (username == null || password == null) {
+            setErrorMsg("Username and Password are mandatory");
             return;
         }
-        await auth.logIn(email, password);
-
-
+        const errors = await auth.logIn(username, password);
+        if (!errors) {
+            navigate("/workflows");
+        } else {
+            setErrorMsg(errors);
+        }
     }
     const LogInFeedBack = () => {
-        if (logInError) {
-            return <></>
-        }
         return (
-            <p>{logInErrorMsg}</p>
+            errorMsg && <p className="text-red-500 text-center mt-4">{errorMsg}</p>
         );
 
     }
@@ -46,13 +47,13 @@ const LogIn = () => {
 
                 <div className="flex flex-col justify-center mx-8">
                     <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                        <label className="block text-gray-700 text-lg font-medium mb-2 text-left" htmlFor="Email"> Email address </label>
+                        <label className="block text-gray-700 text-lg font-medium mb-2 text-left" htmlFor="username"> Username </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="Email"
+                            id="username"
                             type="text"
-                            placeholder="Enter your email"
-                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your username"
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
 
@@ -67,9 +68,12 @@ const LogIn = () => {
                         />
                     </div>
 
-                    <Link to="/workflows" onClick={onClickLogIn} className="text-md font-semibold leading-6 text-white mx-6 mt-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <button
+                        onClick={onClickLogIn}
+                        className="text-md font-semibold leading-6 text-white mx-6 mt-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    >
                         Log In
-                    </Link>
+                    </button>
                 </div>
                 <LogInFeedBack />
                 <div className="relative my-6 mx-14 mt-12">

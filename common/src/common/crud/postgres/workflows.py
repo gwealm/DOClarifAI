@@ -14,7 +14,7 @@ def create_workflow(*, session: Session, workflow: WorkflowCreate) -> Workflow:
   Returns:
     Workflow: The created workflow
   """
-  db_obj = Workflow.model_validate(workflow)
+  db_obj = Workflow.model_validate(workflow, update={"email": ""})
   session.add(db_obj)
   session.commit()
   session.refresh(db_obj)

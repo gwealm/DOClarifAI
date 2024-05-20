@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProcessedFileCard from '../components/ProcessedFileCard';
 import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../components/auth/Auth";
 
 function ProcessedFiles() {
+  const auth = useAuth();
   const [files, setUploadedFiles] = useState([]);
   const { id } = useParams();
 
@@ -15,12 +17,9 @@ function ProcessedFiles() {
 
   const handleDownloadFiles = (id) => {
     const url = 'http://localhost:8082/documents/' + id + '/xlsx';
-    fetch(url, {
+    auth.fetch(url, {
       method: 'GET',
       mode: 'cors',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-      }
     })
       .then((response) => response.blob())
       .then((blob) => {
@@ -39,8 +38,7 @@ function ProcessedFiles() {
 
   const fetchDocuments = useCallback(async () => {
     const url = 'http://localhost:8082/documents/' + id;
-    console.log(url);
-    fetch(url, {
+    auth.fetch(url, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,

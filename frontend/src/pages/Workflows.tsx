@@ -20,11 +20,10 @@ const Workflows = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:8085/', {
+            const response = await auth.fetch('http://localhost:8085/', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
                 },
             });
 
@@ -46,11 +45,10 @@ const Workflows = () => {
 
     const handleAddWorkflow = async (workflowName) => {
         try {
-            const response = await fetch('http://localhost:8085/', {
+            const response = await auth.fetch('http://localhost:8085/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'),
                 },
                 body: JSON.stringify({
                     name: workflowName,
@@ -59,7 +57,8 @@ const Workflows = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to add workflow');
+                console.error('Failed to add workflow');
+                return;
             }
 
             const newWorkflow = await response.json();
