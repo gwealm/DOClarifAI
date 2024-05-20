@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
+
 const LogIn = () => {
 
     const auth = useAuth();
     const navigate = useNavigate();
+    const {state} = useLocation();
     const [username, setUsername] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(state && state.errorMsg?state.errorMsg:null);
+
 
     const onClickLogIn = async () => {
         if (username == null || password == null) {
