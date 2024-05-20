@@ -13,6 +13,8 @@ from app.api.deps import get_mongo_db
 from sqlmodel import Session
 import re
 import asyncio
+from email.mime.text import MIMEText
+
 from pymongo.database import Database as MongoDB
 from common.models.workflows import Workflow
 from common.models.files import FileCreate, FileProcesingStatus
@@ -119,6 +121,52 @@ def document_extracted_callback_partial(mongo_db: MongoDB, workflow: Workflow,
     return store_structured_info
 
 
+def reply_to_email(service, msg_id, message, workflow_id):
+    """Reply to the email with a message.
+
+    :param service: Authorized Gmail API service instance.
+    :param msg_id: ID of the message to reply to.
+    :param message: The message to send.
+    :param workflow_id: The workflow ID to include in the sender email.
+    """
+    try:
+        # Get the original message
+        original_message = service.users().messages().get(userId="me", id=msg_id).execute()
+
+        # Extract the original sender
+        headers = original_message.get('payload', {}).get('headers', [])
+        original_sender = None
+        original_subject = None
+        for header in headers:
+            if header['name'] == 'From':
+                original_sender = header['value']
+            elif header['name'] == 'Subject':
+                original_subject = header['value']
+
+        # Create the reply message
+        reply_subject = f"Re: {original_subject}" if original_subject else "Re: Your email"
+        mime_message = MIMEText(message)
+        mime_message['To'] = original_sender
+        mime_message['Subject'] = reply_subject
+        mime_message['In-Reply-To'] = original_message['id']
+        mime_message['References'] = original_message['id']
+        mime_message['From'] = f'"Do Not Reply" <doclarifai+{workflow_id}@gmail.com>'
+
+        # Encode the message in base64
+        encoded_message = base64.urlsafe_b64encode(mime_message.as_bytes()).decode()
+
+        # Create the message body
+        body = {
+            'raw': encoded_message,
+            'threadId': original_message['threadId'],
+        }
+
+        # Send the message
+        send_message = service.users().messages().send(userId="me", body=body).execute()
+        print(f"Message sent: {send_message['id']}")
+
+    except HttpError as error:
+        print(f'An error occurred while replying with error: {error}')
 
 class GmailAutomationClient:
     def __init__(self):
@@ -156,11 +204,20 @@ class GmailAutomationClient:
                     workflow_id = int(match[0])
                     for attachment in message_attachments:
 
-                        file_path = store_unprocessed_file(workflow_id, attachment)
+                        #file_path = store_unprocessed_file(workflow_id, attachment)
                         with Session(engine) as session:
                             workflow: Workflow = crud_workflows.get_workflow_by_id(
                                 session=session, workflow_id=workflow_id)
+                            if not workflow:
+                                error_msg = "The workflow with the provided id doesn't exist"
+                                reply_to_email(service,msg_id,error_msg,workflow_id)
+                                break
+                            if workflow.email!=sender:
+                                error_msg = "The workflow with the provided id isn't configured to receive emails from this address"
+                                reply_to_email(service,msg_id,error_msg,workflow_id)
+                                break
 
+                            """
                             file_metadata = crud_files.create_file(session=session,
                                                                     file=FileCreate(
                                                                         workflow_id=workflow_id,
@@ -187,6 +244,7 @@ class GmailAutomationClient:
                                 case _:
                                     file_metadata.process_status = FileProcesingStatus.FAILED
                             session.commit()
+                            """
                         
                     service.users().messages().modify(userId="me", id=msg_id, body={'removeLabelIds': ['UNREAD']}).execute()
 
