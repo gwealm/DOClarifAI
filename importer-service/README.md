@@ -16,7 +16,7 @@ Lastly, you'll need an OAUTH2 token to interact with the Gmail API. To get this 
 python3 app/gmail_automation/generate_google_oauth2_token.py
 ```
 This requires that you have the client secrets credentials (crendentials.json) on the google_oauth2_token folder.
-To get this JSON, navigate to the [google cloud console](https://console.cloud.google.com/apis/credentials), log in as doclarifai@gmail.com, navigate to the WeClarifai project, click on the download button for the  Gmail automation OAuth2.0 Client and then click on DOWNLOAD JSON, storing the file inside google_oauth2_token with the name token.json
+To get this JSON, navigate to the [google cloud console](https://console.cloud.google.com/apis/credentials), log in as doclarifai@gmail.com, navigate to the WeClarifai project, click on the download button for the  Gmail automation OAuth2.0 Client and then click on DOWNLOAD JSON, storing the file inside google_oauth2_token with the name credentials.json
 
 
 ## Getting Started
