@@ -7,6 +7,7 @@ import LogIn from "./pages/LogIn";
 import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import AuthProvider from "./components/auth/AuthProvider";
+import Template from "./pages/Template"
 import { AboutUs } from "./pages/AboutUs";
 
 function Router() {
@@ -16,6 +17,7 @@ function Router() {
                 <Header />
                 <Routes location={location} key={location.pathname}>
                     <Route path="/workflows" element={<Workflows />} />
+                    <Route path="/templates" element={<Template  />} />
                     <Route path="/" element={<Workflows />} />
                     <Route path="/workflow/:id" element={<Workflow />} />
                     <Route

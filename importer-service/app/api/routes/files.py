@@ -73,8 +73,6 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
       "description", "netAmount", "quantity", "unitPrice", "materialNumber"
   ]
 
-  # Upload the file and initiate document extraction
-
   def document_extracted_callback_partial(mongo_db: MongoDB, workflow_id: int,
                                           file_metadata_id: int,
                                           file_path: str):
