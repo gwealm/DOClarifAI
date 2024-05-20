@@ -38,8 +38,7 @@ function ProcessedFiles() {
 
   const fetchDocuments = useCallback(async () => {
     const url = 'http://localhost:8082/documents/' + id;
-    console.log(url);
-    fetch(url, {
+    auth.fetch(url, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,

@@ -8,6 +8,7 @@ from common.models.workflows import Workflow
 from common.models.templates import Template
 from common.models.files import File, FileProcesingStatus
 from common.crud.postgres import files as crud_files
+from common.crud.postgres import workflows as crud_workflows
 from common.postgres import engine
 
 from sqlmodel import Session
@@ -49,7 +50,7 @@ def check_confidence_level(document_extraction: dict,
 def upload_document_extraction(
     mongo_db: Database,
     document_extraction: dict,
-    workflow: Workflow,
+    workflow_id: int,
     file_metadata_id: int,
     file_path: str,
 ):
@@ -59,28 +60,27 @@ def upload_document_extraction(
       level above the minimum required.
     If not, the document is stored in the file system.
     """
-  #TODO: Extract the minimum confidence level from the workflow configuration.
-  #TODO: In the future, we will substitute the filesystem storage with a cloud storage service.
-  min_confidence = 0.3  #TODO: obtain from workflow configuration
-  document_data = document_extraction["extraction"]
-  irregular_fields = check_confidence_level(document_data, min_confidence)
-
-  status: FileProcesingStatus
-
-  if irregular_fields:
-    status = FileProcesingStatus.FAILED
-    document_extraction["processed"] = False
-  else:
-    status = FileProcesingStatus.SUCCESS
-    os.remove(file_path)
-    document_extraction["processed"] = True
-
-  collection = mongo_db["documents"]
-
-  collection.insert_one(document_extraction)
-  dox_id = document_extraction["id"]
-
   with Session(engine) as session:
+    workflow:Workflow = crud_workflows.get_workflow_by_id(session=session, workflow_id=workflow_id)
+    min_confidence = workflow.confidence_interval  
+    document_data = document_extraction["extraction"]
+    irregular_fields = check_confidence_level(document_data, min_confidence)
+
+    status: FileProcesingStatus
+
+    if irregular_fields:
+      status = FileProcesingStatus.FAILED
+      document_extraction["processed"] = False
+    else:
+      status = FileProcesingStatus.SUCCESS
+      os.remove(file_path)
+      document_extraction["processed"] = True
+
+    collection = mongo_db["documents"]
+
+    collection.insert_one(document_extraction)
+    dox_id = document_extraction["id"]
+
     file_metadata = crud_files.get_file_by_id(session=session,
                                               file_id=file_metadata_id)
     file_metadata.process_status = status
