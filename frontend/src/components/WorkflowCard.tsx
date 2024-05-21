@@ -27,7 +27,7 @@ const WorkflowCard = ({ index, name, description, id, onDelete}) => {
             </div>
         </div>
         {/* Render NewWorkflowModal component if isModalOpen is true */}
-        {isDeleteModalOpen && <DeleteWorkflowModal onClose={toggleDeleteModal} onDelete={() => onDelete(index)} />}
+        {isDeleteModalOpen && <DeleteWorkflowModal onClose={toggleDeleteModal} onDelete={() => onDelete(index,id)} />}
         </>
     );
 }
