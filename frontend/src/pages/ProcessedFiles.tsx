@@ -62,31 +62,22 @@ function ProcessedFiles() {
       <div className="border-2 rounded-lg p-5 flex flex-col justify-between min-h-[600px]">
         <div>
           <div className="flex max-w-8xl items-center justify-between pl-6 mb-4">
-            <div className="flex lg:flex-1">
+            <div className="flex lg:flex-1 justify-left">
               <h2 className="text-lg font-semibold text-black">Name</h2>
             </div>
             <div className="flex lg:flex-1 justify-left">
               <h2 className="text-lg font-semibold text-black">Last Modified</h2>
+            </div>
+            <div className="flex lg:flex-1 justify-left">
+              <h2 className="text-lg font-semibold text-black">File Status</h2>
             </div>
           </div>
 
           <div className="border-b border-blue-200 mb-4"></div>
 
           {files.map((file, index) => (
-            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} onDownload={handleDownloadFiles} />
+            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} processed_status={file.process_status} onDownload={handleDownloadFiles} />
           ))}
-        </div>
-
-        <div className="flex justify-center space-x-3 pt-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            View logs
-          </button>
-          <button className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Start Workflow
-          </button>
-          <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Stop Workflow
-          </button>
         </div>
       </div>
     </div>

@@ -108,6 +108,9 @@ function Workflow() {
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
       <div className="flex max-w-8xl items-center justify-between pl-6">
         <div className="flex lg:flex-1 items-center">
+          <Link to={`/workflows`} className="mr-4" style={{ fontSize: '1.5rem' }}>
+            &larr;
+          </Link>
           <h2 className="text-lg font-semibold text-black">{workflow.name}</h2>
           <h3 className="text-md font-semibold text-gray-500 ml-4">{workflow.description}</h3>
           <FontAwesomeIcon icon={faPenToSquare} className="ml-4" />
@@ -165,7 +168,7 @@ function Workflow() {
         )}
       </div>
 
-      <div className="flex justify-center space-x-3 ml-4">
+      <div className="flex justify-center space-x-3 ml-4 py-7">
         <button className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Start Workflow
         </button>
