@@ -29,13 +29,14 @@ export function AboutUs() {
             name: "Rui Pires",
             role: "CTO",
             imagePath: "/rui.png",
+            linkedin: "https://www.linkedin.com/in/rui-piress/",
         },        {
             name: "Luísa Salvador",
             role: "CPO",
             imagePath: "/luisa.png",
         },        {
             name: "Martim Videira",
-            role: "CPO",
+            role: "Developer",
             imagePath: "/martim.png",
         },        {
             name: "Bárbara Caravalho",
