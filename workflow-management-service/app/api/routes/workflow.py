@@ -43,9 +43,6 @@ def delete_workflow(session: PostgresDB, current_user: CurrentUser,
   """
   Delete the workflow with the provided ID.
   """
-  # TODO: What to do with deleted files
-  # Maybe make the user consume the processed files before deleting workflow
-  # Or on delete return all files
   workflow = session.get(Workflow, workflow_id)
   if not workflow:
     raise HTTPException(status_code=404, detail="Workflow not found")
@@ -53,7 +50,10 @@ def delete_workflow(session: PostgresDB, current_user: CurrentUser,
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
 
-  #TODO: Delete all  data related with the user (workflows, documents, etc)
+  #Delete all of the workflow's files
+  for file in workflow.files:
+    session.delete(file)
+  
   session.delete(workflow)
   session.commit()
   return {"message": "Workflow deleted successfully"}

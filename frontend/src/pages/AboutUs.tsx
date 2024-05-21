@@ -3,11 +3,6 @@ import { ParallaxGlare } from "../components/utils/ParallaxGlare";
 export function AboutUs() {
     const developers = [
         {
-            name: "João Malva",
-            role: "CEO",
-            imagePath: "/joao.png",
-        },
-        {
             name: "Guilherme Almeida",
             role: "CEO",
             linkedin: "https://www.linkedin.com/in/limwa/",
@@ -17,23 +12,27 @@ export function AboutUs() {
             name: "Maria Monteiro",
             role: "CSO",
             imagePath: "/maria.png",
-        },        {
-            name: "Miguel Teixeira",
-            role: "CSO",
-            imagePath: "/jose.png",
-        },        {
+        },      {
             name: "Pedro Gomes",
             role: "CTO",
             imagePath: "/pedro.png",
-        },        {
-            name: "Rui Pires",
-            role: "CTO",
-            imagePath: "/rui.png",
-            linkedin: "https://www.linkedin.com/in/rui-piress/",
-        },        {
+        },       {
             name: "Luísa Salvador",
             role: "CPO",
             imagePath: "/luisa.png",
+        },        {
+            name: "Miguel Teixeira",
+            role: "Strategy Analyst",
+            imagePath: "/jose.png",
+        },           {
+            name: "Rui Pires",
+            role: "Developer",
+            imagePath: "/rui.png",
+            linkedin: "https://www.linkedin.com/in/rui-piress/",
+        },        {
+            name: "João Malva",
+            role: "Developer",
+            imagePath: "/joao.png",
         },        {
             name: "Martim Videira",
             role: "Developer",

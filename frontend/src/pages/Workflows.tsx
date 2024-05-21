@@ -73,10 +73,6 @@ const Workflows = () => {
         try {
             const response = await auth.fetch(`http://localhost:8085/${workflowId}`, {
                 method: 'DELETE',
-                headers: {
-                    'accept': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwtToken'), // Include the authorization header
-                },
             });
     
             if (!response.ok) {
