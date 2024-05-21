@@ -88,3 +88,20 @@ def add_email_to_workflow(session: PostgresDB, current_user: CurrentUser,
   workflow.email = email
   session.commit()
   return {"message": "Email added successfully"}
+ 
+@router.put("/{workflow_id}/confidence_interval")
+def update_confidence_interval(session: PostgresDB, current_user: CurrentUser,
+                               workflow_id: int, confidence_interval: float) -> Any:
+  """
+  Update the confidence interval of the workflow.
+  """
+  workflow = session.get(Workflow, workflow_id)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+
+  workflow.confidence_interval = confidence_interval
+  session.commit()
+  return {"message": "Confidence interval updated successfully"}

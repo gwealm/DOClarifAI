@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProcessedFileCard from '../components/ProcessedFileCard';
-import { faPenToSquare, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from "../components/auth/Auth";
 
 function ProcessedFiles() {
   const auth = useAuth();
   const [files, setUploadedFiles] = useState([]);
   const { id } = useParams();
-
-  const handleDeleteFiles = (index) => {
-    const updatedFiles = files.filter((_, i) => i !== index);
-    setUploadedFiles(updatedFiles);
-  };
 
   const handleDownloadFiles = (id) => {
     const url = 'http://localhost:8082/documents/' + id + '/xlsx';
@@ -40,9 +33,6 @@ function ProcessedFiles() {
     const url = 'http://localhost:8082/documents/' + id;
     auth.fetch(url, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
-      }
     })
       .then((response) => response.json())
       .then((data) => {
@@ -62,14 +52,10 @@ function ProcessedFiles() {
     <div className="mx-20 my-5">
       <div className="flex max-w-8xl items-center justify-between pl-6 mb-4">
         <div className="flex lg:flex-1 items-center">
+          <Link to={`/workflow/${id}`} className="mr-4" style={{ fontSize: '1.5rem' }}>
+            &larr;
+          </Link>
           <h2 className="text-lg font-semibold text-black">Processed Files</h2>
-          <FontAwesomeIcon icon={faPenToSquare} className="ml-4" />
-        </div>
-        <div className="flex lg:flex justify-left">
-          <button className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-[#5583C5] bg-opacity-80 border border-gray-300 hover:bg-opacity-50 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-            Save Changes
-            <FontAwesomeIcon icon={faFloppyDisk} className="ml-2" style={{ fontSize: '24px' }} />
-          </button>
         </div>
       </div>
 
@@ -87,7 +73,7 @@ function ProcessedFiles() {
           <div className="border-b border-blue-200 mb-4"></div>
 
           {files.map((file, index) => (
-            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} onDelete={handleDeleteFiles} onDownload={handleDownloadFiles} />
+            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} onDownload={handleDownloadFiles} />
           ))}
         </div>
 

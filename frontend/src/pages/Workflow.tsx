@@ -1,6 +1,6 @@
-import { DragDrop } from '../components/DragDrop.tsx'
+import { DragDrop } from '../components/DragDrop.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFloppyDisk, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { Slider } from 'antd';
 import type { SliderSingleProps } from 'antd';
 import { useParams, Link } from 'react-router-dom';
@@ -21,16 +21,36 @@ const marks: SliderSingleProps['marks'] = {
   },
 };
 
+interface Workflow {
+  name: string;
+  description: string;
+  email: string;
+  confidence_interval: number;
+}
+
 function Workflow() {
-  const [workflow, setWorkflow] = useState({} as Workflow);
+  const [workflow, setWorkflow] = useState<Workflow>({} as Workflow);
   const [email, setEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [confidence, setConfidence] = useState(70);
+  const [confidence, setConfidence] = useState<number | null>(null);
   const { id } = useParams<{ id: string }>();
   const auth = useAuth();
 
-  const handleSliderChange = (value: number) => {
+  const handleSliderChange = async (value: number) => {
     setConfidence(value);
+    try {
+      const response = await auth.fetch(`http://localhost:8085/${id}/confidence_interval?confidence_interval=${value / 100}`, {
+        method: 'PUT',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update confidence interval');
+      }
+
+      console.log('Confidence interval updated:', await response.json());
+    } catch (error) {
+      console.error('Error updating confidence interval:', error);
+    }
   };
 
   const fetchWorkflow = useCallback(async () => {
@@ -50,6 +70,7 @@ function Workflow() {
       const data = await response.json();
       console.log(data);
       setWorkflow(data);
+      setConfidence(data.confidence_interval * 100);  // Set slider to the fetched confidence_interval
     } catch (error) {
       console.error('Error fetching workflow:', error);
     }
@@ -104,7 +125,7 @@ function Workflow() {
         </select>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 py-7">
         <label className="text-md font-semibold flex self-start text-black pl-6">
           Add Email
         </label>
@@ -133,14 +154,15 @@ function Workflow() {
         )}
       </div>
 
-
       <DragDrop workflowId={id} />
 
       <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
         <label className="text-md font-semibold flex text-black pl-6">
           Minimum Confidence Level Required
         </label>
-        <Slider marks={marks} range defaultValue={confidence} className="w-2/3" onChange={handleSliderChange} />
+        {confidence !== null && (
+          <Slider marks={marks} defaultValue={confidence} className="w-2/3" onChange={handleSliderChange} />
+        )}
       </div>
 
       <div className="flex justify-center space-x-3 ml-4">

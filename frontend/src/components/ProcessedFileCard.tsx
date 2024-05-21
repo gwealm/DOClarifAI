@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import DeleteWorkflowModal from "./DeleteWorkflowModal";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
-const ProcessedFileCard = ({ index, dox_id, name, date, onDelete, onDownload }) => {
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+const ProcessedFileCard = ({ index, dox_id, name, date, onDownload }) => {
     // const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
     
-    const toggleDeleteModal = () => {
-        setIsDeleteModalOpen(!isDeleteModalOpen);
-    }
 
     return (
         <>
@@ -26,13 +20,7 @@ const ProcessedFileCard = ({ index, dox_id, name, date, onDelete, onDownload }) 
             <div className="cursor-pointer hover:cursor-pointer mr-4" onClick={() => onDownload(dox_id)}>
                 <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
             </div>
-            <div className="cursor-pointer hover:cursor-pointer" onClick={toggleDeleteModal}>
-                <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '24px' }} />
-            </div>
-            
         </div>
-        {/* Render NewWorkflowModal component if isModalOpen is true */}
-        {isDeleteModalOpen && <DeleteWorkflowModal onClose={toggleDeleteModal} onDelete={() => onDelete(index)} />}
         </>
     );
 }
