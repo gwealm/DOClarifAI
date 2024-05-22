@@ -69,10 +69,23 @@ const Workflows = () => {
         }
     };
 
-    const handleDeleteWorkflow = (index) => {
-        const updatedWorkflows = [...workflows];
-        updatedWorkflows.splice(index, 1); // Remove the workflow at the specified index
-        setWorkflows(updatedWorkflows); // Update the workflows state
+    const handleDeleteWorkflow = async (index, workflowId) => {
+        try {
+            const response = await auth.fetch(`http://localhost:8085/${workflowId}`, {
+                method: 'DELETE',
+            });
+    
+            if (!response.ok) {
+                console.error('Failed to delete workflow');
+                return;
+            }
+    
+            const updatedWorkflows = [...workflows];
+            updatedWorkflows.splice(index, 1); // Remove the workflow at the specified index
+            setWorkflows(updatedWorkflows); // Update the workflows state
+        } catch (error) {
+            console.error('Error deleting workflow:', error);
+        }
     };
 
     return (
