@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 
 from common.crud.postgres import schemas as crud_schemas
 from common.models.schemas import (Schema, SchemaCreate, SchemaIn)
-from common.deps import PostgresDB, CurrentUser
+from common.deps import PostgresDB, CurrentUser, DoxClient
 
 
 router = APIRouter(prefix="/schema")
@@ -57,3 +57,17 @@ def delete_schema(session: PostgresDB, current_user: CurrentUser,
   session.delete(schema)
   session.commit()
   return {"message": "schema deleted successfully"}
+
+@router.get("/{schema_id}")
+async def get_schema(*,schema_id: int, current_user: CurrentUser, dox_client: DoxClient, db: PostgresDB) -> Any:
+    """
+    Get the schema with the provided ID.
+    """
+    # Assuming current_user.schemas is a relationship property
+    schema = db.query(Schema).filter(Schema.id == schema_id, Schema.user_id == current_user.id).first()
+    
+    if not schema:
+        raise HTTPException(status_code=404, detail="schema not found")
+    
+    schema = await dox_client.get_schema(schema.schema_id_dox)
+    return schema
