@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import AuthProvider from "./components/auth/AuthProvider";
 import Template from "./pages/Template"
+import ProcessedFile from "./pages/ProcessedFile"
+
 import { AboutUs } from "./pages/AboutUs";
 
 function Router() {
@@ -23,6 +25,10 @@ function Router() {
                     <Route
                         path="/workflow/:id/processed-files"
                         element={<ProcessedFiles />}
+                    />
+                    <Route
+                        path="/workflow/:workflowId/processed-files/:fileId"
+                        element={<ProcessedFile />}
                     />
                     <Route path="/about-us" element={<AboutUs />} />
                     <Route path="/login" element={<LogIn />} />

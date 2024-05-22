@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from "../components/auth/Auth";
 import Select from 'react-select';
 
+
 const Template = () => {
+  const auth = useAuth();
   const [fields, setFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('');
@@ -13,6 +16,7 @@ const Template = () => {
   const [editFieldName, setEditFieldName] = useState('');
   const [editFieldType, setEditFieldType] = useState('');
   const [editFieldConfig, setEditFieldConfig] = useState({});
+
 
   const fieldTypes = ['string', 'number', 'date', 'discount', 'currency', 'country/region'];
   const dateFormats = [
@@ -24,12 +28,26 @@ const Template = () => {
     { value: 'MM/dd/yyyy', label: 'MM/dd/yyyy' },
   ];
 
+
+
   const handleAddField = () => {
     if (newFieldName && newFieldType) {
       setFields([...fields, { name: newFieldName, type: newFieldType, config: newFieldConfig }]);
       setNewFieldName('');
       setNewFieldType('');
       setNewFieldConfig({});
+    }
+  };
+
+  const loadProtectedDocument = async (documentUrl) => {
+    try {
+      const response = await auth.fetch(documentUrl,{
+        mode:'no-cors'
+      });
+      const buffer = await response.arrayBuffer();
+      setDocumentBuffer(buffer);
+    } catch (error) {
+      console.error('Error loading the document:', error);
     }
   };
 
@@ -82,6 +100,10 @@ const Template = () => {
         return null;
     }
   };
+
+  useEffect(() => {
+    loadProtectedDocument("https://pspdfkit.com/downloads/pspdfkit-web-demo.pdf");
+  }, []);
 
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
@@ -168,6 +190,7 @@ const Template = () => {
           </button>
         </div>
       </div>
+
     </div>
   );
 };

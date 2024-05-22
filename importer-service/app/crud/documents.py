@@ -51,8 +51,7 @@ def upload_document_extraction(
     mongo_db: Database,
     document_extraction: dict,
     workflow_id: int,
-    file_metadata_id: int,
-    file_path: str,
+    file_metadata_id: int
 ):
   """
     Stores the extracted information from a document in the database.
@@ -73,7 +72,6 @@ def upload_document_extraction(
       document_extraction["processed"] = False
     else:
       status = FileProcesingStatus.SUCCESS
-      os.remove(file_path)
       document_extraction["processed"] = True
 
     collection = mongo_db["documents"]
@@ -85,7 +83,5 @@ def upload_document_extraction(
                                               file_id=file_metadata_id)
     file_metadata.process_status = status
     file_metadata.dox_id = dox_id
-    if status == FileProcesingStatus.SUCCESS:
-      file_metadata.unprocessed_path = None
     session.add(file_metadata)
     session.commit()

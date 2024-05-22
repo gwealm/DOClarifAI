@@ -7,7 +7,7 @@ from app.api.routes import workflow
 from app.api.routes import file
 from app.api.routes import template
 
-#workflow.router.include_router(file.router)
+workflow.router.include_router(file.router)
 
 api_router = APIRouter()
 api_router.include_router(workflow.router)

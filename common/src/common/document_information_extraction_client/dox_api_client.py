@@ -5,10 +5,10 @@
 import json
 import logging
 from typing import List, Union
-from app.http_client.http_client_base import CommonClient
+from common.http_client.http_client_base import CommonClient
 from .constants import API_FIELD_CLIENT_ID, API_FIELD_RETURN_NULL, API_REQUEST_FIELD_FILE, API_REQUEST_FIELD_OPTIONS
-from fastapi import UploadFile, HTTPException, BackgroundTasks
-from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT
+from fastapi import UploadFile, HTTPException, Response
+from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT, DOCUMENT_FILE_ENDPOINT
 from .helpers import create_document_options
 
 
@@ -150,3 +150,13 @@ class DoxApiClient(CommonClient):
     logging.debug('Document %s processed!', document_id)
     logging.debug(extracted_document)
     document_extracted_callback(extracted_document)
+    return extracted_document
+  
+  async def get_original_uploaded_document(self, document_id):
+    file_response =  await self.get(DOCUMENT_FILE_ENDPOINT.format(document_id=document_id))
+    file_response.raise_for_status()
+
+    content = file_response.content
+    content_type = file_response.headers.get('Content-Type')
+
+    return Response(content=content, media_type=content_type)

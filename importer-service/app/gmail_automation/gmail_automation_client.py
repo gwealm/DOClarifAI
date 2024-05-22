@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import tempfile
 from starlette.datastructures import Headers as Headers
-from app.document_information_extraction_client.dox_api_client import DoxApiClient
+from common.document_information_extraction_client.dox_api_client import DoxApiClient
 from app.core.config import settings
 import app.crud.documents as crud_documents
 from app.api.deps import get_mongo_db
@@ -21,7 +21,6 @@ from common.models.files import FileCreate, FileProcesingStatus
 from common.crud.postgres import workflows as crud_workflows
 from common.crud.postgres import files as crud_files
 from common.postgres import engine
-from pathlib import Path
 
 
 
@@ -97,33 +96,14 @@ def _get_message_info(service, user_id, msg_id):
     return sender_email, receiver, attachment_files
         
 
-def store_unprocessed_file(workflow_id: int, file: UploadFile):
-  workflow_dir = Path(f"files/{workflow_id}")
-  workflow_dir.mkdir(parents=True, exist_ok=True)
-
-  file_path = workflow_dir / file.filename
-
-  try:
-    with open(file_path, "wb") as f:
-      content = file.file.read()  # Read the file content
-      f.write(content)
-  except Exception as e:
-    print(f"An error occurred while saving the file: {e}")
-    return ""
-
-  return str(file_path)
-
-
 def document_extracted_callback_partial(mongo_db: MongoDB, workflow_id: int,
-                                        file_metadata_id: int,
-                                        file_path: str):
+                                        file_metadata_id: int):
 
     def store_structured_info(document_extraction: dict):
         return crud_documents.upload_document_extraction(mongo_db,
                                                         document_extraction,
                                                         workflow_id,
-                                                        file_metadata_id,
-                                                        file_path)
+                                                        file_metadata_id)
 
     return store_structured_info
 
@@ -211,7 +191,6 @@ class GmailAutomationClient:
                     workflow_id = int(match[0])
                     for attachment in message_attachments:
 
-                        file_path = store_unprocessed_file(workflow_id, attachment)
                         with Session(engine) as session:
                             workflow: Workflow = crud_workflows.get_workflow_by_id(
                                 session=session, workflow_id=workflow_id)
@@ -227,11 +206,10 @@ class GmailAutomationClient:
                             file_metadata = crud_files.create_file(session=session,
                                                                     file=FileCreate(
                                                                         workflow_id=workflow_id,
-                                                                        name=attachment.filename,
-                                                                        unprocessed_path=file_path))
+                                                                        name=attachment.filename))
 
                             document_extracted_callback = document_extracted_callback_partial(
-                                mongo_db, workflow.id, file_metadata.id, file_metadata.unprocessed_path
+                                mongo_db, workflow.id, file_metadata.id
                             )
 
                             def create_background_task(get_extraction_for_document, document_id,

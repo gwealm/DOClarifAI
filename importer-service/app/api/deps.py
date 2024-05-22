@@ -5,7 +5,7 @@ from typing import Annotated
 from pymongo.database import Database
 from fastapi import Depends
 from app.core.config import settings
-from app.document_information_extraction_client.dox_api_client import DoxApiClient
+from common.document_information_extraction_client.dox_api_client import DoxApiClient
 from app.core.mongo_db import client as mongo_client
 
 mongo_db: Database = mongo_client[settings.MONGO_DB]

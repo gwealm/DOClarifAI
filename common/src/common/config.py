@@ -37,6 +37,11 @@ class Settings(BaseSettings):
   PRIVATE_KEY: str | None = read_key_from_file(PRIVATE_KEY_FILE)
   PUBLIC_KEY: str | None = read_key_from_file(PUBLIC_KEY_FILE)
   JWT_ALGORITHM: str | None = "ES256"
+  
+  SAP_CLIENT_ID: str|None = os.getenv("SAP_CLIENT_ID")
+  SAP_CLIENT_SECRET: str|None = os.getenv("SAP_CLIENT_SECRET")
+  SAP_BASE_URL: str|None = os.getenv("SAP_BASE_URL")
+  SAP_UAA_URL: str|None = os.getenv("SAP_UAA_URL")
 
   # 60 minutes * 24 hours * 8 days = 8 days
   ACCESS_TOKEN_EXPIRE_MINUTES: int | None = 60 * 24 * 8
