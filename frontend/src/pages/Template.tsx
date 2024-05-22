@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import { useAuth } from "../components/auth/Auth";
 
 
 const Template = () => {
@@ -9,6 +10,7 @@ const Template = () => {
     schemaId: '',
     templateType: ''
   });
+  const auth = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +22,31 @@ const Template = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+  };
+
+  useEffect(() => {
+    fetchSchemas();
+  }, []);
+
+  const fetchSchemas = async () => {
+    try {
+      const response = await auth.fetch(`http://localhost:8085/schema/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch workflow');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setSchemas(data);
+    } catch (error) {
+      console.error('Error fetching schemas:', error);
+    }
   };
 
   return (

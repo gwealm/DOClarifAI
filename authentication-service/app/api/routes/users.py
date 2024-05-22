@@ -4,9 +4,11 @@
 from typing import Any
 from fastapi import APIRouter, HTTPException
 from common.crud.postgres import users as crud_users
+from common.crud.postgres import schemas as crud_schemas
 from common.deps import (
     CurrentUser,
     PostgresDB,
+    DoxClient
 )
 from common.models.users import (User, UserCreate, UserPublic)
 
@@ -14,7 +16,7 @@ router = APIRouter()
 
 
 @router.post("/", response_model=UserPublic)
-def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
+async def create_user(*, session: PostgresDB, user_in: UserCreate, dox_client:DoxClient) -> Any:
   """
   Create a new user.
   """
@@ -27,6 +29,7 @@ def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
     )
   user_create = UserCreate.model_validate(user_in)
   user = crud_users.create_user(session=session, user_create=user_create)
+  await crud_schemas.add_default_schemas(session=session, user=user,dox_client=dox_client)
   return user
 
 
