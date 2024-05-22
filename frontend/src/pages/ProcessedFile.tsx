@@ -377,10 +377,11 @@ const ProcessedFile = () => {
           <div>
             <div>
               <h2>Header fields</h2>
-              <ul>
+              <ul className="divide-y divide-gray-300">
                 {fields["headerFields"].map((field, index) => {
                   return (
                     <li key={"headerField" + "-" + index} className="mb-2">
+                        <div>
                       <span className="mr-2">{field.name}: </span>
                       {selectedFieldLevel === "headerFields" && selectedOuterFieldIdx === index ? (
                         renderInputByType("headerFields", index, null)
@@ -393,6 +394,9 @@ const ProcessedFile = () => {
                       >
                         Edit
                       </button>
+                      </div>
+                      <p>Confidence: {Math.round(field.confidence*100 * 100) / 100}%</p>
+
                     </li>
                   );
                 })}
@@ -402,11 +406,12 @@ const ProcessedFile = () => {
               <h2>Line items</h2>
               <div>
                 {fields["lineItems"].map((lineItemList, lineItemListIdx) => (
-                  <ul key={"lineItem" + "-" + lineItemListIdx} className="mb-4">
+                  <ul key={"lineItem" + "-" + lineItemListIdx} className="divide-y divide-gray-300 mb-4">
                     <p>Line item {lineItemListIdx + 1}</p>
                     {lineItemList.map((lineItem, lineItemIdx) => {
                       return (
                         <li key={"lineItem" + "-" + lineItemListIdx + "-" + lineItemIdx} className="mb-2">
+                            <div>
                           <span className="mr-2">{lineItem.name}: </span>
                           {selectedFieldLevel === "lineItems" && selectedOuterFieldIdx === lineItemListIdx && selectedInnerFieldIdx == lineItemIdx ? (
                             renderInputByType("lineItems", lineItemListIdx, lineItemIdx)
@@ -419,6 +424,8 @@ const ProcessedFile = () => {
                           >
                             Edit
                           </button>
+                            </div>
+                            <p>Confidence: {Math.round(lineItem.confidence * 100 * 100) / 100}%</p>
                         </li>
                       );
                     })}
