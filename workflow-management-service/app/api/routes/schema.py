@@ -38,9 +38,7 @@ async def get_schemas(current_user: CurrentUser, dox_client: DoxClient) -> Any:
   Get user schemas.
   """
   schemas =  current_user.schemas
-  dox_ids = [schema.schema_id_dox for schema in schemas]
-  dox_schemas = await dox_client.get_schemas(dox_ids)
-  return dox_schemas
+  return schemas
 
 
 @router.delete("/{schema_id}")
