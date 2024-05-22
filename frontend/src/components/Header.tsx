@@ -27,7 +27,7 @@ const Header = () => {
                                 Workflows
                             </Link>
                             <Link to="/templates" className="text-sm font-semibold leading-6 text-gray-900">
-                                Templates
+                                Schemas
                             </Link>
                         </div>
                         <div className="flex lg:flex-1 justify-end items-center space-x-8">

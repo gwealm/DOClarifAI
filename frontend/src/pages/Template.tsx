@@ -108,9 +108,9 @@ const Template = () => {
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
-        <h2 className="text-xl font-semibold text-gray-800">Template Configuration</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Schemas Configuration</h2>
         <button className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-          Save Changes
+          Save Schema
           <FontAwesomeIcon icon={faFloppyDisk} className="ml-2" style={{ fontSize: '16px' }} />
         </button>
       </div>

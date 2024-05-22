@@ -18,6 +18,7 @@ from common.models.users import User
 from common.models.workflows import Workflow
 from common.models.templates import Template
 from common.models.files import File
+from common.models.schemas import Schema
 
 from common.models.tokens import TokenPayload
 from common.document_information_extraction_client.dox_api_client import DoxApiClient
