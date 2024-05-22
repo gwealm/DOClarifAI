@@ -2,20 +2,25 @@
   This file contains the Pydantic models for the Template entity.
 """
 from sqlmodel import Field, SQLModel, Relationship
-from sqlalchemy import JSON, Column
 from pydantic import BaseModel
 from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
   from .users import User
+  from .schemas import Schema
 
 
-class TemplateIn(BaseModel):
+class TemplateBase(BaseModel):
   name: str
   description: str
-  schema: dict
+  schema_id: int
 
-class TemplateCreate(TemplateIn):
-  user_id: int | None
+class TemplateIn(TemplateBase):
+  template_definition:dict
+
+
+class TemplateCreate(TemplateBase):
+  user_id: int
+  template_id_dox:str
 
 
 class Template(SQLModel, table=True):
@@ -25,6 +30,8 @@ class Template(SQLModel, table=True):
   id: int | None = Field(default=None, primary_key=True)
   name: str
   description: str
-  schema: dict = Field(sa_column=Column(JSON))
-  user_id: int | None = Field(default=None, foreign_key="user.id")
+  template_id_dox:str
+  schema_id: int = Field(foreign_key="schema.id")
+  schema: Optional["Schema"] = Relationship(back_populates="templates")
+  user_id: int = Field(foreign_key="user.id")
   user: Optional["User"] = Relationship(back_populates="templates")

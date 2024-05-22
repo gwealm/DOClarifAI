@@ -8,7 +8,6 @@ from common.crud.postgres import templates as crud_templates
 from common.models.templates import (Template, TemplateCreate, TemplateIn)
 from common.deps import PostgresDB, CurrentUser
 
-from sqlmodel import select
 
 router = APIRouter(prefix="/template")
 
@@ -23,9 +22,11 @@ def create_template(
   """
   Create a new template.
   """
-  # TODO: less verbose way of doing this
   template_create = TemplateCreate.model_construct(**template_in.model_dump(),
-                                                   user_id=current_user.id)
+                                                   user_id=current_user.id
+                                                   #TODO: template_id_dox=...
+
+                                                  )
   template_create = Template.model_validate(template_create)
   template = crud_templates.create_template(session=session,
                                             template=template_create)
@@ -33,16 +34,11 @@ def create_template(
 
 
 @router.get("/")
-def get_templates(session: PostgresDB, user_only: bool | None,
-                  current_user: CurrentUser) -> list[Template]:
+def get_templates(current_user: CurrentUser) -> list[Template]:
   """
-  Get templates.
+  Get user templates.
   """
-  #TODO: add option to filter query by user templates
-  #TODO: Paginate Results
-  if user_only:
-    return current_user.templates
-  return session.exec(select(Template)).fetchall()
+  return current_user.templates
 
 
 @router.delete("/{template_id}")
@@ -51,10 +47,9 @@ def delete_template(session: PostgresDB, current_user: CurrentUser,
   """
   Delete the template with the provided ID.
   """
-  # TODO: What to do with deleted templates
   template = session.get(Template, template_id)
   if not template:
-    raise HTTPException(status_code=404, detail="Tempalte not found")
+    raise HTTPException(status_code=404, detail="Template not found")
   elif template.user != current_user:
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
