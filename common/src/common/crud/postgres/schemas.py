@@ -29,3 +29,6 @@ def create_schema(*, session: Session, schema: SchemaCreate) -> Schema:
     session.commit()
     session.refresh(db_obj)
   return db_obj
+
+#def add_default_schemas(*, session:Session, user:User):
+    

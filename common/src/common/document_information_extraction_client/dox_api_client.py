@@ -8,7 +8,7 @@ from typing import List, Union
 from common.http_client.http_client_base import CommonClient
 from .constants import API_FIELD_CLIENT_ID, API_FIELD_RETURN_NULL, API_REQUEST_FIELD_FILE, API_REQUEST_FIELD_OPTIONS
 from fastapi import UploadFile, HTTPException, Response
-from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT, DOCUMENT_FILE_ENDPOINT
+from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT, DOCUMENT_FILE_ENDPOINT,SCHEMAS_ENDPOINT, SCHEMA_ID_ENDPOINT
 from .helpers import create_document_options
 
 
@@ -160,8 +160,44 @@ class DoxApiClient(CommonClient):
     content_type = file_response.headers.get('Content-Type')
 
     return Response(content=content, media_type=content_type)
-  
+ 
   async def save_ground_truth(self, document_id, payload):
     response = await self.post(DOCUMENT_ID_ENDPOINT.format(document_id=document_id),json=payload)
+    response.raise_for_status()
+    return response.json()
+  
+  async def get_all_schemas(self):
+    response = await self.get(SCHEMAS_ENDPOINT+'?clientId=default')
+    response.raise_for_status()
+    return response.json()
+
+  async def get_schemas(self,dox_ids):
+    response = await self.get(SCHEMAS_ENDPOINT+'?clientId=default')
+    response.raise_for_status()
+    schemas = response.json()
+    return [schema for schema in schemas if schema['id'] in dox_ids]
+
+  async def get_schema(self, schema_id):
+    response = await self.get(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}?clientId=default')
+    response.raise_for_status()
+    return response.json()
+
+  async def delete_schema(self, schema_id):
+    response = await self.delete(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def create_schema(self, payload):
+    response = await self.post(SCHEMA_ID_ENDPOINT, json=payload)
+    response.raise_for_status()
+    return response.json()
+
+  async def update_schema(self, schema_id, payload):
+    response = await self.put(SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)+'?clientId=default', json=payload)
+    response.raise_for_status()
+    return response.json()
+
+  async def get_schema_first_version(self, schema_id):
+    response = await self.get(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1?clientId=default')
     response.raise_for_status()
     return response.json()

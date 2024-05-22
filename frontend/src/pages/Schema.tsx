@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from "../components/auth/Auth";
 import Select from 'react-select';
 
 
 const Schema = () => {
-  const auth = useAuth();
   const [fields, setFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('');
@@ -36,18 +34,6 @@ const Schema = () => {
       setNewFieldName('');
       setNewFieldType('');
       setNewFieldConfig({});
-    }
-  };
-
-  const loadProtectedDocument = async (documentUrl) => {
-    try {
-      const response = await auth.fetch(documentUrl,{
-        mode:'no-cors'
-      });
-      const buffer = await response.arrayBuffer();
-      setDocumentBuffer(buffer);
-    } catch (error) {
-      console.error('Error loading the document:', error);
     }
   };
 
@@ -101,16 +87,12 @@ const Schema = () => {
     }
   };
 
-  useEffect(() => {
-    loadProtectedDocument("https://pspdfkit.com/downloads/pspdfkit-web-demo.pdf");
-  }, []);
-
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
         <h2 className="text-xl font-semibold text-gray-800">Schema Configuration</h2>
         <button className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-          Save Changes
+          Save Schema
           <FontAwesomeIcon icon={faFloppyDisk} className="ml-2" style={{ fontSize: '16px' }} />
         </button>
       </div>

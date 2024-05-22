@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 
 from common.crud.postgres import schemas as crud_schemas
 from common.models.schemas import (Schema, SchemaCreate, SchemaIn)
-from common.deps import PostgresDB, CurrentUser
+from common.deps import PostgresDB, CurrentUser, DoxClient
 
 
 router = APIRouter(prefix="/schema")
@@ -33,11 +33,14 @@ def create_schema(
 
 
 @router.get("/")
-def get_schemas(current_user: CurrentUser) -> list[Schema]:
+async def get_schemas(current_user: CurrentUser, dox_client: DoxClient) -> Any:
   """
   Get user schemas.
   """
-  return current_user.schemas
+  schemas =  current_user.schemas
+  dox_ids = [schema.schema_id_dox for schema in schemas]
+  dox_schemas = await dox_client.get_schemas(dox_ids)
+  return dox_schemas
 
 
 @router.delete("/{schema_id}")
