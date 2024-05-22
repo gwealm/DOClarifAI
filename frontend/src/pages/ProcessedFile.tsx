@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useAuth } from "../components/auth/Auth";
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
@@ -13,26 +15,28 @@ const ProcessedFile = () => {
 
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [selectedFieldKey, setSelectedFieldKey] = useState(null);
+  const [selectedFieldLevel, setSelectedFieldLevel] = useState(null);
+  const [selectedOuterFieldIdx, setSelectedOuterFieldIdx] = useState(null);
+  const [selectedInnerFieldIdx, setSelectedInnerFieldIdx] = useState(null);
   const [selection, setSelection] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [startCoords, setStartCoords] = useState(null);
-  const [fields, setFields] = useState({
-    customerName: { type: "Text", value: "John Doe", x: 0, y: 0, w: 1, h: 1 },
-    totalAmount:  { type: "Currency", value: 100.0, x: 0, y: 0.5, w: 1, h: 0.5 },
-    invoiceDate:  { type: "Date", value: new Date(), x: 0, y: 0.5, w: 1, h: 0.5 }
-  });
+  const [fields, setFields] = useState(
+    {
+        "headerFields": [],
+        "lineItems": []
+    }
+  );
   const docViewerRef = useRef(null);
 
   useEffect(() => {
-    // Download the PDF file
-    fetchPdf();
+    fetchExtractedInformation();
+    fetchDocument();
   }, []);
 
-  const fetchPdf = async () => {
+  const fetchDocument = async () => {
     try {
       const url = `http://localhost:8085/${workflowId}/file/${fileId}/original-file`;
-      console.log(url)
       const response = await auth.fetch(url, {
         method: "GET"
       });
@@ -43,6 +47,41 @@ const ProcessedFile = () => {
       console.error("Error downloading PDF:", error);
     }
   };
+
+  const fetchExtractedInformation = async () => {
+    const url = `http://localhost:8085/${workflowId}/file/${fileId}/results`;
+    await auth.fetch(url, {
+        method: "GET"
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+        setFields(data["extraction"]);
+    })
+    .catch((error) => {
+        console.error(`Error: ${error}`);
+    });
+  }
+
+  const postGroundTruth = async () => {
+    const url = `http://localhost:8085/${workflowId}/file/${fileId}/ground-truth/`;
+    const data = {
+        extraction: fields
+    }
+    const res = await auth.fetch(url, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    const json_res = await res.json();
+    if (res.ok) {
+        console.log("Saved ground truth succesfully");
+    } else {
+        console.error("Failed saving ground truth with error",json_res.detail)
+    }
+  }
 
   const [document, setDocument] = useState(null);
 
@@ -58,9 +97,14 @@ const ProcessedFile = () => {
       pageNumber + 1 >= numPages ? numPages : pageNumber + 1
     );
 
-  const handleFieldSelection = (fieldKey) => {
-    setSelectedFieldKey(fieldKey);
-    const field = fields[fieldKey];
+  const handleFieldSelection = (selectedFieldLevel,selectedOuterFieldIdx,selectedInnerFieldIdx) => {
+    setSelectedFieldLevel(selectedFieldLevel);
+    setSelectedOuterFieldIdx(selectedOuterFieldIdx);
+    setSelectedInnerFieldIdx(selectedInnerFieldIdx);
+
+    let field = fields[selectedFieldLevel][selectedOuterFieldIdx];
+    if(selectedInnerFieldIdx !== null)
+        field = field[selectedInnerFieldIdx]
 
     const canvas = docViewerRef.current.querySelector(
       ".react-pdf__Page__canvas"
@@ -69,10 +113,10 @@ const ProcessedFile = () => {
 
     const rect = canvas.getBoundingClientRect();
 
-    const relX = field.x * rect.width;
-    const relY = field.y * rect.height;
-    const relW = field.w * rect.width;
-    const relH = field.h * rect.height;
+    const relX = field.coordinates.x * rect.width;
+    const relY = field.coordinates.y * rect.height;
+    const relW = field.coordinates.w * rect.width;
+    const relH = field.coordinates.h * rect.height;
 
     setSelection({ x: relX, y: relY, w: relW, h: relH });
   };
@@ -92,14 +136,14 @@ const ProcessedFile = () => {
   };
 
   const handleMouseDown = (event) => {
-    if (!selectedFieldKey) return;
+    if (selectedOuterFieldIdx===null|| selectedFieldLevel===null) return;
     const { relX, relY } = getMousePos(event);
     setStartCoords({ x: relX, y: relY });
     setIsSelecting(true);
   };
 
   const handleMouseMove = (event) => {
-    if (!isSelecting || !selectedFieldKey) return;
+    if (!isSelecting || selectedOuterFieldIdx===null|| selectedFieldLevel===null) return;
     const { relX, relY } = getMousePos(event);
     const minX = Math.min(startCoords.x, relX);
     const minY = Math.min(startCoords.y, relY);
@@ -110,7 +154,7 @@ const ProcessedFile = () => {
   };
 
   const handleMouseUp = (event) => {
-    if (!isSelecting || !selectedFieldKey) return;
+    if (!isSelecting || selectedOuterFieldIdx===null|| selectedFieldLevel===null) return;
     const { relX, relY } = getMousePos(event);
     const topLeftX = Math.min(startCoords.x, relX);
     const topLeftY = Math.min(startCoords.y, relY);
@@ -130,26 +174,33 @@ const ProcessedFile = () => {
     const y = topLeftY / rect.height;
     const w = width / rect.width;
     const h = height / rect.height;
-  
-    const updatedField = {
-      ...fields[selectedFieldKey],
-      x,
-      y,
-      w,
-      h,
-    };
-  
-    setFields({
-      ...fields,
-      [selectedFieldKey]: updatedField,
-    });
 
-    console.log("Selection coordinates:", { x, y, w, h, pageNumber });
+    let field = fields[selectedFieldLevel][selectedOuterFieldIdx]
+    if(selectedInnerFieldIdx !== null)
+        field = field[selectedInnerFieldIdx]
+    const updatedField = {
+      ...field,
+      coordinates:{
+        x,
+        y,
+        w,
+        h,
+      }
+    };
+    if(selectedInnerFieldIdx === null)
+        fields[selectedFieldLevel][selectedOuterFieldIdx] = updatedField
+    else
+        fields[selectedFieldLevel][selectedOuterFieldIdx][selectedInnerFieldIdx] = updatedField
+
+    setFields(fields);
   };
 
-  const renderInputByType = (field) => {
+  const renderInputByType = (fieldLevel,outerFieldIdx,innerFieldIdx) => {
+    let field = fields[fieldLevel][outerFieldIdx];
+    if(innerFieldIdx!==null)
+        field = field[innerFieldIdx]
     switch (field.type) {
-      case "Text":
+      case "string":
         return (
           <input
             type="text"
@@ -158,7 +209,7 @@ const ProcessedFile = () => {
             className="border border-gray-400 px-2 py-1"
           />
         );
-      case "Currency":
+      case "number":
         return (
           <input
             type="number"
@@ -167,11 +218,11 @@ const ProcessedFile = () => {
             className="border border-gray-400 px-2 py-1"
           />
         );
-      case "Date":
+      case "date":
         return (
           <input
             type="date"
-            value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : field.value}
+            value={field.value}
             onChange={handleFieldValueChange}
             className="border border-gray-400 px-2 py-1"
           />
@@ -189,97 +240,194 @@ const ProcessedFile = () => {
   };
 
   const handleFieldValueChange = (event) => {
-    const field = fields[selectedFieldKey];
-    const updatedField = {
-      ...field,
-      value: event.target.value
+    let updatedField;
+    let updatedFields = {...fields};
+    if(selectedInnerFieldIdx !== null)
+        updatedField = {... fields[selectedFieldLevel][selectedOuterFieldIdx][selectedInnerFieldIdx] };
+    else 
+        updatedField = {... fields[selectedFieldLevel][selectedOuterFieldIdx]};
+
+    updatedField = {
+        ...updatedField,
+        value:event.target.value
     };
-    setFields({
-      ...fields,
-      [selectedFieldKey]: updatedField,
-    });
+    if(selectedInnerFieldIdx !== null)
+        updatedFields[selectedFieldLevel][selectedOuterFieldIdx][selectedInnerFieldIdx]  = updatedField
+    else
+        updatedFields[selectedFieldLevel][selectedOuterFieldIdx] = updatedField
+
+    setFields(updatedFields);
   };
 
   return (
-    <div className="flex w-full mx-32 my-8">
-      <div className="w-1/2 mr-4">
-        <div className="relative border border-gray-300 rounded-md mb-4 inline-block">
-          <Document file={document} onLoadSuccess={onDocumentLoadSuccess}>
-            <div
-              id="docviewer"
-              ref={docViewerRef}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-            >
-              <Page
-                pageNumber={pageNumber}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-              />
-              {selection && (
-                <div
-                  style={{
-                    position: "absolute",
-                    border: "2px solid blue",
-                    top: selection.y,
-                    left: selection.x,
-                    width: selection.w,
-                    height: selection.h,
-                  }}
-                ></div>
-              )}
-            </div>
-          </Document>
-        </div>
-        <div className="flex justify-between items-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={goToPrevPage}
-            disabled={pageNumber === 1}
-          >
-            Prev
-          </button>
-          <p className="text-gray-700">
-            Page {pageNumber} of {numPages}
-          </p>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={goToNextPage}
-            disabled={pageNumber === numPages}
-          >
-            Next
-          </button>
-
-        </div>
-      </div>
-      <div className="w-1/2">
-        <div>
-          <h2>Fields</h2>
-          <ul>
-            {Object.keys(fields).map((fieldKey, index) => {
-              const field = fields[fieldKey];
-              return (
-                <li key={index} className="mb-2">
-                  <span className="mr-2">{fieldKey}: </span>
-                  {selectedFieldKey === fieldKey ? (
-                    renderInputByType(field)
+        <div className="flex justify-center mx-32 my-8">
+        <button
+            onClick={postGroundTruth}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded h-16 mx-6"
+        >
+            <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" />
+            Save Changes
+        </button>
+          <div className="relative mr-32">
+            <div className="relative border border-gray-300 rounded-md mb-4 inline-block">
+              {
+                document && (
+                  document.type === 'application/pdf' ? (
+                    <Document file={document} onLoadSuccess={onDocumentLoadSuccess}>
+                      <div
+                        id="docviewer"
+                        ref={docViewerRef}
+                        onMouseDown={handleMouseDown}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleMouseUp}
+                      >
+                        <Page
+                          pageNumber={pageNumber}
+                          renderTextLayer={false}
+                          renderAnnotationLayer={false}
+                        />
+                        {selection && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              border: "2px solid blue",
+                              top: selection.y,
+                              left: selection.x,
+                              width: selection.w,
+                              height: selection.h,
+                            }}
+                          ></div>
+                        )}
+                      </div>
+                    </Document>
                   ) : (
-                    <span>{field.value instanceof Date ? field.value.toISOString().split('T')[0] : field.value}</span>
-                  )}
-                  <button
-                    onClick={() => handleFieldSelection(fieldKey)}
-                    className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                  >
-                    Edit
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+                    <div
+                      id="docviewer"
+                      ref={docViewerRef}
+                      onMouseDown={handleMouseDown}
+                      onMouseMove={handleMouseMove}
+                      onMouseUp={handleMouseUp}
+                    >
+                      <canvas
+                        className="react-pdf__Page__canvas"
+                        dir="ltr"
+                        width="595"
+                        height="841"
+                        style={{ display: "block", userSelect: "none", width: "595px", height: "841px" }}
+                      ></canvas>
+                      <img
+                        src={URL.createObjectURL(document)}
+                        alt="Document"
+                        style={{ display: "none" }}
+                        onLoad={() => {
+                          const img = new Image();
+                          img.src = URL.createObjectURL(document);
+                          const canvas = docViewerRef.current.querySelector(
+                            ".react-pdf__Page__canvas"
+                          );
+                          const ctx = canvas.getContext("2d");
+                          img.onload = () => {
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            ctx.drawImage(img, 0, 0);
+                          };
+                        }}
+                      />
+                      {selection && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            border: "2px solid blue",
+                            top: selection.y,
+                            left: selection.x,
+                            width: selection.w,
+                            height: selection.h,
+                          }}
+                        ></div>
+                      )}
+                    </div>
+                  )
+                )
+              }
+    
+            </div>
+            {document && document.type === 'application/pdf' && (
+              <div className="flex justify-between items-center">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={goToPrevPage}
+                  disabled={pageNumber === 1}
+                >
+                  Prev
+                </button>
+                <p className="text-gray-700">
+                  Page {pageNumber} of {numPages}
+                </p>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={goToNextPage}
+                  disabled={pageNumber === numPages}
+                >
+                  Next
+                </button>
+    
+              </div>
+            )}
+          </div>
+          <div>
+            <div>
+              <h2>Header fields</h2>
+              <ul>
+                {fields["headerFields"].map((field, index) => {
+                  return (
+                    <li key={"headerField" + "-" + index} className="mb-2">
+                      <span className="mr-2">{field.name}: </span>
+                      {selectedFieldLevel === "headerFields" && selectedOuterFieldIdx === index ? (
+                        renderInputByType("headerFields", index, null)
+                      ) : (
+                        <span>{field.value}</span>
+                      )}
+                      <button
+                        onClick={() => handleFieldSelection("headerFields", index, null)}
+                        className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                      >
+                        Edit
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div>
+              <h2>Line items</h2>
+              <div>
+                {fields["lineItems"].map((lineItemList, lineItemListIdx) => (
+                  <ul key={"lineItem" + "-" + lineItemListIdx} className="mb-4">
+                    <p>Line item {lineItemListIdx + 1}</p>
+                    {lineItemList.map((lineItem, lineItemIdx) => {
+                      return (
+                        <li key={"lineItem" + "-" + lineItemListIdx + "-" + lineItemIdx} className="mb-2">
+                          <span className="mr-2">{lineItem.name}: </span>
+                          {selectedFieldLevel === "lineItems" && selectedOuterFieldIdx === lineItemListIdx && selectedInnerFieldIdx == lineItemIdx ? (
+                            renderInputByType("lineItems", lineItemListIdx, lineItemIdx)
+                          ) : (
+                            <span>{lineItem.value}</span>
+                          )}
+                          <button
+                            onClick={() => handleFieldSelection("lineItems", lineItemListIdx, lineItemIdx)}
+                            className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                          >
+                            Edit
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
   );
 };
 

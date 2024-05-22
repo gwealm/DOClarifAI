@@ -160,3 +160,8 @@ class DoxApiClient(CommonClient):
     content_type = file_response.headers.get('Content-Type')
 
     return Response(content=content, media_type=content_type)
+  
+  async def save_ground_truth(self, document_id, payload):
+    response = await self.post(DOCUMENT_ID_ENDPOINT.format(document_id=document_id),json=payload)
+    response.raise_for_status()
+    return response.json()

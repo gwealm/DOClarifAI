@@ -57,43 +57,62 @@ def delete_file(session: PostgresDB, workflow: PathWorkflow,
 
 
 @router.get("/{file_id}/original-file")
-async def get_pdf_file( session: PostgresDB, current_user: CurrentUser, dox_client:DoxClient, workflow_id: int, file_id: int) -> FileResponse:
-    """
-    Get the original uploaded document
-    """
-    workflow:Workflow = session.get(Workflow, workflow_id)
-    file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
+async def get_pdf_file( session: PostgresDB, current_user: CurrentUser, dox_client:DoxClient, workflow_id: int, file_id: int):
+  """
+  Get the original uploaded document
+  """
+  workflow:Workflow = session.get(Workflow, workflow_id)
+  file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
 
-    if not workflow:
-      raise HTTPException(status_code=404, detail="Workflow not found")
-    elif workflow.user != current_user:
-      raise HTTPException(status_code=403,
-                          detail="The user doesn't have enough privileges")
-    elif file.workflow != workflow:
-      raise HTTPException(status_code=403,
-                          detail="File not associated with workflow")   
-    
-    return await dox_client.get_original_uploaded_document(file.dox_id)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+  elif file.workflow != workflow:
+    raise HTTPException(status_code=403,
+                        detail="File not associated with workflow")   
+  
+  return await dox_client.get_original_uploaded_document(file.dox_id)
   
 @router.get("/{file_id}/results")
-async def get_file_results( session: PostgresDB, current_user: CurrentUser, dox_client:DoxClient, workflow_id: int, file_id: int) -> FileResponse:
-    """
-    Get the results for the file
-    """
-    workflow:Workflow = session.get(Workflow, workflow_id)
-    file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
+async def get_file_results( session: PostgresDB, current_user: CurrentUser, dox_client:DoxClient, workflow_id: int, file_id: int):
+  """
+  Get the results for the file
+  """
+  workflow:Workflow = session.get(Workflow, workflow_id)
+  file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
 
-    if not workflow:
-      raise HTTPException(status_code=404, detail="Workflow not found")
-    elif workflow.user != current_user:
-      raise HTTPException(status_code=403,
-                          detail="The user doesn't have enough privileges")
-    elif file.workflow != workflow:
-      raise HTTPException(status_code=403,
-                          detail="File not associated w.ith workflow")   
-    elif file.process_status == FileProcesingStatus.QUEUED or file.process_status == FileProcesingStatus.PROCESSING:
-      raise HTTPException(status_code=400,
-                          detail="File is still being processed")
-    def do_nothing_callback(extracted_document):
-      pass
-    return await dox_client.get_extraction_for_document(file.dox_id,do_nothing_callback)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+  elif file.workflow != workflow:
+    raise HTTPException(status_code=403,
+                        detail="File not associated w.ith workflow")   
+  elif file.process_status == FileProcesingStatus.QUEUED or file.process_status == FileProcesingStatus.PROCESSING:
+    raise HTTPException(status_code=400,
+                        detail="File is still being processed")
+  def do_nothing_callback(extracted_document):
+    pass
+  return await dox_client.get_extraction_for_document(file.dox_id,do_nothing_callback)
+  
+@router.post("/{file_id}/ground-truth")
+async def save_ground_truth( session: PostgresDB, current_user: CurrentUser, dox_client:DoxClient, workflow_id: int, file_id: int,payload:dict):
+  workflow:Workflow = session.get(Workflow, workflow_id)
+  file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
+
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+  elif file.workflow != workflow:
+    raise HTTPException(status_code=403,
+                        detail="File not associated w.ith workflow")   
+  elif file.process_status == FileProcesingStatus.QUEUED or file.process_status == FileProcesingStatus.PROCESSING:
+    raise HTTPException(status_code=400,
+                        detail="File is still being processed")
+  
+  return await dox_client.save_ground_truth(file.dox_id,payload)

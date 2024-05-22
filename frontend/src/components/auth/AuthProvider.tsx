@@ -55,7 +55,7 @@ function AuthProvider(props:Props) {
         }
         params.headers.set("Authorization", `Bearer ${token}`);
         const res = await fetch(url, params);
-        if (res.status == 403 || res.status == 404) {
+        if (res.status == 403) {
             const json_res = await res.json();
             const data = { errorMsg: json_res.detail }
             onLogout();

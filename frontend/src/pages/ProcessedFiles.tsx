@@ -87,7 +87,7 @@ function ProcessedFiles() {
           <div className="border-b border-blue-200 mb-4"></div>
 
           {files.map((file, index) => (
-            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} onDelete={handleDeleteFiles} onDownload={handleDownloadFiles} />
+            <ProcessedFileCard key={index} fileId={file.id} workflowId={file.workflow_id} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} onDelete={handleDeleteFiles} onDownload={handleDownloadFiles} />
           ))}
         </div>
 
