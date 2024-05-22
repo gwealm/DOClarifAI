@@ -171,12 +171,6 @@ class DoxApiClient(CommonClient):
     response.raise_for_status()
     return response.json()
 
-  async def get_schemas(self,dox_ids):
-    response = await self.get(SCHEMAS_ENDPOINT+'?clientId=default')
-    response.raise_for_status()
-    schemas = response.json()
-    return [schema for schema in schemas if schema['id'] in dox_ids]
-
   async def get_schema(self, schema_id):
     response = await self.get(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}?clientId=default')
     response.raise_for_status()
