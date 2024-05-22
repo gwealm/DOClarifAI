@@ -14,10 +14,11 @@ from common.config import settings
 from common.postgres import engine
 from common.models.users import User
 
-# DO NOT DELETE. User needs templates and workflows, workflows need files
+# DO NOT DELETE. 
 from common.models.workflows import Workflow
 from common.models.templates import Template
 from common.models.files import File
+from common.models.schemas import Schema
 
 from common.models.tokens import TokenPayload
 from common.document_information_extraction_client.dox_api_client import DoxApiClient

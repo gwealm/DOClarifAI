@@ -8,6 +8,9 @@ import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import AuthProvider from "./components/auth/AuthProvider";
 import Template from "./pages/Template"
+import Templates from "./pages/Templates"
+import Schema from "./pages/Schema"
+import Schemas from "./pages/Schemas"
 import ProcessedFile from "./pages/ProcessedFile"
 
 import { AboutUs } from "./pages/AboutUs";
@@ -19,7 +22,16 @@ function Router() {
                 <Header />
                 <Routes location={location} key={location.pathname}>
                     <Route path="/workflows" element={<Workflows />} />
-                    <Route path="/templates" element={<Template  />} />
+                    <Route path="/templates" element={<Templates  />} />
+                    <Route
+                        path="/templates/:id"
+                        element={<Template />}
+                    />
+                    <Route path="/schemas" element={<Schemas  />} />
+                    <Route
+                        path="/schemas/:id"
+                        element={<Schema />}
+                    />
                     <Route path="/" element={<Workflows />} />
                     <Route path="/workflow/:id" element={<Workflow />} />
                     <Route
