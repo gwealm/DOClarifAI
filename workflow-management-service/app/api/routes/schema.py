@@ -86,10 +86,29 @@ async def post_fields_on_schema_version(*, schema_id: int, fields: SchemaFields,
     schema = db.query(Schema).filter(Schema.id == schema_id).first()
     if not schema:
         raise HTTPException(status_code=404, detail="schema not found")
-    
-    payload = {
-        "headerFields": fields.headerFields,
-        "lineItemFields": fields.lineItemFields
-    }
-    response = await dox_client.post_fields_on_schema_version(schema.schema_id_dox, payload)
+    print(schema.schema_id_dox)
+    print(fields.dict())
+    response = await dox_client.post_fields_on_schema_version(schema.schema_id_dox, fields.dict())
+    return response
+
+@router.post("/{schema_id}/activate")
+async def activate_schema_version(*, schema_id: int, dox_client: DoxClient, db: PostgresDB) -> Any:
+    """
+    Activate the schema version.
+    """
+    schema = db.query(Schema).filter(Schema.id == schema_id).first()
+    if not schema:
+        raise HTTPException(status_code=404, detail="schema not found")
+    response = await dox_client.activate_schema_version(schema.schema_id_dox)
+    return response
+
+@router.post("/{schema_id}/deactivate")
+async def deactivate_schema_version(*, schema_id: int, dox_client: DoxClient, db: PostgresDB) -> Any:
+    """
+    Deactivate the schema version.
+    """
+    schema = db.query(Schema).filter(Schema.id == schema_id).first()
+    if not schema:
+        raise HTTPException(status_code=404, detail="schema not found")
+    response = await dox_client.deactivate_schema_version(schema.schema_id_dox)
     return response

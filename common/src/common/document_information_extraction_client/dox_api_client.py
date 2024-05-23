@@ -192,7 +192,7 @@ class DoxApiClient(CommonClient):
     return response.json()
   
   async def post_fields_on_schema_version(self, schema_id, payload):
-    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1?clientId=default', json=payload)
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1/fields?clientId=default', json=payload)
     response.raise_for_status()
     return response.json()
   
@@ -200,3 +200,13 @@ class DoxApiClient(CommonClient):
     response = await self.get(SCHEMA_CAPABILITIES_ENDPOINT)
     response.raise_for_status()
     return response.json()["documentTypes"]
+  
+  async def activate_schema_version(self, schema_id):
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1/activate?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def deactivate_schema_version(self, schema_id):
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1/deactivate?clientId=default')
+    response.raise_for_status()
+    return response.json()
