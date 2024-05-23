@@ -40,7 +40,7 @@ async def create_schema(
   try:
       dox_response = await dox_client.create_schema(payload)
   except Exception as e:
-      raise HTTPException(status_code=500, detail="Failed to create schema in Dox API") from e
+      raise HTTPException(status_code=500, detail="Failed to create schema in the Dox API") from e
 
   schema_id_dox = dox_response.get("id")
 

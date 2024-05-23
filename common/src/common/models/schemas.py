@@ -30,7 +30,7 @@ class Schema(SQLModel, table=True):
   schema_id_dox:str
   
   user_id: int = Field(foreign_key="user.id")
-  user: Optional["User"] = Relationship(back_populates="schemas")
+  user: "User" = Relationship(back_populates="schemas")
   
   document_type_id: int = Field(foreign_key = "document_type.id")
   document_type: "DocumentType" = Relationship(back_populates="schemas")

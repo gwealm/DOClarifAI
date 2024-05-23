@@ -15,24 +15,20 @@ def create_template(*, session: Session, template: TemplateCreate) -> Template:
   Returns:
     template: The created template
   """
-  db_obj = Template.model_validate(template)
+  print("DEBUG: Creating template with data:", template.dict())
+
+  db_obj = Template(
+      name=template.name,
+      description=template.description,
+      template_id_dox=template.template_id_dox,
+      schema_id=template.schema_id,
+      user_id=template.user_id,
+      document_type_id=template.document_type_id
+  )
   session.add(db_obj)
   session.commit()
   session.refresh(db_obj)
-
-  if template.user_id:
-    statement = select(User).where(User.id == template.user_id)
-    # Don't know why This has to be done.
-    # While creating a template normally, if it had directly the user_id this
-    # would be set to None after calling session.refresh()
-    user = session.exec(statement).one()
-    if not user:
-      return None
-    db_obj.user = user
-    session.commit()
-    session.refresh(db_obj)
   return db_obj
-
 
 def get_templates(*, session: Session) -> list[Template]:
   """

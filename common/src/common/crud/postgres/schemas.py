@@ -46,3 +46,9 @@ async def add_default_schemas(*, session:Session, user:User, dox_client:DoxApiCl
 
 def get_schemas_by_document_type(*, session:Session, user_id:int, document_type_id:int):
   return session.query(Schema).filter(Schema.user_id==user_id).filter(Schema.document_type_id==document_type_id).all()
+
+
+def get_schema_by_id(*, session:Session, schema_id:int):
+  statement = select(Schema).where(Schema.id == schema_id)
+  schema = session.exec(statement).first()
+  return schema

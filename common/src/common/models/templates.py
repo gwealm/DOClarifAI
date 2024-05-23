@@ -10,18 +10,14 @@ if TYPE_CHECKING:
   from .document_types import DocumentType
 
 
-class TemplateBase(BaseModel):
+class TemplateIn(BaseModel):
   name: str
   description: str
   schema_id: int
   document_type_id: int
 
 
-class TemplateIn(TemplateBase):
-  template_definition:dict
-
-
-class TemplateCreate(TemplateBase):
+class TemplateCreate(TemplateIn):
   user_id: int
   template_id_dox:str
 
@@ -36,10 +32,10 @@ class Template(SQLModel, table=True):
   template_id_dox:str
   
   schema_id: int = Field(foreign_key="schema.id")
-  schema: Optional["Schema"] = Relationship(back_populates="templates")
+  schema: "Schema" = Relationship(back_populates="templates")
   
   user_id: int = Field(foreign_key="user.id")
-  user: Optional["User"] = Relationship(back_populates="templates")
+  user: "User" = Relationship(back_populates="templates")
   
   document_type_id: int = Field(foreign_key = "document_type.id")
   document_type: "DocumentType" = Relationship(back_populates="templates")
