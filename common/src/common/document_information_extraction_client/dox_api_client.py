@@ -62,8 +62,6 @@ class DoxApiClient(CommonClient):
                             document_type: str,
                             create_background_task_callback,
                             document_extracted_callback,
-                            header_fields: Union[str, List[str]] = None,
-                            line_item_fields: Union[str, List[str]] = None,
                             template_id=None,
                             schema_id=None) -> dict:
     """

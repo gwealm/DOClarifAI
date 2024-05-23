@@ -12,6 +12,9 @@ from common.crud.postgres import files as crud_files
 from common.deps import CurrentUser, PostgresDB, DoxClient
 from common.models.workflows import Workflow
 from common.models.files import FileCreate, FileProcesingStatus
+from common.models.document_types import DocumentType
+from common.models.templates import Template
+from common.models.schemas import Schema
 
 router = APIRouter()
 
@@ -42,18 +45,10 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
                                              workflow_id=workflow_id,
                                              name=file.filename))
 
-  # Default values TODO: obtain them from db according to flow
-  DEFAULT_CLIENT_ID = "default"
-  DEFAULT_DOCUMENT_TYPE = "invoice"
-  DEFAULT_HEADER_FIELDS = [
-      "documentNumber", "taxId", "purchaseOrderNumber", "shippingAmount",
-      "netAmount", "senderAddress", "senderName", "grossAmount", "currencyCode",
-      "receiverContact", "documentDate", "taxAmount", "taxRate", "receiverName",
-      "receiverAddress"
-  ]
-  DEFAULT_LINE_ITEM_FIELDS = [
-      "description", "netAmount", "quantity", "unitPrice", "materialNumber"
-  ]
+  client_id:str = "default"
+  template:Template = workflow.template
+  document_type:DocumentType = template.document_type
+  schema:Schema = template.schema
 
   def document_extracted_callback_partial(mongo_db: MongoDB, workflow_id: int,
                                           file_metadata_id: int):
@@ -69,11 +64,11 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
   document_extracted_callback = document_extracted_callback_partial(
       mongo_db, workflow.id, file_metadata.id)
 
-
   extracted_info = await dox_client.upload_document(
-      file, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, background_tasks.add_task,
-      document_extracted_callback, DEFAULT_HEADER_FIELDS,
-      DEFAULT_LINE_ITEM_FIELDS)
+      file, client_id, document_type.name, 
+      background_tasks.add_task,document_extracted_callback,
+      template.template_id_dox,schema.schema_id_dox
+  )
 
   match extracted_info["status"]:
     case "PENDING":
