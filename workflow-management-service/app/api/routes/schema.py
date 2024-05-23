@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 
 from common.crud.postgres import schemas as crud_schemas
-from common.models.schemas import (Schema, SchemaCreate, SchemaIn)
+from common.models.schemas import (Schema, SchemaCreate, SchemaIn, SchemaFields)
 from common.deps import PostgresDB, CurrentUser, DoxClient
 
 
@@ -71,3 +71,19 @@ async def get_schema(*,schema_id: int, current_user: CurrentUser, dox_client: Do
     
     schema = await dox_client.get_schema(schema.schema_id_dox)
     return schema
+
+@router.post("/{schema_id}/fields")
+async def post_fields_on_schema_version(*, schema_id: int, fields: SchemaFields, dox_client: DoxClient, db: PostgresDB) -> Any:
+    """
+    Post fields on the schema version.
+    """
+    schema = db.query(Schema).filter(Schema.id == schema_id).first()
+    if not schema:
+        raise HTTPException(status_code=404, detail="schema not found")
+    
+    payload = {
+        "headerFields": fields.headerFields,
+        "lineItemFields": fields.lineItemFields
+    }
+    response = await dox_client.post_fields_on_schema_version(schema.schema_id_dox, payload)
+    return response

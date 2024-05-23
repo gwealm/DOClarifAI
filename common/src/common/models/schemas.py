@@ -3,7 +3,7 @@
 """
 from sqlmodel import Field, SQLModel, Relationship
 from pydantic import BaseModel
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, List, Dict, Any
 if TYPE_CHECKING:
   from .users import User
   from .templates import Template
@@ -20,6 +20,27 @@ class SchemaIn(SchemaBase):
 class SchemaCreate(SchemaBase):
   user_id: int
   schema_id_dox: str
+
+
+class FieldExtractor(BaseModel):
+  fieldName: str
+
+class CustomField(BaseModel):
+  name: str
+  description: str
+  label: str
+  categoryName: str
+  defaultExtractor: Optional[FieldExtractor] = {}
+  setupType: str
+  setupTypeVersion: str
+  setup: Dict[str, Any]
+  formattingType: str
+  formatting: Dict[str, Any]
+  formattingTypeVersion: str
+
+class SchemaFields(BaseModel):
+  headerFields: List[CustomField]
+  lineItemFields: List[CustomField]
 
 
 class Schema(SQLModel, table=True):
