@@ -13,6 +13,10 @@ const Schema = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [fields, setFields] = useState([]);
+  const [headerFields, setHeaderFields] = useState([]);
+  const [lineItemFields, setLineItemFields] = useState([]);
+  const [isActive, setIsActive] = useState(false);
+  const [isPredefined, setIsPredefined] = useState(false);
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('');
   const [newFieldConfig, setNewFieldConfig] = useState({});
@@ -32,6 +36,11 @@ const Schema = () => {
           const data = await response.json();
           setName(data.name);
           setDescription(data.schemaDescription);
+          setHeaderFields(data.headerFields);
+          setLineItemFields(data.lineItemFields);
+          setIsActive(data.state);
+          setIsPredefined(data.predefined);
+          console.log(data);
         } else {
           console.error('Failed to fetch schema');
         }
@@ -120,14 +129,71 @@ const Schema = () => {
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
         <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
         <h3 className="text-md text-gray-600">{description}</h3>
+        {// Add button to deactivate schema or make it active, if the schema is not predefined  
+        }
+        {isPredefined ? null : (
+          <button
+            className={`px-4 py-2 rounded-md ${isActive ? 'bg-red-600 text-white' : 'bg-green-600 text-white'}`}
+            onClick={() => setIsActive(!isActive)}
+          >
+            {isActive ? 'Deactivate' : 'Activate'}
+          </button>
+        )}
         <button className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
           Save Schema
           <FontAwesomeIcon icon={faFloppyDisk} className="ml-2" style={{ fontSize: '16px' }} />
         </button>
       </div>
       <div>
-        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Fields</h3>
-        {fields.map((field, index) => (
+        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Header Fields</h3>
+        {headerFields.map((field, index) => (
+          <div key={index} className="mb-4">
+            {editingIndex === index ? (
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  className="p-2 border rounded"
+                  value={editFieldName}
+                  onChange={(e) => setEditFieldName(e.target.value)}
+                  placeholder="Field Name"
+                />
+                <select
+                  className="p-2 border rounded"
+                  value={editFieldType}
+                  onChange={(e) => setEditFieldType(e.target.value)}
+                >
+                  {fieldTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {renderFieldConfig(editFieldType, editFieldConfig, setEditFieldConfig)}
+                <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md">
+                  Save
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between p-4 bg-gray-200 rounded-lg shadow">
+                <div className="flex flex-col text-left">
+                  <p className="text-lg font-semibold text-gray-800">{field.name}</p>
+                  <p className="text-md text-gray-600">{field.type}</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="cursor-pointer" onClick={() => handleEditField(index)}>
+                    <FontAwesomeIcon icon={faEdit} style={{ fontSize: '20px' }} />
+                  </div>
+                  <div className="cursor-pointer" onClick={() => handleDeleteField(index)}>
+                    <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '20px' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+
+        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Line Item Fields</h3>
+        {lineItemFields.map((field, index) => (
           <div key={index} className="mb-4">
             {editingIndex === index ? (
               <div className="flex items-center space-x-2">
