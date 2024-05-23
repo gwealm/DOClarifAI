@@ -10,10 +10,12 @@ if TYPE_CHECKING:
 
 class SchemaBase(BaseModel):
   name: str
-  description: str
+  schemaDescription: str
 
 class SchemaIn(SchemaBase):
-  schema_definition:dict
+  clientId: str
+  documentType: str
+  documentTypeDescription: str
 
 class SchemaCreate(SchemaBase):
   user_id: int
@@ -26,7 +28,7 @@ class Schema(SQLModel, table=True):
   """
   id: int | None = Field(default=None, primary_key=True)
   name: str
-  description: str
+  schemaDescription: str
   schema_id_dox:str
   user_id: int = Field(foreign_key="user.id")
   user: Optional["User"] = Relationship(back_populates="schemas")

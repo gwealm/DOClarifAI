@@ -35,6 +35,6 @@ async def add_default_schemas(*, session:Session, user:User, dox_client:DoxApiCl
   all_schemas = (await dox_client.get_all_schemas())["schemas"]
   default_schemas = [schema for schema in all_schemas if schema["predefined"]]
   for default_schema in default_schemas:
-    schema_create = SchemaCreate(name=default_schema["name"],description=default_schema["schemaDescription"],user_id=user.id,schema_id_dox=default_schema["id"])
+    schema_create = SchemaCreate(name=default_schema["name"],schemaDescription=default_schema["schemaDescription"],user_id=user.id,schema_id_dox=default_schema["id"])
     create_schema(session=session,schema=schema_create)  
     
