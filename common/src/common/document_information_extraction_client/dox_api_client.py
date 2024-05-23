@@ -191,6 +191,11 @@ class DoxApiClient(CommonClient):
     response.raise_for_status()
     return response.json()
   
+  async def post_fields_on_schema_version(self, schema_id, payload):
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1?clientId=default', json=payload)
+    response.raise_for_status()
+    return response.json()
+  
   async def get_document_types(self):
     response = await self.get(SCHEMA_CAPABILITIES_ENDPOINT)
     response.raise_for_status()
