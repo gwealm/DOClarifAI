@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import Select from 'react-select';
+import { useAuth } from '../components/auth/Auth';
+import { useParams } from 'react-router-dom';
 
 
 const Schema = () => {
+  const { id } = useParams();
+  const auth = useAuth();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [fields, setFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('');
@@ -14,6 +20,28 @@ const Schema = () => {
   const [editFieldName, setEditFieldName] = useState('');
   const [editFieldType, setEditFieldType] = useState('');
   const [editFieldConfig, setEditFieldConfig] = useState({});
+
+  useEffect(() => {
+    const fetchSchema = async () => {
+      try {
+        const response = await auth.fetch(`http://localhost:8085/schema/${id}`, {
+          method: 'GET',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setName(data.name);
+          setDescription(data.schemaDescription);
+        } else {
+          console.error('Failed to fetch schema');
+        }
+      } catch (error) {
+        console.error('Error fetching schema:', error);
+      }
+    };
+
+    fetchSchema();
+  }, [auth, id]);
 
 
   const fieldTypes = ['string', 'number', 'date', 'discount', 'currency', 'country/region'];
@@ -90,7 +118,8 @@ const Schema = () => {
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
-        <h2 className="text-xl font-semibold text-gray-800">Schema Configuration</h2>
+        <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
+        <h3 className="text-md text-gray-600">{description}</h3>
         <button className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
           Save Schema
           <FontAwesomeIcon icon={faFloppyDisk} className="ml-2" style={{ fontSize: '16px' }} />
