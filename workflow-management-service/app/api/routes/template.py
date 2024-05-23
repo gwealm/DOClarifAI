@@ -196,6 +196,21 @@ async def deactivate_template(
   return {"message": "Template deactivated succesfully"}
 
 
+@router.get("/{template_id}")
+def get_template(session: PostgresDB, current_user: CurrentUser,
+                 template_id: int) -> Template:
+  """
+  Get the template with the provided ID.
+  """
+  template = session.get(Template, template_id)
+  if not template:
+    raise HTTPException(status_code=404, detail="Template not found")
+  elif template.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+  return template
+
+
 @router.get("/")
 def get_templates(current_user: CurrentUser) -> list[Template]:
   """

@@ -140,7 +140,7 @@ const Schemas = () => {
                   name="document_type_id"
                   value={newSchema.document_type_id}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border rounded-lg"
+                  className="w-full mt-2 px-3 py-2 border rounded-lg"
                   required
                 >
                   <option value="">Select a document type</option>
@@ -151,7 +151,7 @@ const Schemas = () => {
                   ))}
                 </select>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-around mt-8">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}

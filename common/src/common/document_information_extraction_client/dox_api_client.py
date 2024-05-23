@@ -74,10 +74,6 @@ class DoxApiClient(CommonClient):
             document_type (str): The type of the document.
             background_tasks (BackgroundTasks): Background tasks
               manager for asynchronous processing.
-            header_fields (Union[str, List[str]], optional): Header
-              fields to extract. Defaults to None.
-            line_item_fields (Union[str, List[str]], optional): Line
-              item fields to extract. Defaults to None.
             template_id (Any, optional): The template ID for document
               extraction. Defaults to None.
             schema_id (Any, optional): The schema ID for document
@@ -87,8 +83,7 @@ class DoxApiClient(CommonClient):
             dict: The JSON response containing information
               about the submitted document.
         """
-    options = create_document_options(client_id, document_type, header_fields,
-                                      line_item_fields, template_id, schema_id)
+    options = create_document_options(client_id, document_type,template_id, schema_id)
 
     client_id = options.get(API_FIELD_CLIENT_ID)
     self.logger.debug('Starting upload of %s documents for client %s',

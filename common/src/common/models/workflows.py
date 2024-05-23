@@ -15,7 +15,7 @@ class WorkflowIn(BaseModel):
   description: str
   confidence_interval:float = Field(default=0.7)
   template_id: int
-  email: str | None
+  email: str | None = Field(default=None)
 
 
 

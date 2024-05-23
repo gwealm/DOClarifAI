@@ -1,41 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "../components/auth/Auth";
+import { useParams } from 'react-router-dom';
 
 const Template = () => {
   const [schemas, setSchemas] = useState([]);
   const [documentTypes, setDocumentTypes] = useState([]);
-  const [formData, setFormData] = useState({
-    templateName: '',
+  const [template, setTemplate] = useState({
+    name:'',
     description: '',
-    schemaId: '',
-    templateType: ''
+    schema_id:'',
+    document_type_id: ''
   });
-  const auth = useAuth();
+  const [isActive, setIsActive] = useState(false);
 
-  const handleChange = (e) => {
+
+
+  const auth = useAuth();
+  const { id } = useParams();
+
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
+    setTemplate({ ...template, [name]: value })
+  }
 
   const handleDocumentTypeChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-    fetchSchemas(value); // Fetch schemas based on the selected document type ID
+    const new_document_type_id = e.target.value
+    setTemplate({ ...template, document_type_id: new_document_type_id, schema_id: '' })
+    fetchSchemas(new_document_type_id)
+  }
+
+
+  const updateTemplate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await auth.fetch(`http://localhost:8085/template/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(template),
+      });
+      console.log({
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(template),
+      })
+      e.preventDefault()
+
+      if (!response.ok) {
+        throw new Error('Failed to update template');
+      }
+
+      const data = await response.json();
+      console.log("Template: " + data);
+    } catch (error) {
+      console.error('Error fetching document types:', error);
+    }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // Submit form data
-  };
 
   useEffect(() => {
-    fetchDocumentTypes();
+    fetchDocumentTypes()
+    fetchTemplate(id);
   }, []);
 
   const fetchDocumentTypes = async () => {
@@ -59,9 +88,51 @@ const Template = () => {
     }
   };
 
+  const fetchTemplate = async (id) => {
+    try {
+      const response = await auth.fetch(`http://localhost:8085/template/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch template');
+      }
+
+      const data = await response.json();
+      await fetchSchemas(data.document_type_id)
+      setTemplate(data);
+      setIsActive(data.active)
+    } catch (error) {
+      console.error('Error fetching document types:', error);
+    }
+  };
+
+  const toggleIsActive = async () => {
+    try {
+      const url = `http://localhost:8085/template/${id}/${isActive ? 'deactivate' : 'activate'}`;
+      const response = await auth.fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to ${isActive ? 'deactivate' : 'activate'} schema`);
+      }
+
+      setIsActive(!isActive);
+    } catch (error) {
+      console.error(`Error toggling template active state:`, error);
+    }
+  };
+
   const fetchSchemas = async (document_type_id) => {
     try {
-      const response = await auth.fetch(`http://localhost:8085/document_type/${document_type_id}`, {
+      const response = await auth.fetch(`http://localhost:8085/document_type/${document_type_id}/schema/active`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -75,6 +146,7 @@ const Template = () => {
       const data = await response.json();
       console.log("Schemas: " + data);
       setSchemas(data);
+
     } catch (error) {
       console.error('Error fetching schemas:', error);
     }
@@ -82,18 +154,24 @@ const Template = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-4">Create a Template</h2>
-      <form onSubmit={onSubmit} className="space-y-4">
+      <h2 className="text-2xl font-bold mb-4">Edit Template</h2>
+      <button
+            className={`px-4 py-2 rounded-md ${isActive ? 'bg-red-600 text-white' : 'bg-green-600 text-white'}`}
+            onClick={toggleIsActive}
+          >
+            {isActive ? 'Deactivate' : 'Activate'}
+      </button>
+        
+      <form onSubmit={updateTemplate} className="space-y-4">
         <div>
           <label htmlFor="templateName" className="block text-sm font-medium text-gray-700">
             Template Name
           </label>
           <input
             type="text"
-            id="templateName"
-            name="templateName"
-            value={formData.templateName}
-            onChange={handleChange}
+            name="name"
+            value={template.name}
+            onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
@@ -103,10 +181,9 @@ const Template = () => {
             Description
           </label>
           <textarea
-            id="description"
             name="description"
-            value={formData.description}
-            onChange={handleChange}
+            value={template.description}
+            onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
@@ -116,9 +193,8 @@ const Template = () => {
             Document Type
           </label>
           <select
-            id="templateType"
-            name="templateType"
-            value={formData.templateType}
+            name="document_type_id"
+            value={template.document_type_id}
             onChange={handleDocumentTypeChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
@@ -136,10 +212,9 @@ const Template = () => {
             Schema
           </label>
           <select
-            id="schemaId"
-            name="schemaId"
-            value={formData.schemaId}
-            onChange={handleChange}
+            name="schema_id"
+            value={template.schema_id}
+            onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           >
@@ -156,7 +231,7 @@ const Template = () => {
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Create Template
+            Update Template
           </button>
         </div>
       </form>
