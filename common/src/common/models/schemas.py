@@ -7,10 +7,12 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
   from .users import User
   from .templates import Template
+  from .document_types import DocumentType
 
 class SchemaBase(BaseModel):
   name: str
   description: str
+  document_type_id: int
 
 class SchemaIn(SchemaBase):
   schema_definition:dict
@@ -28,6 +30,11 @@ class Schema(SQLModel, table=True):
   name: str
   description: str
   schema_id_dox:str
+  
   user_id: int = Field(foreign_key="user.id")
   user: Optional["User"] = Relationship(back_populates="schemas")
+  
+  document_type_id: int = Field(foreign_key = "document_type.id")
+  document_type: "DocumentType" = Relationship(back_populates="schemas")
+  
   templates: list["Template"] = Relationship(back_populates="schema")

@@ -5,6 +5,7 @@ from sqlmodel import Session, select
 from common.models.schemas import Schema, SchemaCreate
 from common.models.users import User
 from common.document_information_extraction_client.dox_api_client import DoxApiClient
+import common.crud.postgres.document_types as crud_document_types
 
 
 def create_schema(*, session: Session, schema: SchemaCreate) -> Schema:
@@ -35,6 +36,13 @@ async def add_default_schemas(*, session:Session, user:User, dox_client:DoxApiCl
   all_schemas = (await dox_client.get_all_schemas())["schemas"]
   default_schemas = [schema for schema in all_schemas if schema["predefined"]]
   for default_schema in default_schemas:
-    schema_create = SchemaCreate(name=default_schema["name"],description=default_schema["schemaDescription"],user_id=user.id,schema_id_dox=default_schema["id"])
+    schema_create = SchemaCreate(name=default_schema["name"],
+                                 description=default_schema["schemaDescription"],
+                                 document_type_id=crud_document_types.get_document_type_by_name(session=session,name=default_schema["documentType"]).id,
+                                 user_id=user.id,
+                                 schema_id_dox=default_schema["id"])
     create_schema(session=session,schema=schema_create)  
-    
+
+
+def get_schemas_by_document_type(*, session:Session, user_id:int, document_type_id:int):
+  return session.query(Schema).filter(Schema.user_id==user_id).filter(Schema.document_type_id==document_type_id).all()

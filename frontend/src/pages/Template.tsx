@@ -1,9 +1,9 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from "../components/auth/Auth";
 
-
 const Template = () => {
-  const [schemas, setSchemas] = useState([])
+  const [schemas, setSchemas] = useState([]);
+  const [documentTypes, setDocumentTypes] = useState([]);
   const [formData, setFormData] = useState({
     templateName: '',
     description: '',
@@ -20,17 +20,27 @@ const Template = () => {
     });
   };
 
+  const handleDocumentTypeChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+    fetchSchemas(value); // Fetch schemas based on the selected document type ID
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
+    // Submit form data
   };
 
   useEffect(() => {
-    fetchSchemas();
+    fetchDocumentTypes();
   }, []);
 
-  const fetchSchemas = async () => {
+  const fetchDocumentTypes = async () => {
     try {
-      const response = await auth.fetch(`http://localhost:8085/schema/`, {
+      const response = await fetch(`http://localhost:8085/document_type/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -38,11 +48,32 @@ const Template = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch workflow');
+        throw new Error('Failed to fetch document types');
       }
 
       const data = await response.json();
-      console.log(data);
+      console.log("Document types: " + data);
+      setDocumentTypes(data);
+    } catch (error) {
+      console.error('Error fetching document types:', error);
+    }
+  };
+
+  const fetchSchemas = async (document_type_id) => {
+    try {
+      const response = await auth.fetch(`http://localhost:8085/document_type/${document_type_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch schemas');
+      }
+
+      const data = await response.json();
+      console.log("Schemas: " + data);
       setSchemas(data);
     } catch (error) {
       console.error('Error fetching schemas:', error);
@@ -82,21 +113,22 @@ const Template = () => {
         </div>
         <div>
           <label htmlFor="templateType" className="block text-sm font-medium text-gray-700">
-            Template Type
+            Document Type
           </label>
           <select
             id="templateType"
             name="templateType"
             value={formData.templateType}
-            onChange={handleChange}
+            onChange={handleDocumentTypeChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           >
-            <option value="" disabled>Select a template type</option>
-            <option value="invoice">Invoice</option>
-            <option value="paymentAdvice">Payment Advice</option>
-            <option value="purchaseOrder">Purchase Order</option>
-            <option value="custom">Custom</option>
+            <option value="" disabled>Select a document type</option>
+            {documentTypes.map((documentType) => (
+              <option key={documentType.id} value={documentType.id}>
+                {documentType.name}
+              </option>
+            ))}
           </select>
         </div>
         <div>
