@@ -40,7 +40,8 @@ async def add_default_schemas(*, session:Session, user:User, dox_client:DoxApiCl
                                  document_type_id=crud_document_types.get_document_type_by_name(session=session,name=default_schema["documentType"]).id,
                                  description=default_schema["schemaDescription"],
                                  user_id=user.id,
-                                 schema_id_dox=default_schema["id"])
+                                 schema_id_dox=default_schema["id"],
+                                 predefined=True)
     create_schema(session=session,schema=schema_create)  
 
 

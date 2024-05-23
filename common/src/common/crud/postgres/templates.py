@@ -2,9 +2,8 @@
   This module contains the CRUD operations for the Template ORM.
 """
 from sqlmodel import Session, select
-from common.models.templates import Template, TemplateCreate
-from common.models.users import User
-
+from common.models.templates import Template, TemplateCreate, TemplateUpdate
+from common.models.workflows import Workflow
 
 def create_template(*, session: Session, template: TemplateCreate) -> Template:
   """
@@ -15,7 +14,6 @@ def create_template(*, session: Session, template: TemplateCreate) -> Template:
   Returns:
     template: The created template
   """
-  print("DEBUG: Creating template with data:", template.dict())
 
   db_obj = Template(
       name=template.name,
@@ -30,6 +28,21 @@ def create_template(*, session: Session, template: TemplateCreate) -> Template:
   session.refresh(db_obj)
   return db_obj
 
+def update_template(*, session:Session, template_id:int, template_in: TemplateUpdate) -> Template:
+  db_obj:Template = session.query(Template).filter(Template.id == template_id).first()
+  if not db_obj:
+    return None
+  db_obj.name = template_in.name
+  db_obj.description = template_in.description
+  db_obj.schema_id = template_in.schema_id
+  db_obj.document_type_id = template_in.document_type_id
+  db_obj.template_id_dox = template_in.template_id_dox
+  session.commit()
+  session.refresh(db_obj)
+  return db_obj
+
+
+
 def get_templates(*, session: Session) -> list[Template]:
   """
     List Available templates.
@@ -42,3 +55,8 @@ def get_templates(*, session: Session) -> list[Template]:
   # TODO: Paginate Results
   templates = session.exec(statement).all()
   return templates
+
+def get_template_by_id(*, session:Session, template_id:int) -> Template:
+  statement = select(Template).where(Template.id == template_id)
+  template = session.exec(statement).first()
+  return template

@@ -34,7 +34,7 @@ class Workflow(SQLModel, table=True):
   files: list["File"] = Relationship(back_populates="workflow")
   
   template_id: int|None = Field(default=None, foreign_key="template.id")
-  template: "Template" = Relationship()
+  template: "Template" = Relationship(back_populates="workflows")
 
   user_id: int = Field(default=None, foreign_key="user.id")
   user: "User" = Relationship(back_populates="workflows")
