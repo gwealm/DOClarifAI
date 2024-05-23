@@ -42,21 +42,14 @@ def update_template(*, session:Session, template_id:int, template_in: TemplateUp
   return db_obj
 
 
-
-def get_templates(*, session: Session) -> list[Template]:
-  """
-    List Available templates.
-    Args:
-      session: PostgresDB session
-    Returns:
-      list[template]: available templates
-  """
-  statement = select(Template)
-  # TODO: Paginate Results
-  templates = session.exec(statement).all()
-  return templates
-
 def get_template_by_id(*, session:Session, template_id:int) -> Template:
   statement = select(Template).where(Template.id == template_id)
   template = session.exec(statement).first()
   return template
+
+def get_user_active_templates(*, session:Session, user_id:int) -> list[Template]:
+  statement =  select(Template)\
+              .filter(Template.user_id == user_id)\
+              .filter(Template.active == True)
+  active_templates = session.exec(statement).all()
+  return active_templates

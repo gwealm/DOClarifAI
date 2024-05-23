@@ -29,15 +29,19 @@ async def create_template(
   schema = crud_schemas.get_schema_by_id(session=session,schema_id=template_in.schema_id)
 
   if not document_type:
-    raise HTTPException(status_code=404, detail="document type not found")
+    raise HTTPException(status_code=404, detail="Document type not found")
   if not schema:
-    raise HTTPException(status_code=404, detail="schema not found")
+    raise HTTPException(status_code=404, detail="Schema not found")
   if schema.user!=current_user:
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
   if schema.document_type != document_type:
     raise HTTPException(status_code=400,
                     detail="The schema document type doesn't match with the template document type")
+  if not schema.active:
+    raise HTTPException(status_code=400,
+                    detail="The provided schema is not active")
+  
   payload = {
     "name":template_in.name,
     "description":template_in.description,
@@ -86,6 +90,9 @@ async def update_template(
   elif template.user != current_user:
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
+  elif template.active:
+    raise HTTPException(status_code=400,
+                    detail="Can't edit active templates")
 
   document_type = crud_document_types.get_document_type_by_id(session=session, document_type_id=template_in.document_type_id)
   schema = crud_schemas.get_schema_by_id(session=session,schema_id=template_in.schema_id)
@@ -100,6 +107,9 @@ async def update_template(
   if schema.document_type != document_type:
     raise HTTPException(status_code=400,
                     detail="The schema document type doesn't match with the template document type")
+  if not schema.active:
+    raise HTTPException(status_code=400,
+                    detail="The provided schema is not active")
   payload = {
     "name":template_in.name,
     "description":template_in.description,
@@ -185,4 +195,12 @@ def get_templates(current_user: CurrentUser) -> list[Template]:
   Get user templates.
   """
   return current_user.templates
+
+
+@router.get("/active")
+def get_active_templates(current_user: CurrentUser, session:PostgresDB) -> list[Template]:
+  """
+  Get user active templates.
+  """
+  return crud_templates.get_user_active_templates(session=session, user_id=current_user.id)
 

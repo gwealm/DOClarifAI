@@ -41,12 +41,17 @@ async def add_default_schemas(*, session:Session, user:User, dox_client:DoxApiCl
                                  description=default_schema["schemaDescription"],
                                  user_id=user.id,
                                  schema_id_dox=default_schema["id"],
+                                 active=True,
                                  predefined=True)
     create_schema(session=session,schema=schema_create)  
 
 
-def get_schemas_by_document_type(*, session:Session, user_id:int, document_type_id:int):
-  return session.query(Schema).filter(Schema.user_id==user_id).filter(Schema.document_type_id==document_type_id).all()
+def get_active_schemas_by_document_type(*, session:Session, user_id:int, document_type_id:int):
+  return session.query(Schema)\
+    .filter(Schema.user_id==user_id)\
+    .filter(Schema.document_type_id==document_type_id)\
+    .filter(Schema.active==True)\
+    .all()
 
 
 def get_schema_by_id(*, session:Session, schema_id:int):

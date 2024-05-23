@@ -14,7 +14,9 @@ class SchemaIn(BaseModel):
   name: str = Field(regex=r'\S+$')  # This regex ensures no white spaces are allowed
   document_type_id: int
   description: str
+  active: bool = Field(default=False)
   predefined: bool = Field(default=False)
+
 
 class SchemaCreate(SchemaIn):
   user_id: int
@@ -47,6 +49,7 @@ class Schema(SQLModel, table=True):
   name: str
   description: str
   schema_id_dox:str
+  active: bool
   predefined: bool
   user_id: int = Field(foreign_key="user.id")
   user: "User" = Relationship(back_populates="schemas")

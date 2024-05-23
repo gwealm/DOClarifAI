@@ -16,18 +16,20 @@ from common.deps import (
 router = APIRouter(prefix="/document_type")
 
 @router.get("/")
-def get_document_types(db:PostgresDB) -> list[DocumentType]:
+def get_document_types(session:PostgresDB) -> list[DocumentType]:
   """
   Get document types.
   """
-  return crud_document_types.get_document_types(session=db)
+  return crud_document_types.get_document_types(session=session)
 
 
-@router.get("/{document_type_id}")
-def get_document_type_schemas(db:PostgresDB, current_user: CurrentUser, document_type_id: int) -> list[Schema]:
+@router.get("/{document_type_id}/active")
+def get_document_type_active_schemas(session:PostgresDB, current_user: CurrentUser, document_type_id: int) -> list[Schema]:
   """
-  Get schemas of document type.
+  Get active schemas of document type.
   """
-  x = crud_schemas.get_schemas_by_document_type(session=db, user_id=current_user.id, document_type_id=document_type_id)
-  print(x)
-  return x
+  return crud_schemas.get_active_schemas_by_document_type(
+    session=session,
+    user_id=current_user.id,
+    document_type_id=document_type_id
+  )

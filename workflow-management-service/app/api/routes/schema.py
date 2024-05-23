@@ -65,50 +65,85 @@ async def get_schemas(current_user: CurrentUser) -> Any:
 
 
 @router.get("/{schema_id}")
-async def get_schema(*,schema_id: int, current_user: CurrentUser, dox_client: DoxClient, db: PostgresDB) -> Any:
+async def get_schema(*,schema_id: int, current_user: CurrentUser, dox_client: DoxClient, session: PostgresDB) -> Any:
     """
     Get the schema with the provided ID.
     """
-    # Assuming current_user.schemas is a relationship property
-    schema = db.query(Schema).filter(Schema.id == schema_id, Schema.user_id == current_user.id).first()
-    
+    schema = crud_schemas.get_schema_by_id(session=session,schema_id=schema_id)
     if not schema:
-        raise HTTPException(status_code=404, detail="schema not found")
+      raise HTTPException(status_code=404, detail="Schema not found")
+    elif schema.user != current_user:
+      raise HTTPException(status_code=403,
+                          detail="The user doesn't have enough privileges") 
     
     schema = await dox_client.get_schema(schema.schema_id_dox)
     return schema
 
 @router.post("/{schema_id}/fields")
-async def post_fields_on_schema_version(*, schema_id: int, fields: SchemaFields, dox_client: DoxClient, db: PostgresDB) -> Any:
+async def post_fields_on_schema_version(*, schema_id: int, current_user: CurrentUser, fields: SchemaFields, dox_client: DoxClient, session: PostgresDB) -> Any:
     """
     Post fields on the schema version.
     """
-    schema = db.query(Schema).filter(Schema.id == schema_id).first()
+    schema = crud_schemas.get_schema_by_id(session=session,schema_id=schema_id)
     if not schema:
-        raise HTTPException(status_code=404, detail="schema not found")
-    print(schema.schema_id_dox)
-    print(fields.dict())
+      raise HTTPException(status_code=404, detail="Schema not found")
+    elif schema.user != current_user:
+      raise HTTPException(status_code=403,
+                          detail="The user doesn't have enough privileges")  
+    elif schema.predefined:
+      raise HTTPException(status_code=400,
+                          detail="Can't alter predefined schema fields")
+    elif schema.active:
+      raise HTTPException(status_code=400,
+                      detail="Can't alter active schema fields")
+    
     response = await dox_client.post_fields_on_schema_version(schema.schema_id_dox, fields.dict())
     return response
 
 @router.post("/{schema_id}/activate")
-async def activate_schema_version(*, schema_id: int, dox_client: DoxClient, db: PostgresDB) -> Any:
+async def activate_schema_version(*, schema_id: int, current_user: CurrentUser, dox_client: DoxClient, session: PostgresDB) -> Any:
     """
     Activate the schema version.
     """
-    schema = db.query(Schema).filter(Schema.id == schema_id).first()
+    schema = crud_schemas.get_schema_by_id(session=session,schema_id=schema_id)
     if not schema:
-        raise HTTPException(status_code=404, detail="schema not found")
-    response = await dox_client.activate_schema_version(schema.schema_id_dox)
-    return response
+      raise HTTPException(status_code=404, detail="Schema not found")
+    elif schema.user != current_user:
+      raise HTTPException(status_code=403,
+                          detail="The user doesn't have enough privileges")  
+    elif schema.active:
+      raise HTTPException(status_code=400,
+                      detail="The schema is already active")  
 
+    await dox_client.activate_schema_version(schema.schema_id_dox)
+  
+    schema.active = True
+    session.commit()
+    return {"message": "Schema activated succesfully"}
+  
 @router.post("/{schema_id}/deactivate")
-async def deactivate_schema_version(*, schema_id: int, dox_client: DoxClient, db: PostgresDB) -> Any:
+async def deactivate_schema_version(*, schema_id: int, current_user: CurrentUser, dox_client: DoxClient, session: PostgresDB) -> Any:
     """
     Deactivate the schema version.
     """
-    schema = db.query(Schema).filter(Schema.id == schema_id).first()
+    schema = crud_schemas.get_schema_by_id(session=session,schema_id=schema_id)
     if not schema:
-        raise HTTPException(status_code=404, detail="schema not found")
-    response = await dox_client.deactivate_schema_version(schema.schema_id_dox)
-    return response
+      raise HTTPException(status_code=404, detail="Schema not found.")
+    elif schema.user != current_user:
+      raise HTTPException(status_code=403,
+                          detail="The user doesn't have enough privileges.")  
+    elif schema.predefined:
+      raise HTTPException(status_code=400,
+                          detail="Can't deactivate predefined schemas")
+    elif not schema.active:
+      raise HTTPException(status_code=400,
+                      detail="The schema is already inactive.")  
+    elif len(schema.templates)>0:
+      raise HTTPException(status_code=400,
+                      detail="The schema is being used by at least one template.")  
+
+    await dox_client.deactivate_schema_version(schema.schema_id_dox)
+
+    schema.active = False
+    session.commit()
+    return {"message": "Schema deactivated succesfully"}
