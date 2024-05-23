@@ -7,17 +7,15 @@ from typing import TYPE_CHECKING, Optional, List, Dict, Any
 if TYPE_CHECKING:
   from .users import User
   from .templates import Template
+  from .document_types import DocumentType
 
-class SchemaBase(BaseModel):
-  name: str
-  schemaDescription: str
 
-class SchemaIn(SchemaBase):
-  clientId: str
-  documentType: str
-  documentTypeDescription: str
+class SchemaIn(BaseModel):
+  name: str = Field(regex=r'\S+$')  # This regex ensures no white spaces are allowed
+  document_type_id: int
+  description: str
 
-class SchemaCreate(SchemaBase):
+class SchemaCreate(SchemaIn):
   user_id: int
   schema_id_dox: str
 
@@ -49,8 +47,13 @@ class Schema(SQLModel, table=True):
   """
   id: int | None = Field(default=None, primary_key=True)
   name: str
-  schemaDescription: str
+  description: str
   schema_id_dox:str
+  
   user_id: int = Field(foreign_key="user.id")
   user: Optional["User"] = Relationship(back_populates="schemas")
+  
+  document_type_id: int = Field(foreign_key = "document_type.id")
+  document_type: "DocumentType" = Relationship(back_populates="schemas")
+  
   templates: list["Template"] = Relationship(back_populates="schema")
