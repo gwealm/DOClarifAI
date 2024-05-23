@@ -53,3 +53,17 @@ def get_user_active_templates(*, session:Session, user_id:int) -> list[Template]
               .filter(Template.active == True)
   active_templates = session.exec(statement).all()
   return active_templates
+
+
+def get_user_template_by_name(*, session:Session, user_id:int, template_name:str) -> Template | None:
+  return session.query(Template)\
+    .filter(Template.user_id==user_id)\
+    .filter(Template.name==template_name)\
+    .first()
+    
+def get_active_templates_by_document_type(*, session:Session, user_id:int, document_type_id:int) -> list[Template]:
+  return session.query(Template)\
+    .filter(Template.user_id==user_id)\
+    .filter(Template.document_type_id==document_type_id)\
+    .filter(Template.active==True)\
+    .all()

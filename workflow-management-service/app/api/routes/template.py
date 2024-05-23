@@ -24,7 +24,14 @@ async def create_template(
   """
   Create a new template.
   """
+
+  already_existing_template = crud_templates.get_user_template_by_name(session=session,
+                                                                       user_id=current_user.id,
+                                                                       template_name=template_in.name)
+  if already_existing_template is not None:
+    raise HTTPException(status_code=400, detail="Template with provided name already exists")
   
+
   document_type = crud_document_types.get_document_type_by_id(session=session, document_type_id=template_in.document_type_id)
   schema = crud_schemas.get_schema_by_id(session=session,schema_id=template_in.schema_id)
 
@@ -43,7 +50,7 @@ async def create_template(
                     detail="The provided schema is not active")
   
   payload = {
-    "name":template_in.name,
+    "name": f"{current_user.username}_{template_in.name}",
     "description":template_in.description,
     "clientId":"default",
     "schemaId":schema.schema_id_dox,
@@ -111,7 +118,7 @@ async def update_template(
     raise HTTPException(status_code=400,
                     detail="The provided schema is not active")
   payload = {
-    "name":template_in.name,
+    "name": f"{current_user.username}_{template_in.name}",
     "description":template_in.description,
     "clientId":"default",
     "schemaId":schema.schema_id_dox,
@@ -195,12 +202,4 @@ def get_templates(current_user: CurrentUser) -> list[Template]:
   Get user templates.
   """
   return current_user.templates
-
-
-@router.get("/active")
-def get_active_templates(current_user: CurrentUser, session:PostgresDB) -> list[Template]:
-  """
-  Get user active templates.
-  """
-  return crud_templates.get_user_active_templates(session=session, user_id=current_user.id)
 

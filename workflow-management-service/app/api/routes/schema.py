@@ -24,14 +24,21 @@ async def create_schema(
   """
   Create a new scema.
   """
+  
+  already_existing_schema = crud_schemas.get_user_schema_by_name(session=session,
+                                                                user_id=current_user.id,
+                                                                schema_name=schema_in.name)
+  if already_existing_schema is not None:
+    raise HTTPException(status_code=400, detail="Schema with provided name already exists")
+  
   document_type = crud_document_types.get_document_type_by_id(session=session, document_type_id=schema_in.document_type_id)
   if not document_type:
-    raise HTTPException(status_code=404, detail="document type not found")
+    raise HTTPException(status_code=404, detail="Document type not found")
   if " " in schema_in.name:
-    raise HTTPException(status_code=422, detail="schema name must not contain spaces")
+    raise HTTPException(status_code=422, detail="Schema name must not contain spaces")
   payload = {
       "clientId": "default",
-      "name": schema_in.name,
+      "name": f"{current_user.username}_{schema_in.name}",
       "schemaDescription": schema_in.description,
       "documentType": document_type.name,
       "documentTypeDescription": ""

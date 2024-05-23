@@ -58,3 +58,9 @@ def get_schema_by_id(*, session:Session, schema_id:int):
   statement = select(Schema).where(Schema.id == schema_id)
   schema = session.exec(statement).first()
   return schema
+
+def get_user_schema_by_name(*, session:Session, user_id:int, schema_name:str) -> Schema | None:
+  return session.query(Schema)\
+    .filter(Schema.user_id==user_id)\
+    .filter(Schema.name==schema_name)\
+    .first()
