@@ -21,21 +21,18 @@ class SchemaCreate(SchemaIn):
   schema_id_dox: str
 
 
-class FieldExtractor(BaseModel):
-  fieldName: str
-
 class CustomField(BaseModel):
   name: str
   description: str
   label: str
-  categoryName: str
-  defaultExtractor: Optional[FieldExtractor] = {}
-  setupType: str
-  setupTypeVersion: str
-  setup: Dict[str, Any]
+  defaultExtractor: Optional[Dict[str, Any]] = {}
+  setupType: Optional[str] = "static"
+  setupTypeVersion: Optional[str] = "2.0.0"
+  setup: Optional[Dict[str, Any]] = {"type": "manual","priority": 1}
   formattingType: str
-  formatting: Dict[str, Any]
-  formattingTypeVersion: str
+  formatting: Optional[Dict[str, Any]] = {}
+  formattingTypeVersion: Optional[str] = "1.0.0"
+  predefined: Optional[bool] = False
 
 class SchemaFields(BaseModel):
   headerFields: List[CustomField]
