@@ -83,8 +83,9 @@ async def get_schema(*,schema_id: int, current_user: CurrentUser, dox_client: Do
       raise HTTPException(status_code=403,
                           detail="The user doesn't have enough privileges") 
     
-    schema = await dox_client.get_schema(schema.schema_id_dox)
-    return schema
+    dox_schema = await dox_client.get_schema(schema.schema_id_dox)
+    dox_schema["name"] = schema.name
+    return dox_schema
 
 @router.post("/{schema_id}/fields")
 async def post_fields_on_schema_version(*, schema_id: int, current_user: CurrentUser, fields: SchemaFields, dox_client: DoxClient, session: PostgresDB) -> Any:
