@@ -175,14 +175,9 @@ class DoxApiClient(CommonClient):
     response = await self.get(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}?clientId=default')
     response.raise_for_status()
     return response.json()
-
-  async def delete_schema(self, schema_id):
-    response = await self.delete(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}?clientId=default')
-    response.raise_for_status()
-    return response.json()
   
   async def create_schema(self, payload):
-    response = await self.post(SCHEMA_ID_ENDPOINT, json=payload)
+    response = await self.post(SCHEMAS_ENDPOINT, json=payload)
     response.raise_for_status()
     return response.json()
 

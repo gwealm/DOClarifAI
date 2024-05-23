@@ -2,22 +2,20 @@
   This file contains the Pydantic models for the Template entity.
 """
 from sqlmodel import Field, SQLModel, Relationship
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
   from .users import User
   from .templates import Template
   from .document_types import DocumentType
 
-class SchemaBase(BaseModel):
-  name: str
-  description: str
+
+class SchemaIn(BaseModel):
+  name: str = Field(regex=r'\S+$')  # This regex ensures no white spaces are allowed
   document_type_id: int
+  description: str
 
-class SchemaIn(SchemaBase):
-  schema_definition:dict
-
-class SchemaCreate(SchemaBase):
+class SchemaCreate(SchemaIn):
   user_id: int
   schema_id_dox: str
 
