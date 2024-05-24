@@ -21,7 +21,7 @@ route {
     }
 
     handle_path /workflow-management/* {
-        reverse_proxy workflow-management:8085
+        reverse_proxy workflowManagement:8085
     }
 
 	handle {

@@ -20,7 +20,7 @@ const Workflows = () => {
             return;
         }
         try {
-            const response = await auth.fetch('/workflow-management/', {
+            const response = await auth.fetch('/workflowManagement/', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const Workflows = () => {
 
     const handleAddWorkflow = async (workflowName) => {
         try {
-            const response = await auth.fetch('/workflow-management/', {
+            const response = await auth.fetch('/workflowManagement/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const Workflows = () => {
 
     const handleDeleteWorkflow = async (index, workflowId) => {
         try {
-            const response = await auth.fetch(`/workflow-management/${workflowId}/`, {
+            const response = await auth.fetch(`/workflowManagement/${workflowId}/`, {
                 method: 'DELETE',
             });
     
