@@ -56,7 +56,7 @@ const NewWorkflowModal = ({ onClose, onAddWorkflow }) => {
                   class="flex flex-shrink-0 items-center justify-between rounded-t-md bg-blue-100 border-b-2 border-neutral-100 p-4 dark:border-white/10">
                   <h5
                     class="text-xl font-medium leading-normal text-surface dark:text-white">
-                    Create new workflow
+                    Create New Workflow
                   </h5>
                 </div>
                 <form onSubmit={handleAddWorkflow}>
