@@ -18,9 +18,13 @@ from email.mime.text import MIMEText
 from pymongo.database import Database as MongoDB
 from common.models.workflows import Workflow
 from common.models.files import FileCreate, FileProcesingStatus
+from common.models.document_types import DocumentType
+from common.models.templates import Template
+from common.models.schemas import Schema
 from common.crud.postgres import workflows as crud_workflows
 from common.crud.postgres import files as crud_files
 from common.postgres import engine
+
 
 
 
@@ -30,18 +34,6 @@ dox_client:DoxApiClient = DoxApiClient(settings.SAP_BASE_URL,
                                    settings.SAP_UAA_URL)
 mongo_db = get_mongo_db()
 
-
-DEFAULT_CLIENT_ID = "default"
-DEFAULT_DOCUMENT_TYPE = "invoice"
-DEFAULT_HEADER_FIELDS = [
-    "documentNumber", "taxId", "purchaseOrderNumber", "shippingAmount",
-    "netAmount", "senderAddress", "senderName", "grossAmount", "currencyCode",
-    "receiverContact", "documentDate", "taxAmount", "taxRate", "receiverName",
-    "receiverAddress"
-]
-DEFAULT_LINE_ITEM_FIELDS = [
-    "description", "netAmount", "quantity", "unitPrice", "materialNumber"
-]
 
 def _get_message_info(service, user_id, msg_id):
     """Get attachments and other information from a Message with given id.
@@ -202,6 +194,7 @@ class GmailAutomationClient:
                                 error_msg = "The workflow with the provided id isn't configured to receive emails from this address"
                                 reply_to_email(service,msg_id,error_msg,workflow_id)
                                 break
+                            
 
                             file_metadata = crud_files.create_file(session=session,
                                                                     file=FileCreate(
@@ -216,12 +209,17 @@ class GmailAutomationClient:
                                                         document_extracted_callback):
                                 asyncio.create_task(get_extraction_for_document(document_id,document_extracted_callback))
                             
+                            client_id:str = "default"
+                            template:Template = workflow.template
+                            document_type:DocumentType = template.document_type
+                            schema:Schema = template.schema
+
                             extracted_info = await dox_client.upload_document(
-                                attachment, DEFAULT_CLIENT_ID, DEFAULT_DOCUMENT_TYPE, create_background_task,
-                                document_extracted_callback, DEFAULT_HEADER_FIELDS,
-                                DEFAULT_LINE_ITEM_FIELDS
+                                attachment, client_id, document_type.name,
+                                create_background_task, document_extracted_callback,
+                                template.template_id_dox,schema.schema_id_dox
                             )
-                        
+
                             match extracted_info["status"]:
                                 case "PENDING":
                                     file_metadata.process_status = FileProcesingStatus.PROCESSING
