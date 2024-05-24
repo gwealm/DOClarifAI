@@ -1,7 +1,35 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/auth/Auth";
 
-const Register = ( {onLogin} ) => {
+const Register = () => {
+
+    const auth = useAuth();
+    const navigate = useNavigate();
+
+    const [username, setUsername] = useState<string | null>(null);
+    const [password, setPassword] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+
+    const onClickRegister = async () => {
+        if (username === null || password === null) {
+            setErrorMsg("Username and Password are mandatory");
+            return;
+        }
+        const errors = await auth.register(username, password);
+        if (!errors) {
+            navigate("/workflows");
+        } else {
+            setErrorMsg(errors);
+        }
+    }
+
+    const RegisterFeedBack = () => {
+        return (
+            errorMsg && <p className="text-red-500 text-center mt-4">{errorMsg}</p>
+        );
+    };
 
     return (
         <div className="flex justify-center items-center">
@@ -9,8 +37,8 @@ const Register = ( {onLogin} ) => {
                 <div className="flex justify-start items-center max-w-8xl bg-[#C8EDFD] rounded-md p-2">
                     <div className="flex">
                         <a href="#" className="-m-1.5 p-1.5">
-                        <span className="sr-only">Your Company</span>
-                        <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
+                            <span className="sr-only">Your Company</span>
+                            <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
                         </a>
                     </div>
                     <div className="flex px-4">
@@ -21,31 +49,33 @@ const Register = ( {onLogin} ) => {
                 <div className="flex flex-col justify-center mx-8">
                     <div className="px-4 sm:px-6 py-4">
                         <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Name"> Name </label>
-                        <input 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="Name" 
-                            type="text" 
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="Name"
+                            type="text"
                             placeholder="Enter your name"
                         />
                     </div>
 
                     <div className="px-4 sm:px-6 py-4">
-                        <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Email"> Email address </label>
-                        <input 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="Email" 
-                            type="text" 
-                            placeholder="Enter your email"
+                        <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="username"> Username </label>
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="username"
+                            type="text"
+                            placeholder="Enter your username"
+                            onChange={e => setUsername(e.target.value)}
                         />
                     </div>
 
                     <div className="px-4 sm:px-6 py-4">
                         <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Password"> Password </label>
-                        <input 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            id="Password" 
-                            type="text" 
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="Password"
+                            type="password"
                             placeholder="Enter your password"
+                            onChange={e => setPassword(e.target.value)}
                         />
                     </div>
 
@@ -57,15 +87,18 @@ const Register = ( {onLogin} ) => {
                             id="checkboxDefault" />
                         <label
                             className="text-xs inline-block ps-[0.15rem] hover:cursor-pointer mx-2">
-                            I agree to the 
+                            I agree to the
                             <a href="#" className="text-gray-700 underline"> terms & policy</a>
                         </label>
                     </div>
-
-                    <Link to="/workflows" onClick={onLogin} className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <button
+                        onClick={onClickRegister}
+                        className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Register
-                    </Link>
+                    </button>
                 </div>
+                <RegisterFeedBack />
+
 
                 <div className="relative my-6 mx-14 mt-10">
                     <div className="w-full h-0.5 bg-[#C8EDFD]"></div>

@@ -1,31 +1,28 @@
-************* Module test_main
-tests/test_main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module tokens
-app/models/tokens.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module users
-app/models/users.py:15:0: C0301: Line too long (90/80) (line-too-long)
-app/models/users.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module app.main
-app/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module config
-app/core/config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/core/config.py:12:7: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-app/core/config.py:17:0: C0115: Missing class docstring (missing-class-docstring)
-app/core/config.py:30:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/core/config.py:2:0: W0611: Unused HttpUrl imported from pydantic (unused-import)
-************* Module db
-app/core/db.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/core/db.py:3:0: W0404: Reimport 'create_engine' (imported line 1) (reimported)
-app/core/db.py:8:12: W0613: Unused argument 'session' (unused-argument)
-************* Module app.api.deps
-app/api/deps.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app/api/deps.py:12:0: W0404: Reimport 'settings' (imported line 8) (reimported)
-app/api/deps.py:33:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
-************* Module app.api.main
-app/api/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module hello_world
-app/api/routes/hello_world.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.core.config
+app/core/config.py:35:2: C0103: Attribute name "POSTGRES_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+app/core/config.py:53:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module document
+app/api/routes/document.py:11:0: C0412: Imports from package common are not grouped (ungrouped-imports)
+************* Module common.crud.postgres.users
+common/src/common/crud/postgres/users.py:11:0: W0611: Unused Template imported from common.models.templates (unused-import)
+common/src/common/crud/postgres/users.py:12:0: W0611: Unused File imported from common.models.files (unused-import)
+common/src/common/crud/postgres/users.py:13:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
+************* Module common.crud.postgres.workflows
+common/src/common/crud/postgres/workflows.py:24:0: C0301: Line too long (82/80) (line-too-long)
+************* Module common.config
+common/src/common/config.py:52:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+common/src/common/config.py:71:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module common.models.files
+common/src/common/models/files.py:33:0: C0301: Line too long (88/80) (line-too-long)
+************* Module common.models.workflows
+common/src/common/models/workflows.py:32:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/workflows.py:34:0: C0303: Trailing whitespace (trailing-whitespace)
+************* Module common.deps
+common/src/common/deps.py:49:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
+common/src/common/deps.py:18:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
+common/src/common/deps.py:19:0: W0611: Unused Template imported from common.models.templates (unused-import)
+common/src/common/deps.py:20:0: W0611: Unused File imported from common.models.files (unused-import)
 
 -----------------------------------
-Your code has been rated at 8.06/10
+Your code has been rated at 9.54/10
 

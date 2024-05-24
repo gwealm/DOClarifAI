@@ -271,7 +271,7 @@ class CommonClient:
             return response
           elif response_status in FAILED_STATUSES:
             raise FailedAsynchronousOperationException(
-                f"Asynchronous job with URL {self.path_to_url(path)} failed",
+                f'Asynchronous job with URL {self.path_to_url(path)} failed',
                 response=response)
           else:
             await asyncio.sleep(sleep_interval)
@@ -282,7 +282,7 @@ class CommonClient:
       else:
         self.raise_for_status_with_logging(response)
     raise PollingTimeoutException(
-        f"Polling for URL {self.path_to_url(path)} timed out after {sleep_interval * self.polling_max_attempts} seconds",
+        f'Polling for URL {self.path_to_url(path)} timed out after {sleep_interval * self.polling_max_attempts} seconds',
         response=response)
 
   def path_to_url(self, path):
@@ -442,7 +442,7 @@ class CommonClient:
                           status_code=response.status_code)
 
     if e is not None:
-      self.common_logger.warning(
-          '%s request to URL %s failed with body: %s',
-          response.request.method, response.url, response.text)
+      self.common_logger.warning('%s request to URL %s failed with body: %s',
+                                 response.request.method, response.url,
+                                 response.text)
       raise e

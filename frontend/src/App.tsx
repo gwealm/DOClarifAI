@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from "react";
 import "./App.css";
-import Workflows from "./pages/Workflows";
 import { ThemeProvider } from "./components/ThemeProvider"
 import Workflow from "./pages/Workflow";
 import Header from "./components/Header";
@@ -11,40 +9,13 @@ import ProcessedFiles from "./pages/ProcessedFiles";
 import { AboutUs } from "./pages/AboutUs";
 import HomePage from "./pages/HomePage";
 
+import Router from "./Router";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    const handleLogin = () => {
-      setIsLoggedIn(true);
-    }
-
-    const handleLogout = () => {
-      setIsLoggedIn(false);
-    }
-
     return (
-        <>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <BrowserRouter>
-                    <div className="w-full h-full bg-gradient-to-r from-[#f9fdfef8] to-[#65BEE5]">
-                        <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-                        <Routes location={location} key={location.pathname}>
-                            <Route path="/home" element={<HomePage />} />
-                            <Route path="/workflows" element={<Workflows />} />
-                            <Route path="/workflow/:id" element={<Workflow />} />
-                            <Route
-                                path="/processedfiles"
-                                element={<ProcessedFiles />}
-                            />
-                            <Route path="/about-us" element={<AboutUs />} />
-                            <Route path="/login" element={<LogIn onLogin={handleLogin} />} />
-                            <Route path="/register" element={<Register onLogin={handleLogin}/>} />
-                        </Routes>
-                    </div>
-                </BrowserRouter>
-            </ThemeProvider>
-        </>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <Router />
+        </ThemeProvider>
     );
 }
 

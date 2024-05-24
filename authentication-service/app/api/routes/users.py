@@ -23,7 +23,7 @@ def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
   if user:
     raise HTTPException(
         status_code=400,
-        detail="The user with this username already exists in the system",
+        detail="The provided username is already taken",
     )
   user_create = UserCreate.model_validate(user_in)
   user = crud_users.create_user(session=session, user_create=user_create)

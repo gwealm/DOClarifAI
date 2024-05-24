@@ -14,6 +14,7 @@ RUN pip install /app/common
 
 COPY ./app /app/app
 COPY ./ES256 /app/ES256
+COPY ./google_oauth2_token /app/google_oauth2_token
 
 
 # Stage Tests

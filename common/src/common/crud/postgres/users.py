@@ -1,10 +1,17 @@
 """
-  This module contains the CRUD operations for the User ORM.
+  This module contains the CRUD operations for the User ORM. 
+
+  Why are these imports needed:
+  This is needed because of circular dependencies while defining sqlmodels
+  In those files no actual imports are done, only while TYPE_CHECKING
+  so that in runtime there will no circular imports
 """
 from sqlmodel import Session, select
 from common.security import get_password_hash, verify_password
+from common.models.templates import Template
+from common.models.files import File
+from common.models.workflows import Workflow
 from common.models.users import User, UserCreate
-
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -25,7 +32,6 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
   return db_obj
 
 
-
 def get_user_by_username(*, session: Session, username: str) -> User | None:
   """
     Get a user by username.
@@ -38,7 +44,6 @@ def get_user_by_username(*, session: Session, username: str) -> User | None:
   statement = select(User).where(User.username == username)
   session_user = session.exec(statement).first()
   return session_user
-
 
 
 def authenticate(*, session: Session, username: str,

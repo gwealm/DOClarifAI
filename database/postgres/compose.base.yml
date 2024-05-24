@@ -5,17 +5,20 @@
 version: "3"
 
 services:
-  database-postgres:
+  init-postgres:
+    depends_on:
+      database-postgres:
+        condition: service_healthy
     build:
       context: .
+      additional_contexts:
+        common: ../../common
       dockerfile: Dockerfile
+  database-postgres:
+    image: postgres
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
       interval: 30s
       timeout: 60s
       retries: 5
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
-      POSTGRES_USER: ${POSTGRES_USER:?}
-      POSTGRES_DB: ${POSTGRES_DB:?}

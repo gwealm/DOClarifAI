@@ -1,5 +1,15 @@
-FROM postgres
+# Stage Build
+FROM python:3.11-slim as build
 
-COPY ./init-scripts/schema.sql /docker-entrypoint-initdb.d/01_schema.sql
+WORKDIR /app
 
-EXPOSE 5432
+# Install dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r requirements.txt
+
+COPY --from=common . /app/common
+RUN pip install /app/common
+
+COPY src /app/src
+
+CMD ["python3", "/app/src/main.py"]
