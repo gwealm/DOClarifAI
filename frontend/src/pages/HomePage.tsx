@@ -3,9 +3,9 @@ import { faLocationDot, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { FaEvernote } from 'react-icons/fa';
 
-export default function HomePage() {
+export function HomePage() {
   return (
-    <div className="h-screen flex flex-col justify-between">
+    <div className="h-screen w-full flex flex-col justify-between bg-gradient-to-r from-[#f9fdfef8] to-[#65BEE5]">
       <div className="flex flex-row items-center mt-20 w-full justify-center">
         <div className='w-1/2 flex flex-col h-full justify-center items-center'>
           <div className='w-full flex flex-col px-20 justify-center'>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { DragDrop } from '../components/DragDrop.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';

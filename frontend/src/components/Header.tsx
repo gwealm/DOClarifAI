@@ -14,7 +14,7 @@ const Header = () => {
     
     useEffect(() => {
         setCurrentURL(window.location.pathname);
-    }, []);
+    }, [window.location.pathname]);
 
     useEffect(() => {
         if (auth.isLoggedIn) {
@@ -56,12 +56,12 @@ const Header = () => {
     };
 
     return (
-        <header className={`${currentURL == "/home" ? "bg-transparent" : "bg-[#C8EDFD]" }`}>
+        <header className={`${currentURL == "/" ? "bg-gradient-to-r from-[#f9fdfef8] to-[#65BEE5]" : "bg-[#C8EDFD]" }`}>
             <nav className="flex max-w-8xl items-center justify-between p-6 lg:px-8 lg:py-3" aria-label="Global">
                 <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
+                    <a href="/" className="-m-1.5 p-1.5">
                         <span className="sr-only">WeClarifai</span>
-                        <img className="h-12 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
+                        <img className="h-16 w-auto" src="logotipo.png" alt="" />
                     </a>
                 </div>
 
