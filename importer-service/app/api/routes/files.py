@@ -51,7 +51,7 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
   def document_extracted_callback_partial(workflow_id: int, file_metadata_id: int):
 
     def store_structured_info(document_extraction: dict):
-      return crud_documents.upload_document_extraction(document_extraction,
+      return crud_documents.update_document_extraction_metadata(document_extraction,
                                                        workflow_id,
                                                        file_metadata_id)
 

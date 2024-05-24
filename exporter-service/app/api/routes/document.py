@@ -37,7 +37,7 @@ async def export_extracted_results(
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
   
-  document_xlsx_file_path: str = crud_files.get_extracted_results_by_id_xlsx(
+  document_xlsx_file_path: str = await crud_files.get_extracted_results_by_id_xlsx(
       session=session, file_id=file_id, dox_client=dox_client)
   if document_xlsx_file_path is None:
     raise HTTPException(status_code=500, detail="Error exporting the extracted results")

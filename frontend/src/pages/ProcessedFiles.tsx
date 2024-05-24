@@ -9,7 +9,7 @@ function ProcessedFiles() {
   const { id } = useParams();
 
   const handleDownloadFiles = (id) => {
-    const url = 'http://localhost:8082/documents/' + id + '/xlsx';
+    const url = `http://localhost:8082/documents/${id}/xlsx`;
     auth.fetch(url, {
       method: 'GET',
       mode: 'cors',

@@ -13,5 +13,4 @@ sqlmodel
 pydantic-settings
 SQLAlchemy
 psycopg[binary,pool]
-pandas
 openpyxl

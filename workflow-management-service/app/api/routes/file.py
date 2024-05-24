@@ -2,7 +2,7 @@
   File routes.
 """
 from typing import Any
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException
 
 from common.crud.postgres import files as crud_files
 from common.models.files import (File, FileCreate, FileProcesingStatus)
@@ -12,13 +12,13 @@ from common.deps import (
     PostgresDB,
     DoxClient
 )
-import os
-from fastapi.responses import FileResponse
 
 from app.deps import PathWorkflow
 
 router = APIRouter(prefix="/{workflow_id}/file")
 
+def do_nothing_callback(extracted_document):
+  pass
 
 @router.post("/")
 def create_file(*, session: PostgresDB, file_in: FileCreate,
@@ -96,8 +96,7 @@ async def get_file_results( session: PostgresDB, current_user: CurrentUser, dox_
   elif file.process_status == FileProcesingStatus.QUEUED or file.process_status == FileProcesingStatus.PROCESSING:
     raise HTTPException(status_code=400,
                         detail="File is still being processed")
-  def do_nothing_callback(extracted_document):
-    pass
+
   return await dox_client.get_extraction_for_document(file.dox_id,do_nothing_callback)
   
 @router.post("/{file_id}/ground-truth")
@@ -116,5 +115,13 @@ async def save_ground_truth( session: PostgresDB, current_user: CurrentUser, dox
   elif file.process_status == FileProcesingStatus.QUEUED or file.process_status == FileProcesingStatus.PROCESSING:
     raise HTTPException(status_code=400,
                         detail="File is still being processed")
+    
+  await dox_client.save_ground_truth(file.dox_id,payload)
   
-  return await dox_client.save_ground_truth(file.dox_id,payload)
+  document_extraction:dict = await dox_client.get_extraction_for_document(file.dox_id,do_nothing_callback)
+
+  crud_files.update_document_extraction_metadata(
+    document_extraction,
+    workflow_id,
+    file_id
+  )

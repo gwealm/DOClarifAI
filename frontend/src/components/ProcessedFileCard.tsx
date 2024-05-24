@@ -13,7 +13,7 @@ const ProcessedFileCard = ({ index, fileId, workflowId, dox_id, name, date, proc
 
     const handleDownloadClick = (e) => {
         e.stopPropagation();
-        onDownload(dox_id);
+        onDownload(fileId);
     };
 
     return (
