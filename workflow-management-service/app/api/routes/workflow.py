@@ -51,7 +51,7 @@ def update_workflow(*, session:PostgresDB, current_user:CurrentUser, workflow_id
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
 
-  template:Template = crud_templates.get_template_by_id(session=session,template_id=workflow_update.template_id)
+  template:Template = crud_templates.get_template_by_id(session=session,template_id=workflow_in.template_id)
   if not template:
     raise HTTPException(status_code=404, detail="Template not found")
   if template.user!=current_user:

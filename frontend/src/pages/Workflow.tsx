@@ -46,11 +46,15 @@ function Workflow() {
   const { id } = useParams<{ id: string }>();
   const auth = useAuth();
 
-  const handleInputChange = async (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setWorkflow({ ...workflow, [name]: value })
   };
 
+
+  const handleSliderChange = (value) => {
+    setWorkflow({ ...workflow, confidence_interval: value/100 })
+  };
 
   const handleEditModalNameChange = (e) =>{
     setEditedName(e.target.value)
@@ -199,7 +203,9 @@ function Workflow() {
         <select 
           name="template_id"
           value={workflow.template_id}
-          className="flex place-self-start mt-4 border-r-8 border-transparent mb-8 mr-12 ml-8 rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500">
+          onChange={handleInputChange}
+          className="flex place-self-start mt-4 border-r-8 border-transparent mb-8 mr-12 ml-8 rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500"
+          required>
             <option value="">Select a template</option>
             {userTemplates.map(template => (
               <option key={template.id} value={template.id}>
@@ -214,6 +220,7 @@ function Workflow() {
         </label>
         <input
             type="email"
+            name="email"
             value={workflow.email}
             onChange={handleInputChange}
             className="flex place-self-start mt-4 border-r-8 border-transparent mb-8 mr-12 ml-8 rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500"
@@ -231,7 +238,7 @@ function Workflow() {
           Minimum Confidence Level Required
         </label>
         {workflow.confidence_interval !== null && (
-          <Slider marks={marks} value={workflow.confidence_interval*100} className="w-2/3" onChange={handleInputChange} />
+          <Slider name="confidence_interval" marks={marks} value={workflow.confidence_interval*100} className="w-2/3" onChange={handleSliderChange} />
         )}
       </div>
 
