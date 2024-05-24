@@ -13,6 +13,12 @@ from sqlmodel import Session
 from common.config import settings
 from common.postgres import engine
 from common.models.users import User
+
+# DO NOT DELETE. User needs templates and workflows, workflows need files
+from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.files import File
+
 from common.models.tokens import TokenPayload
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
@@ -42,11 +48,11 @@ def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
   except (JWTError, ValidationError):
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
-        detail="Could not validate credentials",
+        detail="Your session has ended or is invalid",
     )
   user = session.get(User, token_data.sub)
   if not user:
-    raise HTTPException(status_code=404, detail="User not found")
+    raise HTTPException(status_code=404, detail="User account associated with session no longer exists")
   return user
 
 

@@ -8,7 +8,7 @@ function AuthProvider(props:Props) {
     const startLoggedIn = savedToken !== null;
 
     type User = {
-        email: string,
+        username: string,
         name?: string,
     };
 
@@ -55,16 +55,19 @@ function AuthProvider(props:Props) {
         }
         params.headers.set("Authorization", `Bearer ${token}`);
         const res = await fetch(url, params);
-        if (res.status == 403) {
+        if (res.status == 403 || res.status == 404) {
+            const json_res = await res.json();
+            const data = { errorMsg: json_res.detail }
             onLogout();
-            navigate("/login");
+            navigate("/login", { state:data} );
+            
         }
         return res;
     }
 
-    const logIn = async (email: string, password: string) => {
+    const logIn = async (username: string, password: string) => {
         const data = new FormData();
-        data.append("username", email);
+        data.append("username", username);
         console.log("Trying to log in");
         data.append("password", password);
         const res = await fetch("http://localhost:8083/oauth/token", {
@@ -72,24 +75,21 @@ function AuthProvider(props:Props) {
             mode: 'cors',
             body: data,
         });
+        const json_res = await res.json();
         if (res.ok) {
-            // TODO: ERROR MESSAGES
             console.log("Log In Success");
-            const token = await res.json();
-            onLogIn(token.access_token);
-            return true;
+            const token = json_res.access_token
+            onLogIn(token);
+            return null;
         } else {
             saveToken(null);
             setIsLogedIn(false);
-            // TODO: ERROR Messages
             console.log("Log In Failed")
-            console.log(res.status)
-            console.log(res.statusText)
-            return false;
+            return json_res.detail;
         }
     }
-    const register = async (email: string, password: string) => {
-        const data = { "username": email, "password": password };
+    const register = async (username: string, password: string) => {
+        const data = { "username": username, "password": password };
         const res = await fetch("http://localhost:8083/users", {
             method: 'post',
             mode: 'cors',
@@ -99,16 +99,13 @@ function AuthProvider(props:Props) {
             body: JSON.stringify(data),
         });
         if (res.ok) {
-            // TODO: error messages
             console.log("Successefully Created account!");
-            const logRes = await logIn(email, password);
+            const logRes = await logIn(username, password);
             return logRes;
         } else {
-            // TODO: error messages
+            const json_res = await res.json()
             console.log("Register Failed!");
-            console.log(res.status)
-            console.log(res.statusText)
-            return false;
+            return json_res.detail;
         }
 
     }

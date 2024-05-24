@@ -1,22 +1,6 @@
-************* Module app.http_client.exceptions
-app/http_client/exceptions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module app.http_client.helpers
-app/http_client/helpers.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module app.http_client.http_client_base
-app/http_client/http_client_base.py:11:0: C0301: Line too long (89/80) (line-too-long)
-app/http_client/http_client_base.py:60:0: C0301: Line too long (83/80) (line-too-long)
-app/http_client/http_client_base.py:285:0: C0301: Line too long (121/80) (line-too-long)
-app/http_client/http_client_base.py:274:0: W1405: Quote delimiter " is inconsistent with the rest of the file (inconsistent-quotes)
-app/http_client/http_client_base.py:285:0: W1405: Quote delimiter " is inconsistent with the rest of the file (inconsistent-quotes)
-************* Module app.http_client.constants
-app/http_client/constants.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module app.api.deps
-app/api/deps.py:45:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
-************* Module files
-app/api/routes/files.py:31:2: C0103: Variable name "DEFAULT_CLIENT_ID" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/api/routes/files.py:32:2: C0103: Variable name "DEFAULT_DOCUMENT_TYPE" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/api/routes/files.py:33:2: C0103: Variable name "DEFAULT_HEADER_FIELDS" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/api/routes/files.py:39:2: C0103: Variable name "DEFAULT_LINE_ITEM_FIELDS" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module app.main
+app/main.py:16:0: W1405: Quote delimiter ' is inconsistent with the rest of the file (inconsistent-quotes)
+app/main.py:8:0: C0412: Imports from package fastapi are not grouped (ungrouped-imports)
 ************* Module dox_api_client
 app/document_information_extraction_client/dox_api_client.py:9:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
 app/document_information_extraction_client/dox_api_client.py:11:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
@@ -32,18 +16,56 @@ app/document_information_extraction_client/constants.py:79:0: C0301: Line too lo
 ************* Module config
 app/core/config.py:42:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
 app/core/config.py:60:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-************* Module postgres_db
-app/core/postgres_db.py:2:0: C0301: Line too long (92/80) (line-too-long)
-app/core/postgres_db.py:12:12: W0613: Unused argument 'session' (unused-argument)
-************* Module app.main
-app/main.py:8:0: C0412: Imports from package fastapi are not grouped (ungrouped-imports)
+************* Module files
+app/api/routes/files.py:54:0: C0325: Unnecessary parens after 'if' keyword (superfluous-parens)
+app/api/routes/files.py:32:9: W0718: Catching too general exception Exception (broad-exception-caught)
+app/api/routes/files.py:66:2: C0103: Variable name "DEFAULT_CLIENT_ID" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
+app/api/routes/files.py:67:2: C0103: Variable name "DEFAULT_DOCUMENT_TYPE" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
+app/api/routes/files.py:68:2: C0103: Variable name "DEFAULT_HEADER_FIELDS" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
+app/api/routes/files.py:74:2: C0103: Variable name "DEFAULT_LINE_ITEM_FIELDS" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
+app/api/routes/files.py:14:0: W0611: Unused User imported from common.models.users (unused-import)
+app/api/routes/files.py:16:0: W0611: Unused Template imported from common.models.templates (unused-import)
+app/api/routes/files.py:17:0: W0611: Unused File imported from common.models.files (unused-import)
+************* Module documents
+app/crud/documents.py:63:0: C0301: Line too long (95/80) (line-too-long)
+app/crud/documents.py:52:4: W0613: Unused argument 'workflow' (unused-argument)
+app/crud/documents.py:6:0: W0611: Unused User imported from common.models.users (unused-import)
+app/crud/documents.py:8:0: W0611: Unused Template imported from common.models.templates (unused-import)
+app/crud/documents.py:9:0: W0611: Unused File imported from common.models.files (unused-import)
+************* Module app.http_client.http_client_base
+app/http_client/http_client_base.py:11:0: C0301: Line too long (89/80) (line-too-long)
+app/http_client/http_client_base.py:60:0: C0301: Line too long (83/80) (line-too-long)
+app/http_client/http_client_base.py:285:0: C0301: Line too long (121/80) (line-too-long)
+app/http_client/http_client_base.py:274:0: W1405: Quote delimiter " is inconsistent with the rest of the file (inconsistent-quotes)
+app/http_client/http_client_base.py:285:0: W1405: Quote delimiter " is inconsistent with the rest of the file (inconsistent-quotes)
+************* Module app.http_client.helpers
+app/http_client/helpers.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.http_client.exceptions
+app/http_client/exceptions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module app.http_client.constants
+app/http_client/constants.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module document_status
 app/models/document_status.py:15:2: C0103: Class attribute name "processedTime" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
-************* Module documents
-app/crud/documents.py:53:0: C0301: Line too long (95/80) (line-too-long)
-app/crud/documents.py:44:31: C0103: Argument name "fileContents" doesn't conform to '^[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/crud/documents.py:42:51: W0613: Unused argument 'postgres_session' (unused-argument)
+************* Module common.crud.postgres.users
+common/src/common/crud/postgres/users.py:11:0: W0611: Unused Template imported from common.models.templates (unused-import)
+common/src/common/crud/postgres/users.py:12:0: W0611: Unused File imported from common.models.files (unused-import)
+common/src/common/crud/postgres/users.py:13:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
+************* Module common.crud.postgres.workflows
+common/src/common/crud/postgres/workflows.py:24:0: C0301: Line too long (82/80) (line-too-long)
+************* Module common.config
+common/src/common/config.py:52:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+common/src/common/config.py:71:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module common.models.files
+common/src/common/models/files.py:33:0: C0301: Line too long (88/80) (line-too-long)
+************* Module common.models.workflows
+common/src/common/models/workflows.py:32:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/workflows.py:34:0: C0303: Trailing whitespace (trailing-whitespace)
+************* Module common.deps
+common/src/common/deps.py:49:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Could not validate credentials') from exc' (raise-missing-from)
+common/src/common/deps.py:18:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
+common/src/common/deps.py:19:0: W0611: Unused Template imported from common.models.templates (unused-import)
+common/src/common/deps.py:20:0: W0611: Unused File imported from common.models.files (unused-import)
 
 -----------------------------------
-Your code has been rated at 9.05/10
+Your code has been rated at 9.11/10
 

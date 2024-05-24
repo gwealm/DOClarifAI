@@ -31,7 +31,13 @@ def get_files_by_workflow_id(*, session: Session,
     Returns:
       list[File]: The Files related to the workflow id
   """
-  statement = select(File).where(File.workflow_id == workflow_id)
+  statement = select(File).where(File.workflow_id == workflow_id).order_by(File.uploaded_at.desc())
   # TODO: Paginate Results
   files = session.exec(statement).all()
   return files
+
+def get_file_by_id(*, session: Session,
+                             file_id: int) -> File:
+  statement = select(File).where(File.id == file_id)
+  file = session.exec(statement).first()
+  return file

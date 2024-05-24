@@ -43,9 +43,6 @@ def delete_workflow(session: PostgresDB, current_user: CurrentUser,
   """
   Delete the workflow with the provided ID.
   """
-  # TODO: What to do with deleted files
-  # Maybe make the user consume the processed files before deleting workflow
-  # Or on delete return all files
   workflow = session.get(Workflow, workflow_id)
   if not workflow:
     raise HTTPException(status_code=404, detail="Workflow not found")
@@ -53,7 +50,58 @@ def delete_workflow(session: PostgresDB, current_user: CurrentUser,
     raise HTTPException(status_code=403,
                         detail="The user doesn't have enough privileges")
 
-  #TODO: Delete all  data related with the user (workflows, documents, etc)
+  #Delete all of the workflow's files
+  for file in workflow.files:
+    session.delete(file)
+  
   session.delete(workflow)
   session.commit()
   return {"message": "Workflow deleted successfully"}
+
+@router.get("/{workflow_id}")
+def get_workflow(session: PostgresDB, current_user: CurrentUser,
+                 workflow_id: int) -> Any:
+  """
+  Get the workflow with the provided ID.
+  """
+  workflow = session.get(Workflow, workflow_id)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+  return workflow
+
+@router.post("/{workflow_id}/email")
+def add_email_to_workflow(session: PostgresDB, current_user: CurrentUser,
+                          workflow_id: int, email: str) -> Any:
+  """
+  Add an email to the workflow.
+  """
+  workflow = session.get(Workflow, workflow_id)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+
+  workflow.email = email
+  session.commit()
+  return {"message": "Email added successfully"}
+ 
+@router.put("/{workflow_id}/confidence_interval")
+def update_confidence_interval(session: PostgresDB, current_user: CurrentUser,
+                               workflow_id: int, confidence_interval: float) -> Any:
+  """
+  Update the confidence interval of the workflow.
+  """
+  workflow = session.get(Workflow, workflow_id)
+  if not workflow:
+    raise HTTPException(status_code=404, detail="Workflow not found")
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+
+  workflow.confidence_interval = confidence_interval
+  session.commit()
+  return {"message": "Confidence interval updated successfully"}

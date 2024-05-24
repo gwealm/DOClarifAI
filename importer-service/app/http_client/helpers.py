@@ -1,3 +1,7 @@
+"""
+This snippet is from the helper module of the HTTP client in the importer-service.
+"""
+
 def make_url(base: str, extension: str) -> str:
   """
     Concatenates a base URL and an extension to form a complete URL.

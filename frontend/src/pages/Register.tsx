@@ -1,20 +1,36 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
 
 const Register = () => {
 
     const auth = useAuth();
-    const [email, setEmail] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+    const [username, setUsername] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
 
     const onClickRegister = async () => {
-        if (email === null || password === null) {
+        if (username === null || password === null) {
+            setErrorMsg("Username and Password are mandatory");
             return;
         }
-        await auth.register(email, password);
+        const errors = await auth.register(username, password);
+        if (!errors) {
+            navigate("/workflows");
+        } else {
+            setErrorMsg(errors);
+        }
     }
+
+    const RegisterFeedBack = () => {
+        return (
+            errorMsg && <p className="text-red-500 text-center mt-4">{errorMsg}</p>
+        );
+    };
+
     return (
         <div className="flex justify-center items-center">
             <div className="border-[3px] border-[#C8EDFD] rounded-lg w-[600px] min-h-[600px] h-auto mx-20 my-5 p-3 flex flex-col">
@@ -42,13 +58,13 @@ const Register = () => {
                     </div>
 
                     <div className="px-4 sm:px-6 py-4">
-                        <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="Email"> Email address </label>
+                        <label className="block text-gray-700 text-md font-medium mb-2 text-left" htmlFor="username"> Username </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="Email"
+                            id="username"
                             type="text"
-                            placeholder="Enter your email"
-                            onChange={e => setEmail(e.target.value)}
+                            placeholder="Enter your username"
+                            onChange={e => setUsername(e.target.value)}
                         />
                     </div>
 
@@ -57,7 +73,7 @@ const Register = () => {
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="Password"
-                            type="text"
+                            type="password"
                             placeholder="Enter your password"
                             onChange={e => setPassword(e.target.value)}
                         />
@@ -75,11 +91,14 @@ const Register = () => {
                             <a href="#" className="text-gray-700 underline"> terms & policy</a>
                         </label>
                     </div>
-
-                    <Link to="/workflows" onClick={onClickRegister} className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <button
+                        onClick={onClickRegister}
+                        className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Register
-                    </Link>
+                    </button>
                 </div>
+                <RegisterFeedBack />
+
 
                 <div className="relative my-6 mx-14 mt-10">
                     <div className="w-full h-0.5 bg-[#C8EDFD]"></div>

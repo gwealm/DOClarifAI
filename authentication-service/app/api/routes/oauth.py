@@ -33,7 +33,7 @@ def login_access_token(
                                  username=form_data.username,
                                  password=form_data.password)
   if not user:
-    raise HTTPException(status_code=400,
+    raise HTTPException(status_code=401,
                         detail="Incorrect username or password")
 
   access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
