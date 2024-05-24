@@ -64,7 +64,9 @@ async def get_pdf_file( session: PostgresDB, current_user: CurrentUser, dox_clie
   workflow:Workflow = session.get(Workflow, workflow_id)
   file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
 
-  if not workflow:
+  if not file:
+    raise HTTPException(status_code=404, detail="File not found")  
+  elif not workflow:
     raise HTTPException(status_code=404, detail="Workflow not found")
   elif workflow.user != current_user:
     raise HTTPException(status_code=403,

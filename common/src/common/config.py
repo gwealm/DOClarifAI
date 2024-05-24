@@ -3,7 +3,6 @@ from pydantic_core import MultiHostUrl
 from pydantic import (
     PostgresDsn,
     computed_field,
-    MongoDsn,
 )
 
 from pydantic_settings import BaseSettings
@@ -65,20 +64,6 @@ class Settings(BaseSettings):
     )
 
   TOKEN_URL: str | None = os.getenv("TOKEN_URL")
-  MONGO_HOST: str | None = os.getenv("MONGO_HOST")
-  MONGO_PORT: int | None = os.getenv("MONGO_PORT")
-  MONGO_USER: str | None = os.getenv("MONGO_INITDB_ROOT_USERNAME")
-  MONGO_PASSWORD: str | None = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
-  MONGO_DB: str | None = os.getenv("MONGO_DB")
-
-  @computed_field
-  @property
-  def MONGO_DATABASE_URI(self) -> MongoDsn:
-    return MultiHostUrl.build(scheme="mongodb",
-                              username=self.MONGO_USER,
-                              password=self.MONGO_PASSWORD,
-                              host=self.MONGO_HOST,
-                              port=self.MONGO_PORT)
 
 
 settings = Settings()

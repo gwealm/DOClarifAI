@@ -118,8 +118,6 @@ class DoxApiClient(CommonClient):
     """
         Polls the DOX API for a document identified by its
           ID until the extraction results are ready.
-        Stores the results in the mongodb document database
-          (lgp database, documents collection).
         Args:
             document_id: The ID of the document for which
               extraction results are requested.

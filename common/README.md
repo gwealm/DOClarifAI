@@ -49,7 +49,6 @@ RUN pip install <path-inside-container>
 ├── models
 │   ├── tokens.py
 │   └── users.py
-├── mongo.py
 ├── postgres.py
 └── security.py
 ```

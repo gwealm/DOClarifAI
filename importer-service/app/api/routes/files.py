@@ -5,7 +5,6 @@ file to be processed by the document extraction service.
 
 from fastapi import APIRouter, HTTPException, UploadFile, BackgroundTasks
 from app.models.document_status import DocumentStatus
-from app.api.deps import MongoDB
 from app.crud import documents as crud_documents
 from common.crud.postgres import workflows as crud_workflows
 from common.crud.postgres import files as crud_files
@@ -23,9 +22,8 @@ router = APIRouter()
 
 @router.post("/{workflow_id}", status_code=202)
 async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
-                      mongo_db: MongoDB, postgres_db: PostgresDB,
-                      file: UploadFile, background_tasks: BackgroundTasks,
-                      workflow_id: int) -> DocumentStatus:
+                      postgres_db: PostgresDB,file: UploadFile, 
+                      background_tasks: BackgroundTasks, workflow_id: int) -> DocumentStatus:
   """
     This asynchronous endpoint lets the client
       submit a pdf document for processing. 
@@ -50,19 +48,18 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
   document_type:DocumentType = template.document_type
   schema:Schema = template.schema
 
-  def document_extracted_callback_partial(mongo_db: MongoDB, workflow_id: int,
-                                          file_metadata_id: int):
+  def document_extracted_callback_partial(workflow_id: int, file_metadata_id: int):
 
     def store_structured_info(document_extraction: dict):
-      return crud_documents.upload_document_extraction(mongo_db,
-                                                       document_extraction,
+      return crud_documents.upload_document_extraction(document_extraction,
                                                        workflow_id,
                                                        file_metadata_id)
 
     return store_structured_info
 
   document_extracted_callback = document_extracted_callback_partial(
-      mongo_db, workflow.id, file_metadata.id)
+      workflow.id, file_metadata.id
+  )
 
   extracted_info = await dox_client.upload_document(
       file, client_id, document_type.name, 

@@ -9,13 +9,11 @@ from starlette.datastructures import Headers as Headers
 from common.document_information_extraction_client.dox_api_client import DoxApiClient
 from app.core.config import settings
 import app.crud.documents as crud_documents
-from app.api.deps import get_mongo_db
 from sqlmodel import Session
 import re
 import asyncio
 from email.mime.text import MIMEText
 
-from pymongo.database import Database as MongoDB
 from common.models.workflows import Workflow
 from common.models.files import FileCreate, FileProcesingStatus
 from common.models.document_types import DocumentType
@@ -32,7 +30,6 @@ dox_client:DoxApiClient = DoxApiClient(settings.SAP_BASE_URL,
                                    settings.SAP_CLIENT_ID,
                                    settings.SAP_CLIENT_SECRET,
                                    settings.SAP_UAA_URL)
-mongo_db = get_mongo_db()
 
 
 def _get_message_info(service, user_id, msg_id):
@@ -88,14 +85,13 @@ def _get_message_info(service, user_id, msg_id):
     return sender_email, receiver, attachment_files
         
 
-def document_extracted_callback_partial(mongo_db: MongoDB, workflow_id: int,
+def document_extracted_callback_partial(workflow_id: int,
                                         file_metadata_id: int):
 
     def store_structured_info(document_extraction: dict):
-        return crud_documents.upload_document_extraction(mongo_db,
-                                                        document_extraction,
-                                                        workflow_id,
-                                                        file_metadata_id)
+        return crud_documents.update_document_extraction_metadata(document_extraction,
+                                                                    workflow_id,
+                                                                    file_metadata_id)
 
     return store_structured_info
 
@@ -202,7 +198,7 @@ class GmailAutomationClient:
                                                                         name=attachment.filename))
 
                             document_extracted_callback = document_extracted_callback_partial(
-                                mongo_db, workflow.id, file_metadata.id
+                                workflow.id, file_metadata.id
                             )
 
                             def create_background_task(get_extraction_for_document, document_id,

@@ -2,7 +2,6 @@
 This module contains the functions to interact with the database.
 """
 
-from pymongo.database import Database
 from common.models.users import User
 from common.models.workflows import Workflow
 from common.models.templates import Template
@@ -14,7 +13,6 @@ from app.websockets.manager import manager
 import asyncio
 
 from sqlmodel import Session
-import os
 
 
 def check_confidence_level(document_extraction: dict,
@@ -49,8 +47,7 @@ def check_confidence_level(document_extraction: dict,
   return irregular_fields
 
 
-def upload_document_extraction(
-    mongo_db: Database,
+def update_document_extraction_metadata(
     document_extraction: dict,
     workflow_id: int,
     file_metadata_id: int
@@ -66,13 +63,9 @@ def upload_document_extraction(
 
         if irregular_fields:
             status = FileProcesingStatus.FAILED
-            document_extraction["processed"] = False
         else:
             status = FileProcesingStatus.SUCCESS
-            document_extraction["processed"] = True
 
-        collection = mongo_db["documents"]
-        collection.insert_one(document_extraction)
         dox_id = document_extraction["id"]
 
         file_metadata = crud_files.get_file_by_id(session=session, file_id=file_metadata_id)
