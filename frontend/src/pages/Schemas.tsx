@@ -121,27 +121,41 @@ const Schemas = () => {
   };
 
   return (
-    <div className="border-2 border-blue-500 rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col justify-between">
-      <div className="grid grid-cols-1 gap-4">
-        {schemas.map(schema => (
-          <Link key={schema.id} to={`/schemas/${schema.id}`}>
-            <div className="bg-gray-200 shadow-md rounded-lg p-4">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-semibold">{schema.name}</h3>
+    <>
+      <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col justify-between">
+          <div>
+              <div className="flex max-w-8xl items-center justify-between pl-6">
+                  <div className="flex lg:flex-1">
+                      <h2 className="text-lg font-semibold text-black">Name</h2>
+                  </div>
+                  <div className="flex lg:flex-1 justify-left">
+                      <h2 className="text-lg font-semibold text-black">Description</h2>
+                  </div>
               </div>
-              <p className="text-gray-700">{schema.description}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
-      <div className="flex items-center justify-start mt-4">
-        <button
-          onClick={() => setShowModal(true)}
-          className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-blue-500 bg-opacity-80 border border-gray-300 hover:bg-opacity-50 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
-        >
-          New Schema
-          <FontAwesomeIcon icon={faSquarePlus} className="ml-2" style={{ fontSize: '24px' }} />
-        </button>
+              <div className="border-b border-blue-[#F5F5F5] my-4"></div>
+
+              {schemas.map((schema) => (
+                  <div className="flex max-w-8xl items-center justify-between bg-[#C8EDFD] bg-opacity-50 my-3 p-6 rounded-lg">
+                      <div className="flex lg:flex-1">
+                          <Link key={schema.id} to={`/schemas/${schema.id}`}>
+                          <p className="text-lg font-normal text-black">{schema.name}</p>
+                          </Link>
+                      </div>
+                      <div className="flex lg:flex-1 justify-left">
+                          <p className="text-md text-gray-700">{schema.description}</p>
+                      </div>
+                  </div>
+              ))}
+          </div>
+          <div className="flex items-center justify-start">
+              <button
+                  className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-[#5583C5] bg-opacity-80 border border-gray-300 hover:bg-opacity-50 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                  onClick={() => setShowModal(true)}
+              >
+                  New Schema
+                  <FontAwesomeIcon icon={faSquarePlus} className="ml-2" style={{ fontSize: '24px' }} />
+              </button>
+          </div>
       </div>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
@@ -220,7 +234,7 @@ const Schemas = () => {
           </button>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 
