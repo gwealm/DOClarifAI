@@ -37,6 +37,12 @@ def read_user_me(current_user: CurrentUser) -> Any:
   """
   return current_user
 
+@router.post("/me/change-password", response_model=UserPublic)
+def change_password(session:PostgresDB ,current_user: CurrentUser,new_password: str) -> Any:
+  """
+  Get current user.
+  """
+  crud_users.change_user_password(current_user,new_password)
 
 @router.delete("/{user_id}")
 def delete_user(session: PostgresDB, current_user: CurrentUser,
