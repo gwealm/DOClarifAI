@@ -82,82 +82,93 @@ const NewTemplateModal = ({ onClose, onAddTemplate }) => {
 
     
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg px-12">
-            <h2 className="text-xl font-semibold mb-4">Create New Template</h2>
-            <form onSubmit={handleAddTemplate}>
-              <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={template.name}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Description</label>
-                <textarea
-                    name="description"
-                    value={template.description}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded-lg"
-                    required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Document Type</label>
-                <select
-                  name="document_type_id"
-                  value={template.document_type_id}
-                  onChange={handleDocumentTypeChange}
-                  className="w-full mt-2 px-3 py-2 border rounded-lg"
-                  required
-                >
-                  <option value="">Select a document type</option>
-                  {documentTypes.map(documentType => (
-                    <option key={documentType.id} value={documentType.id}>
-                      {documentType.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Schema</label>
-                <select
-                  name="schema_id"
-                  value={template.schema_id}
-                  onChange={handleInputChange}
-                  className="w-full mt-2 px-3 py-2 border rounded-lg"
-                  required
-                >
-                  <option value="">Select a schema</option>
-                  {userSchemas.map(userSchema => (
-                    <option key={userSchema.id} value={userSchema.id}>
-                      {userSchema.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex justify-around mt-8">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-4 py-2 mr-2 rounded-lg bg-gray-300 hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
-          </div>
+        <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                  <div
+                    className="flex flex-shrink-0 items-center justify-between rounded-t-md bg-blue-100 border-b-2 border-neutral-100 p-4 dark:border-white/10">
+                    <h5
+                      className="text-xl font-medium leading-normal text-surface dark:text-white">
+                      Create New Template
+                    </h5>
+                  </div>
+                  <form onSubmit={handleAddTemplate}>
+                    <div className="bg-white pt-4 sm:px-6 sm:pb-6">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Name"> Name </label>
+                        <input 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" 
+                            type="text" 
+                            name="name"
+                            value={template.name}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="bg-white sm:px-6 sm:pb-6">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Description"> Description </label>
+                        <input 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+                            type="text" 
+                            name="description"
+                            value={template.description}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="bg-white sm:px-6 sm:pb-6">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Template"> Document Type </label>
+                        <select 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+                            name="document_type_id"
+                            value={template.document_type_id}
+                            onChange={handleDocumentTypeChange}
+                            required
+                        >
+                          <option value="">Select a document type</option>
+                          {documentTypes.map(documentType => (
+                            <option key={documentType.id} value={documentType.id}>
+                              {documentType.name}
+                            </option>
+                          ))}
+                        </select>
+                    </div>
+                    <div className="bg-white sm:px-6 sm:pb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Template"> Schema </label>
+                        <select 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+                            name="schema_id"
+                            value={template.schema_id}
+                            onChange={handleInputChange}
+                            required
+                        >
+                          <option value="">Select a schema</option>
+                          {userSchemas.map(userSchema => (
+                            <option key={userSchema.id} value={userSchema.id}>
+                              {userSchema.name}
+                            </option>
+                          ))}
+                        </select>
+                    </div>
+                    <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button 
+                            type="submit" 
+                            className="inline-flex w-full justify-center rounded-md bg-[#1976D2] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-opacity-80 sm:ml-3 sm:w-auto"
+                        >
+                            Create
+                        </button>
+                        <button 
+                            onClick={onClose}
+                            type="button" 
+                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                  </form>
+                </div>
+                </div>
+            </div>
         </div>
     );
 }
