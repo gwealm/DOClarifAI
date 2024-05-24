@@ -35,8 +35,8 @@ const ProcessedFile = () => {
 
   const FieldComponent = ({ index, item, onAdd }) => {
     return (
-      <div onClick={()=>onAdd(index,item)} key={"lineItem" + "-" + index} className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-lg mb-2">
-        <span className="text-gray-700">
+      <div onClick={()=>onAdd(index,item)} key={"lineItem" + "-" + index} className="w-full px-4 py-2 text-left border border-blue-300 rounded-lg mb-2">
+        <span className="text-gray-700 text-sm">
           {item.name}
         </span>
       </div >
@@ -45,10 +45,10 @@ const ProcessedFile = () => {
 
   const AddFieldsComponent = ({ title, fields, onAdd }) => {
     const [toggle, setToggle] = useState<boolean>(false);
-    return (<div className="border border-green-300 rounded-lg my-5">
+    return (<div className="border-2 border-blue-300 rounded-lg my-5 mx-6">
       <button
         onClick={() => setToggle((t) => !t)}
-        className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-t-lg"
+        className="w-full px-4 py-2 text-left bg-[#C8EDFD] bg-opacity-70 hover:bg-opacity-30 rounded-t-lg"
       >
         <div className="flex justify-between items-center">
           <span className="text-gray-700">
@@ -71,7 +71,7 @@ const ProcessedFile = () => {
         </div>
       </button>
       {toggle && (
-        <div className="p-4 bg-white border-t border-gray-300 divide-y divide-gray-300">
+        <div className="grid grid-cols-2 gap-2 m-2 max-h-[200px] overflow-y-auto overflow-x-hidden">
           {fields.map((item, i) => <FieldComponent index={i} item={item} onAdd={onAdd} />)} </div>
       )}
     </div>);
@@ -102,18 +102,16 @@ const ProcessedFile = () => {
       setFields(newFields);
     }
     return (
-      <div className="border border-gray-300 rounded-lg my-5">
-        <button
+      <button
           onClick={onAdd}
-          className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-t-lg"
+          className=" px-4 py-2 text-left bg-blue-400 hover:bg-blue-300 rounded-lg"
         >
           <div className="flex justify-between items-center">
-            <span className="text-gray-700">
+            <span className="text-white text-sm">
               Add New Line Item
             </span>
           </div>
         </button>
-      </div>
     );
   }
   const AddInsideLineComponent = (lineIndex) => {
@@ -335,7 +333,7 @@ const ProcessedFile = () => {
             type="text"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
+            className="w-55 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
       case "number":
@@ -344,7 +342,7 @@ const ProcessedFile = () => {
             type="number"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
+            className="w-55 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
       case "date":
@@ -353,7 +351,7 @@ const ProcessedFile = () => {
             type="date"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
+            className="w-55 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
       default:
@@ -362,7 +360,7 @@ const ProcessedFile = () => {
             type="text"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
+            className="w-55 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
     }
@@ -420,13 +418,6 @@ const ProcessedFile = () => {
 
   return (
     <div className="flex justify-center mx-32 my-8">
-      <button
-        onClick={postGroundTruth}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded h-16 mx-6"
-      >
-        <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" />
-        Save Changes
-      </button>
       <div className="relative mr-32">
         <div className="relative border border-gray-300 rounded-md mb-4 inline-block">
           {
@@ -534,30 +525,41 @@ const ProcessedFile = () => {
         )}
       </div>
       <div className="w-full max-w-xl mx-auto">
-
-        <span className="flex font-semibold text-xl mb-2">Extraction Confidence Range</span>
-        <div className="flex items-center space-x-2 pb-2">
-          <div className="flex items-center space-x-6">
-            <div className="w-24 h-8 bg-red-600 text-white flex items-center justify-center rounded-md">
-              0% - 50%
-            </div>
-            <div className="w-24 h-8 bg-orange-500 text-white flex items-center justify-center rounded-md">
-              51% - 79%
-            </div>
-            <div className="w-24 h-8 bg-green-600 text-white flex items-center justify-center rounded-md">
-              80% - 100%
+        <div className="flex items-center">
+          <div>
+            <span className="flex font-semibold text-xl mb-2">Extraction Confidence Range</span>
+            <div className="flex items-center space-x-2 pb-2">
+              <div className="flex items-center space-x-6">
+                <div className="w-24 h-8 bg-red-600 text-white flex items-center justify-center rounded-md">
+                  0% - 50%
+                </div>
+                <div className="w-24 h-8 bg-orange-500 text-white flex items-center justify-center rounded-md">
+                  51% - 79%
+                </div>
+                <div className="w-24 h-8 bg-green-600 text-white flex items-center justify-center rounded-md">
+                  80% - 100%
+                </div>
+              </div>
             </div>
           </div>
+
+          <button
+            onClick={postGroundTruth}
+            className="bg-green-500 hover:bg-green-700 text-white text-sm font-bold py-2 px-4 rounded h-10 ml-14"
+          >
+            <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" />
+            Save Changes
+          </button>
         </div>
 
         {/* Header Fields Dropdown */}
-        <div className="border border-gray-300 rounded-lg my-5">
+        <div className="border border-blue-300 rounded-lg my-5">
           <button
             onClick={toggleDropdown}
-            className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-t-lg"
+            className="w-full px-4 py-2 text-left bg-[#C8EDFD] hover:bg-opacity-50 rounded-t-lg"
           >
             <div className="flex justify-between items-center">
-              <span className="text-gray-700">Header Fields ({fields.headerFields.length})</span>
+              <span className="text-gray-700 text-lg">Header Fields ({fields.headerFields.length})</span>
               <svg
                 className={`h-5 w-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 xmlns="http://www.w3.org/2000/svg"
@@ -575,7 +577,7 @@ const ProcessedFile = () => {
           </button>
           {isOpen && (
             <>
-              <ul className="p-4 bg-white border-t border-gray-300 divide-y divide-gray-300">
+              <ul className="p-4 bg-white border-t border-blue-300 divide-y divide-gray-300 max-h-[450px] overflow-y-auto overflow-x-hidden">
                 {fields.headerFields.map((field, index) => {
                   const confidenceLevel = getConfidenceLevel(field.confidence);
                   return (
@@ -591,7 +593,7 @@ const ProcessedFile = () => {
                                 type="text"
                                 value={field.value}
                                 readOnly
-                                className="w-40 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
+                                className="w-55 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
                               />
                             )}
                             <FontAwesomeIcon
@@ -613,13 +615,13 @@ const ProcessedFile = () => {
         </div>
 
         {/* Line Items Dropdown */}
-        <div className="border border-gray-300 rounded-lg my-5">
+        <div className="border border-blue-300 rounded-lg my-5">
           <button
             onClick={toggleLineItemsDropdown}
-            className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-t-lg"
+            className="w-full px-4 py-2 text-left bg-[#C8EDFD] hover:bg-opacity-50 rounded-t-lg"
           >
             <div className="flex justify-between items-center">
-              <span className="text-gray-700">
+              <span className="text-gray-700 text-lg">
                 Line Items ({fields.lineItems.length})
               </span>
               <svg
@@ -639,12 +641,12 @@ const ProcessedFile = () => {
             </div>
           </button>
           {isLineItemsOpen && (
-            <div className="p-4 bg-white border-t border-gray-300 divide-y divide-gray-300">
+            <div className="p-4 bg-white border-t border-blue-300 divide-y divide-gray-300 max-h-[450px] overflow-y-auto">
               {fields["lineItems"].map((lineItemList, lineItemListIdx) => (
                 <div key={"lineItem" + "-" + lineItemListIdx}>
                   <button
                     onClick={() => toggleIndividualLineItem(lineItemListIdx)}
-                    className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-lg mb-2"
+                    className="w-full px-4 py-2 text-left bg-blue-100 hover:bg-opacity-70 rounded-lg my-2"
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700">
@@ -695,7 +697,7 @@ const ProcessedFile = () => {
                                         type="text"
                                         value={lineItem.value}
                                         readOnly
-                                        className="w-40 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
+                                        className="w-55 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
                                       />
                                     )}
                                     <FontAwesomeIcon
