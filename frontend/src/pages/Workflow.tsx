@@ -206,7 +206,7 @@ function Workflow() {
           onChange={handleInputChange}
           className="flex place-self-start mt-4 border-r-8 border-transparent mb-8 mr-12 ml-8 rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500"
           required>
-            <option value="">Select a template</option>
+            <option value="" disabled>Select a template</option>
             {userTemplates.map(template => (
               <option key={template.id} value={template.id}>
                 {template.name}
