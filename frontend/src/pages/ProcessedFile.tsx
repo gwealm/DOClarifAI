@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { useAuth } from "../components/auth/Auth";
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 
 import "react-pdf/dist/esm/Page/TextLayer.css";
@@ -206,7 +207,7 @@ const ProcessedFile = () => {
             type="text"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="border border-gray-400 px-2 py-1"
+            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
       case "number":
@@ -215,7 +216,7 @@ const ProcessedFile = () => {
             type="number"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="border border-gray-400 px-2 py-1"
+            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
       case "date":
@@ -224,7 +225,7 @@ const ProcessedFile = () => {
             type="date"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="border border-gray-400 px-2 py-1"
+            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
       default:
@@ -233,7 +234,7 @@ const ProcessedFile = () => {
             type="text"
             value={field.value}
             onChange={handleFieldValueChange}
-            className="border border-gray-400 px-2 py-1"
+            className="w-40 px-2 py-1 bg-gray-100 border-none rounded-md outline-none overflow-hidden text-ellipsis"
           />
         );
     }
@@ -257,6 +258,36 @@ const ProcessedFile = () => {
         updatedFields[selectedFieldLevel][selectedOuterFieldIdx] = updatedField
 
     setFields(updatedFields);
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLineItemsOpen, setIsLineItemsOpen] = useState(false);
+  const [openLineItems, setOpenLineItems] = useState([]);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleLineItemsDropdown = () => {
+    setIsLineItemsOpen(!isLineItemsOpen);
+  };
+
+  const toggleIndividualLineItem = (index) => {
+    setOpenLineItems((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+  };
+
+  const confidenceLevels = {
+    low: 'border-l-red-500',
+    medium: 'border-l-orange-500',
+    high: 'border-l-green-500',
+  };
+  
+  const getConfidenceLevel = (confidence) => {
+    if (confidence >= 0.8) return 'high';
+    if (confidence >= 0.5) return 'medium';
+    return 'low';
   };
 
   return (
@@ -374,64 +405,196 @@ const ProcessedFile = () => {
               </div>
             )}
           </div>
-          <div>
-            <div>
-              <h2>Header fields</h2>
-              <ul className="divide-y divide-gray-300">
-                {fields["headerFields"].map((field, index) => {
-                  return (
-                    <li key={"headerField" + "-" + index} className="mb-2">
-                        <div>
-                      <span className="mr-2">{field.name}: </span>
-                      {selectedFieldLevel === "headerFields" && selectedOuterFieldIdx === index ? (
-                        renderInputByType("headerFields", index, null)
-                      ) : (
-                        <span>{field.value}</span>
-                      )}
-                      <button
-                        onClick={() => handleFieldSelection("headerFields", index, null)}
-                        className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                      >
-                        Edit
-                      </button>
-                      </div>
-                      <p>Confidence: {Math.round(field.confidence*100 * 100) / 100}%</p>
+          <div className="w-full max-w-xl mx-auto">
 
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            <div>
-              <h2>Line items</h2>
-              <div>
-                {fields["lineItems"].map((lineItemList, lineItemListIdx) => (
-                  <ul key={"lineItem" + "-" + lineItemListIdx} className="divide-y divide-gray-300 mb-4">
-                    <p>Line item {lineItemListIdx + 1}</p>
-                    {lineItemList.map((lineItem, lineItemIdx) => {
-                      return (
-                        <li key={"lineItem" + "-" + lineItemListIdx + "-" + lineItemIdx} className="mb-2">
-                            <div>
-                          <span className="mr-2">{lineItem.name}: </span>
-                          {selectedFieldLevel === "lineItems" && selectedOuterFieldIdx === lineItemListIdx && selectedInnerFieldIdx == lineItemIdx ? (
-                            renderInputByType("lineItems", lineItemListIdx, lineItemIdx)
-                          ) : (
-                            <span>{lineItem.value}</span>
-                          )}
-                          <button
-                            onClick={() => handleFieldSelection("lineItems", lineItemListIdx, lineItemIdx)}
-                            className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                          >
-                            Edit
-                          </button>
-                            </div>
-                            <p>Confidence: {Math.round(lineItem.confidence * 100 * 100) / 100}%</p>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ))}
+            <span className="flex font-semibold text-xl mb-2">Extraction Confidence Range</span>
+            <div className="flex items-center space-x-2 pb-2">
+              <div className="flex items-center space-x-6">
+                <div className="w-24 h-8 bg-red-600 text-white flex items-center justify-center rounded-md">
+                  0% - 50%
+                </div>
+                <div className="w-24 h-8 bg-orange-500 text-white flex items-center justify-center rounded-md">
+                  51% - 79%
+                </div>
+                <div className="w-24 h-8 bg-green-600 text-white flex items-center justify-center rounded-md">
+                  80% - 100%
+                </div>
               </div>
+            </div>
+
+            {/* Header Fields Dropdown */}
+            <div className="border border-gray-300 rounded-lg my-5">
+              <button
+                onClick={toggleDropdown}
+                className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-t-lg"
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">Header Fields ({fields.headerFields.length})</span>
+                  <svg
+                    className={`h-5 w-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </button>
+              {isOpen && (
+                <ul className="p-4 bg-white border-t border-gray-300 divide-y divide-gray-300">
+                  {fields.headerFields.map((field, index) => {
+                    const confidenceLevel = getConfidenceLevel(field.confidence);
+                    return (
+                      <li key={`headerField-${index}`} className="py-2 flex items-center">
+                        <div className={`flex-1 pl-4 p-2 border-l-4 ${confidenceLevels[confidenceLevel]} bg-opacity-20`}>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-gray-700">{field.name}:</span>
+                            <div className="flex items-center justify-end ml-auto bg-white border border-gray-300 rounded-md px-2 py-1">
+                              {selectedFieldLevel === "headerFields" && selectedOuterFieldIdx === index ? (
+                                renderInputByType("headerFields", index, null)
+                              ) : (
+                                <input
+                                  type="text"
+                                  value={field.value}
+                                  readOnly
+                                  className="w-40 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
+                                />
+                              )}
+                              <FontAwesomeIcon
+                                onClick={() => handleFieldSelection("headerFields", index, null)}
+                                icon={faPenToSquare}
+                                className="ml-2 cursor-pointer text-blue-500"
+                              />
+                            </div>
+                          </div>
+                          <p className="text-gray-500 text-xs text-left">Confidence: {Math.round(field.confidence * 100 * 100) / 100}%</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+
+            {/* Line Items Dropdown */}
+            <div className="border border-gray-300 rounded-lg my-5">
+              <button
+                onClick={toggleLineItemsDropdown}
+                className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-t-lg"
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">
+                    Line Items ({fields.lineItems.length})
+                  </span>
+                  <svg
+                    className={`h-5 w-5 transform transition-transform ${
+                      isLineItemsOpen ? 'rotate-180' : ''
+                    }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </button>
+              {isLineItemsOpen && (
+                <div className="p-4 bg-white border-t border-gray-300 divide-y divide-gray-300">
+                  {fields["lineItems"].map((lineItemList, lineItemListIdx) => (
+                    <div key={"lineItem" + "-" + lineItemListIdx}>
+                      <button
+                        onClick={() => toggleIndividualLineItem(lineItemListIdx)}
+                        className="w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded-lg mb-2"
+                      >
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-700">
+                            Line Item {lineItemListIdx + 1}
+                          </span>
+                          <svg
+                            className={`h-5 w-5 transform transition-transform ${
+                              openLineItems.includes(lineItemListIdx)
+                                ? 'rotate-180'
+                                : ''
+                            }`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      </button>
+                      {openLineItems.includes(lineItemListIdx) && (
+                        <ul className="divide-y divide-gray-300 mb-4">
+                          {lineItemList.map((lineItem, lineItemIdx) => {
+                            const confidenceLevel = getConfidenceLevel(
+                              lineItem.confidence
+                            );
+                            return (
+                              <li
+                              key={"lineItem" + "-" + lineItemListIdx + "-" + lineItemIdx}
+                                className="py-2 flex items-start"
+                              >
+                                <div
+                                  className={`flex-1 pl-4 p-2 border-l-4 ${confidenceLevels[confidenceLevel]} bg-opacity-20`}
+                                >
+                                  <div className="flex justify-between items-center mb-1">
+                                    <span className="text-gray-700">
+                                      {lineItem.name}:
+                                    </span>
+                                    <div className="flex items-center justify-end ml-auto bg-white border border-gray-300 rounded-md px-2 py-1">
+                                    {selectedFieldLevel === "lineItems" && selectedOuterFieldIdx === lineItemListIdx && selectedInnerFieldIdx == lineItemIdx ? (
+                                      renderInputByType("lineItems", lineItemListIdx, lineItemIdx)
+                                    ) : (
+                                      <input
+                                        type="text"
+                                        value={lineItem.value}
+                                        readOnly
+                                        className="w-40 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
+                                      />
+                                    )}
+                                      <FontAwesomeIcon
+                                        onClick={() =>
+                                          handleFieldSelection(
+                                            'lineItems',
+                                            lineItemListIdx,
+                                            lineItemIdx
+                                          )
+                                        }
+                                        icon={faPenToSquare}
+                                        className="ml-2 cursor-pointer text-blue-500"
+                                      />
+                                    </div>
+                                  </div>
+                                  <p className="text-gray-500 text-xs text-left">
+                                    Confidence:{' '}
+                                    {Math.round(lineItem.confidence * 100)}%
+                                  </p>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
