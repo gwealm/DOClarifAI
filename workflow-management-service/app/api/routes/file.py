@@ -7,6 +7,8 @@ from fastapi import APIRouter, HTTPException
 from common.crud.postgres import files as crud_files
 from common.models.files import (File, FileCreate, FileProcesingStatus)
 from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.schemas import Schema
 from common.deps import (
     CurrentUser,
     PostgresDB,
@@ -97,7 +99,20 @@ async def get_file_results( session: PostgresDB, current_user: CurrentUser, dox_
     raise HTTPException(status_code=400,
                         detail="File is still being processed")
 
-  return await dox_client.get_extraction_for_document(file.dox_id,do_nothing_callback)
+
+  extraction_results:dict = await dox_client.get_extraction_for_document(file.dox_id,do_nothing_callback)
+  extraction:dict = extraction_results["extraction"]
+  
+  template:Template = workflow.template
+  schema:Schema = template.schema
+  dox_schema = await dox_client.get_schema(schema.schema_id_dox)
+  
+  return {
+    "extraction":extraction,
+    "schema":dox_schema
+  }
+
+  
   
 @router.post("/{file_id}/ground-truth")
 async def save_ground_truth( session: PostgresDB, current_user: CurrentUser, dox_client:DoxClient, workflow_id: int, file_id: int,payload:dict):
