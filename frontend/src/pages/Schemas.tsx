@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons';
 import { useAuth } from "../components/auth/Auth";
+import Modal from 'react-modal';
 
 const Schemas = () => {
   const [schemas, setSchemas] = useState([]);
@@ -14,6 +15,19 @@ const Schemas = () => {
     document_type_id: ''
   });
   const auth = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const openModal = (message) => {
+    setErrorMessage(message);
+    setIsModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setErrorMessage('');
+    window.location.reload();
+  };
 
   useEffect(() => {
     const fetchSchemas = async () => {
@@ -77,10 +91,32 @@ const Schemas = () => {
         setSchemas([...schemas, createdSchema]);
         setShowModal(false);
       } else {
+        setShowModal(false);
         console.error('Failed to create schema');
+        for (let i = 0; i < schemas.length; i++) {
+          if (schemas[i].name === newSchema.name) {
+            openModal('Schema name already exists');
+            return;
+          }
+        }
+        // check for whitespace in the schema name
+        if(newSchema.name.indexOf(' ') >= 0){
+          openModal('Schema name cannot contain whitespaces');
+        }
+        // check for empty schema name
+        else if(newSchema.name === ''){
+          openModal('Schema name cannot be empty');
+        }
+        //check if schema name already exists
+        else{
+          openModal('Error creating schema');
+        }
       }
     } catch (error) {
+      setShowModal(false);
       console.error('Error creating schema:', error);
+      openModal('Error creating schema: ' + error.message);
+
     }
   };
 
@@ -170,6 +206,20 @@ const Schemas = () => {
           </div>
         </div>
       )}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Error Modal"
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-5 rounded shadow-lg">
+          <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
+          <p>{errorMessage}</p>
+          <button onClick={closeModal} className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md">
+            Close
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

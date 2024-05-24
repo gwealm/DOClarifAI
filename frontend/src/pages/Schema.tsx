@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +22,8 @@ const Schema = () => {
   const [editingCategory, setEditingCategory] = useState('');
   const [editFieldName, setEditFieldName] = useState('');
   const [editFieldType, setEditFieldType] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchSchema = async () => {
@@ -46,14 +49,28 @@ const Schema = () => {
           console.log(data);
         } else {
           console.error('Failed to fetch schema');
+          openModal('Failed to fetch schema');
         }
       } catch (error) {
         console.error('Error fetching schema:', error);
+        openModal('Error fetching schema: ' + error.message);
       }
     };
 
     fetchSchema();
-  }, [auth, id]);
+  }, [auth, id, isActive]);
+
+  
+  const openModal = (message) => {
+    setErrorMessage(message);
+    setIsModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setErrorMessage('');
+    window.location.reload();
+  };
 
   const handleToggleActiveState = async () => {
     try {
@@ -66,9 +83,11 @@ const Schema = () => {
         setIsActive(!isActive);
       } else {
         console.error('Failed to toggle schema state');
+        openModal('Error toggling schema state: \n The schema is in use by a template or needs at least one field');
       }
     } catch (error) {
       console.error('Error toggling schema state:', error);
+      openModal('Error toggling schema state: \n The schema is in use by a template or needs at least one field');
     }
   };
 
@@ -103,9 +122,6 @@ const Schema = () => {
         updatedLineItemFields.push(newField);
       }
   
-      setHeaderFields(updatedHeaderFields);
-      setLineItemFields(updatedLineItemFields);
-  
       auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
         method: 'POST',
         headers: {
@@ -119,12 +135,21 @@ const Schema = () => {
       .then((response) => {
         if (response.ok) {
           console.log('Schema fields updated');
+          setHeaderFields(updatedHeaderFields);
+          setLineItemFields(updatedLineItemFields);
         } else {
+          if (isActive) {
+            openModal('You cannot add a field to an active schema');
+          }
+          else{
           console.error('Failed to update schema fields');
+          openModal('Failed to update schema fields');
+          }
         }
       })
       .catch((error) => {
         console.error('Error updating schema fields:', error);
+        openModal('Error updating schema fields: ' + error.message);
       });
   
       setNewFieldName('');
@@ -143,9 +168,6 @@ const Schema = () => {
       updatedLineItemFields.splice(index, 1);
     }
 
-    setHeaderFields(updatedHeaderFields);
-    setLineItemFields(updatedLineItemFields);
-
     auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
       method: 'POST',
       headers: {
@@ -159,12 +181,16 @@ const Schema = () => {
     .then((response) => {
       if (response.ok) {
         console.log('Schema fields updated');
+        setHeaderFields(updatedHeaderFields);
+        setLineItemFields(updatedLineItemFields);
       } else {
         console.error('Failed to update schema fields');
+        openModal('Failed to update schema fields');
       }
     })
     .catch((error) => {
       console.error('Error updating schema fields:', error);
+      openModal('Error updating schema fields: ' + error.message);
     });
   };
 
@@ -189,9 +215,6 @@ const Schema = () => {
       updatedLineItemFields[editingIndex].formattingType = editFieldType;
     }
 
-    setHeaderFields(updatedHeaderFields);
-    setLineItemFields(updatedLineItemFields);
-
     auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
       method: 'POST',
       headers: {
@@ -205,12 +228,21 @@ const Schema = () => {
     .then((response) => {
       if (response.ok) {
         console.log('Schema fields updated');
+        setHeaderFields(updatedHeaderFields);
+        setLineItemFields(updatedLineItemFields);
       } else {
         console.error('Failed to update schema fields');
+          if (isActive) {
+            openModal('You cannot edit a field in an active schema');
+          }
+          else{
+            openModal('Failed to update schema fields');
+          }
       }
     })
     .catch((error) => {
       console.error('Error updating schema fields:', error);
+      openModal('Error updating schema fields: ' + error.message);
     });
 
     setEditingIndex(null);
@@ -374,6 +406,20 @@ const Schema = () => {
         </>
       )}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Error Modal"
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-5 rounded shadow-lg">
+          <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
+          <p>{errorMessage}</p>
+          <button onClick={closeModal} className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md">
+            Close
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
