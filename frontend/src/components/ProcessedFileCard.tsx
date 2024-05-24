@@ -28,7 +28,7 @@ const ProcessedFileCard = ({ index, fileId, workflowId, dox_id, name, date, proc
                 <p className="text-lg text-black">{FileProcessingStatus[processed_status]}</p>
             </div>
             <div className="flex justify-end items-center">
-                {processed_status === 3 || processed_status === 2  && (
+                {processed_status === 2  && (
                 <>
                     <Link
                         to={`/workflow/${workflowId}/processed-files/${fileId}`}
@@ -40,6 +40,12 @@ const ProcessedFileCard = ({ index, fileId, workflowId, dox_id, name, date, proc
                 )}
                 {processed_status === 3 && (
                     <>
+                    <Link
+                        to={`/workflow/${workflowId}/processed-files/${fileId}`}
+                        className="mr-12 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Results
+                    </Link>
                         <div className="ml-12 cursor-pointer" onClick={handleDownloadClick}>
                             <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
                         </div>
