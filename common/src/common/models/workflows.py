@@ -18,7 +18,6 @@ class WorkflowIn(BaseModel):
   email: str | None = Field(default=None)
 
 
-
 class WorkflowCreate(WorkflowIn):
   user_id: int
 

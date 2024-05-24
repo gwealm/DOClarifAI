@@ -20,6 +20,27 @@ def create_workflow(*, session: Session, workflow: WorkflowCreate) -> Workflow:
   session.refresh(db_obj)
   return db_obj
 
+def update_workflow(*, session: Session, workflow_id:int, workflow:WorkflowCreate) -> Workflow:
+  """
+  Update a new workflow.
+  Args:
+    session: PostgresDB session
+    workflow: New workflow information
+  Returns:
+    Workflow: The updated workflow
+  """
+  db_obj:Workflow = session.query(Workflow).filter(Workflow.id == workflow_id).first()
+  if not db_obj:
+    return None
+  db_obj.name = workflow.name
+  db_obj.description = workflow.description
+  db_obj.confidence_interval = workflow.confidence_interval
+  db_obj.template_id = workflow.template_id
+  db_obj.email = workflow.email
+  session.commit()
+  session.refresh(db_obj)
+  return db_obj
+
 
 def get_workflows_by_user_id(*, session: Session, user_id: int) -> list[Workflow]:
   """
