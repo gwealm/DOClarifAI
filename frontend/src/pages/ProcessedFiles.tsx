@@ -9,7 +9,7 @@ function ProcessedFiles() {
   const { id } = useParams();
 
   const handleDownloadFiles = (id) => {
-    const url = 'http://localhost:8082/documents/' + id + '/xlsx';
+    const url = '/exporter/documents/' + id + '/xlsx/';
     auth.fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -30,7 +30,7 @@ function ProcessedFiles() {
   }
 
   const fetchDocuments = useCallback(async () => {
-    const url = 'http://localhost:8082/documents/' + id;
+    const url = '/exporter/documents/' + id + '/';
     auth.fetch(url, {
       method: 'GET',
     })

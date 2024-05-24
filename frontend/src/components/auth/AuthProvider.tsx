@@ -70,7 +70,7 @@ function AuthProvider(props:Props) {
         data.append("username", username);
         console.log("Trying to log in");
         data.append("password", password);
-        const res = await fetch("http://localhost:8083/oauth/token", {
+        const res = await fetch("/auth/oauth/token/", {
             method: 'post',
             mode: 'cors',
             body: data,
@@ -90,7 +90,7 @@ function AuthProvider(props:Props) {
     }
     const register = async (username: string, password: string) => {
         const data = { "username": username, "password": password };
-        const res = await fetch("http://localhost:8083/users", {
+        const res = await fetch("/auth/users/", {
             method: 'post',
             mode: 'cors',
             headers: {
