@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "../components/auth/Auth";
 import { useParams } from 'react-router-dom';
+import Modal from 'react-modal';
 
 const Template = () => {
   const [schemas, setSchemas] = useState([]);
@@ -12,6 +13,8 @@ const Template = () => {
     document_type_id: ''
   });
   const [isActive, setIsActive] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
 
 
@@ -29,6 +32,16 @@ const Template = () => {
     setTemplate({ ...template, document_type_id: new_document_type_id, schema_id: '' })
     fetchSchemas(new_document_type_id)
   }
+  const openModal = (message) => {
+    setErrorMessage(message);
+    setIsModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setErrorMessage('');
+    window.location.reload();
+  };
 
 
   const updateTemplate = async (e) => {
@@ -51,6 +64,7 @@ const Template = () => {
       e.preventDefault()
 
       if (!response.ok) {
+        openModal('Failed to update template. Make sure the template is not active.');
         throw new Error('Failed to update template');
       }
 
@@ -58,6 +72,7 @@ const Template = () => {
       console.log("Template: " + data);
     } catch (error) {
       console.error('Error fetching document types:', error);
+      openModal('Failed to update template. Make sure the template is not active.');
     }
   };
 
@@ -121,12 +136,14 @@ const Template = () => {
       });
 
       if (!response.ok) {
+        openModal('Failed to update template. Make sure the template is not being used by any workflow.');
         throw new Error(`Failed to ${isActive ? 'deactivate' : 'activate'} schema`);
       }
 
       setIsActive(!isActive);
     } catch (error) {
       console.error(`Error toggling template active state:`, error);
+      openModal('Failed to update template. Make sure the template is not being used by any workflow.');
     }
   };
 
@@ -235,6 +252,20 @@ const Template = () => {
           </button>
         </div>
       </form>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Error Modal"
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-5 rounded shadow-lg">
+          <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
+          <p>{errorMessage}</p>
+          <button onClick={closeModal} className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md">
+            Close
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

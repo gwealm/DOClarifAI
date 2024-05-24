@@ -79,4 +79,9 @@ def update_document_extraction_metadata(
             user_id = workflow.user.id
             message = f"File {file_metadata.name} inside the workflow: \"{workflow.name}\" has been processed successfully"
             asyncio.create_task(manager.send_personal_message(message, user_id))
+        # Send notification if the file status is failed
+        elif status == FileProcesingStatus.FAILED:
+            user_id = workflow.user.id
+            message = f"File {file_metadata.name} inside the workflow: \"{workflow.name}\" has failed to process"
+            asyncio.create_task(manager.send_personal_message(message, user_id))
 
