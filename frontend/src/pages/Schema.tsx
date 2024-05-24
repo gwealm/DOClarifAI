@@ -1,106 +1,242 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan, faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import Select from 'react-select';
-
+import { useAuth } from '../components/auth/Auth';
+import { useParams } from 'react-router-dom';
 
 const Schema = () => {
-  const [fields, setFields] = useState([]);
+  const { id } = useParams();
+  const auth = useAuth();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [headerFields, setHeaderFields] = useState([]);
+  const [lineItemFields, setLineItemFields] = useState([]);
+  const [isActive, setIsActive] = useState(false);
+  const [isPredefined, setIsPredefined] = useState(false);
+  const [newFieldCategory, setNewFieldCategory] = useState('');
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('');
-  const [newFieldConfig, setNewFieldConfig] = useState({});
   const [editingIndex, setEditingIndex] = useState(null);
+  const [editingCategory, setEditingCategory] = useState('');
   const [editFieldName, setEditFieldName] = useState('');
   const [editFieldType, setEditFieldType] = useState('');
-  const [editFieldConfig, setEditFieldConfig] = useState({});
 
+  useEffect(() => {
+    const fetchSchema = async () => {
+      try {
+        const response = await auth.fetch(`http://localhost:8085/schema/${id}`, {
+          method: 'GET',
+        });
 
-  const fieldTypes = ['string', 'number', 'date', 'discount', 'currency', 'country/region'];
-  const dateFormats = [
-    { value: 'yyyy-MM-dd', label: 'yyyy-MM-dd' },
-    { value: 'yyyy/MM/dd', label: 'yyyy/MM/dd' },
-    { value: 'dd-MM-yyyy', label: 'dd-MM-yyyy' },
-    { value: 'dd/MM/yyyy', label: 'dd/MM/yyyy' },
-    { value: 'MM-dd-yyyy', label: 'MM-dd-yyyy' },
-    { value: 'MM/dd/yyyy', label: 'MM/dd/yyyy' },
-  ];
+        if (response.ok) {
+          const data = await response.json();
+          setName(data.name);
+          setDescription(data.schemaDescription);
+          setHeaderFields(data.headerFields);
+          setLineItemFields(data.lineItemFields);
+          if (data.state === 'active') {
+            setIsActive(true);
+          }
+          else {
+            setIsActive(false);
+          }
+          setIsPredefined(data.predefined);
+          console.log(isActive);
+          console.log(data);
+        } else {
+          console.error('Failed to fetch schema');
+        }
+      } catch (error) {
+        console.error('Error fetching schema:', error);
+      }
+    };
 
+    fetchSchema();
+  }, [auth, id]);
 
+  const handleToggleActiveState = async () => {
+    try {
+      const endpoint = isActive ? 'deactivate' : 'activate';
+      const response = await auth.fetch(`http://localhost:8085/schema/${id}/${endpoint}`, {
+        method: 'POST',
+      });
 
-  const handleAddField = () => {
-    if (newFieldName && newFieldType) {
-      setFields([...fields, { name: newFieldName, type: newFieldType, config: newFieldConfig }]);
-      setNewFieldName('');
-      setNewFieldType('');
-      setNewFieldConfig({});
+      if (response.ok) {
+        setIsActive(!isActive);
+      } else {
+        console.error('Failed to toggle schema state');
+      }
+    } catch (error) {
+      console.error('Error toggling schema state:', error);
     }
   };
 
-  const handleDeleteField = (index) => {
-    setFields(fields.filter((_, i) => i !== index));
+  const fieldCategories = ['Header', 'Line Item'];
+  const fieldTypes = ['string', 'number', 'date', 'discount', 'currency', 'country/region'];
+
+  const handleAddField = async () => {
+    if (newFieldName && newFieldType && newFieldCategory) {
+      const newField = {
+        name: newFieldName,
+        description: "",
+        label: "",
+        defaultExtractor: {},
+        setupType: "static",
+        setupTypeVersion: "2.0.0",
+        setup: {
+          type: "manual",
+          priority: 1
+        },
+        formattingType: newFieldType,
+        formatting: {},
+        formattingTypeVersion: "1.0.0",
+        predefined: false
+      };
+  
+      let updatedHeaderFields = [...headerFields];
+      let updatedLineItemFields = [...lineItemFields];
+  
+      if (newFieldCategory === 'Header') {
+        updatedHeaderFields.push(newField);
+      } else if (newFieldCategory === 'Line Item') {
+        updatedLineItemFields.push(newField);
+      }
+  
+      setHeaderFields(updatedHeaderFields);
+      setLineItemFields(updatedLineItemFields);
+  
+      auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          headerFields: updatedHeaderFields,
+          lineItemFields: updatedLineItemFields
+        }),
+      })
+      .then((response) => {
+        if (response.ok) {
+          console.log('Schema fields updated');
+        } else {
+          console.error('Failed to update schema fields');
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating schema fields:', error);
+      });
+  
+      setNewFieldName('');
+      setNewFieldType('');
+    }
+  };
+  
+
+  const handleDeleteField = (index, header) => {
+    let updatedHeaderFields = [...headerFields];
+    let updatedLineItemFields = [...lineItemFields];
+
+    if (header) {
+      updatedHeaderFields.splice(index, 1);
+    } else {
+      updatedLineItemFields.splice(index, 1);
+    }
+
+    setHeaderFields(updatedHeaderFields);
+    setLineItemFields(updatedLineItemFields);
+
+    auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        headerFields: updatedHeaderFields,
+        lineItemFields: updatedLineItemFields
+      }),
+    })
+    .then((response) => {
+      if (response.ok) {
+        console.log('Schema fields updated');
+      } else {
+        console.error('Failed to update schema fields');
+      }
+    })
+    .catch((error) => {
+      console.error('Error updating schema fields:', error);
+    });
   };
 
-  const handleEditField = (index) => {
-    const field = fields[index];
-    setEditFieldName(field.name);
-    setEditFieldType(field.type);
-    setEditFieldConfig(field.config);
+  const handleEditField = (index, header) => {
     setEditingIndex(index);
+    setEditingCategory(header ? 'Header' : 'Line Item');
+    const field = header ? headerFields[index] : lineItemFields[index];
+    setEditFieldName(field.name);
+    setEditFieldType(field.formattingType);
   };
 
   const saveEdit = () => {
-    const updatedFields = fields.map((field, i) => 
-      i === editingIndex ? { name: editFieldName, type: editFieldType, config: editFieldConfig } : field
-    );
-    setFields(updatedFields);
+    let updatedHeaderFields = [...headerFields];
+    let updatedLineItemFields = [...lineItemFields];
+
+    if (editingIndex !== null && editingCategory === 'Header') {
+      updatedHeaderFields[editingIndex].name = editFieldName;
+      updatedHeaderFields[editingIndex].formattingType = editFieldType;
+    }
+    else if (editingIndex !== null && editingCategory === 'Line Item') {
+      updatedLineItemFields[editingIndex].name = editFieldName;
+      updatedLineItemFields[editingIndex].formattingType = editFieldType;
+    }
+
+    setHeaderFields(updatedHeaderFields);
+    setLineItemFields(updatedLineItemFields);
+
+    auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        headerFields: updatedHeaderFields,
+        lineItemFields: updatedLineItemFields
+      }),
+    })
+    .then((response) => {
+      if (response.ok) {
+        console.log('Schema fields updated');
+      } else {
+        console.error('Failed to update schema fields');
+      }
+    })
+    .catch((error) => {
+      console.error('Error updating schema fields:', error);
+    });
+
     setEditingIndex(null);
     setEditFieldName('');
     setEditFieldType('');
-    setEditFieldConfig({});
-  };
-
-  const renderFieldConfig = (type, config, setConfig) => {
-    switch (type) {
-      case 'date':
-        const styles = {
-            menu: ({ width, ...css }) => ({
-                ...css,
-                width: "max-content",
-                minWidth: "100%"
-            }),          
-        }
-        return (
-            <Select
-                options={dateFormats}
-                value={dateFormats.find(option => option.value === config.format)}
-                onChange={(selectedOption) => setConfig({ ...config, format: selectedOption.value })}
-                className="ml-2"
-                placeholder="Select Date Format"
-                isClearable
-                isSearchable
-                styles={styles}
-            />
-        );
-      default:
-        return null;
-    }
   };
 
   return (
     <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
-        <h2 className="text-xl font-semibold text-gray-800">Schema Configuration</h2>
-        <button className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-          Save Schema
-          <FontAwesomeIcon icon={faFloppyDisk} className="ml-2" style={{ fontSize: '16px' }} />
-        </button>
+        <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
+        <h3 className="text-md text-gray-600">{description}</h3>
+        {isPredefined ? null : (
+          <button
+            className={`px-4 py-2 rounded-md ${isActive ? 'bg-red-600 text-white' : 'bg-green-600 text-white'}`}
+            onClick={handleToggleActiveState}
+          >
+            {isActive ? 'Deactivate' : 'Activate'}
+          </button>
+        )}
       </div>
       <div>
-        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Fields</h3>
-        {fields.map((field, index) => (
+        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Header Fields</h3>
+        {headerFields.map((field, index) => (
           <div key={index} className="mb-4">
-            {editingIndex === index ? (
+            {editingIndex === index && editingCategory === 'Header' ? (
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
@@ -120,7 +256,6 @@ const Schema = () => {
                     </option>
                   ))}
                 </select>
-                {renderFieldConfig(editFieldType, editFieldConfig, setEditFieldConfig)}
                 <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md">
                   Save
                 </button>
@@ -129,24 +264,75 @@ const Schema = () => {
               <div className="flex items-center justify-between p-4 bg-gray-200 rounded-lg shadow">
                 <div className="flex flex-col text-left">
                   <p className="text-lg font-semibold text-gray-800">{field.name}</p>
-                  <p className="text-md text-gray-600">{field.type}</p>
+                  <p className="text-md text-gray-600">{field.formattingType}</p>
                 </div>
+                {isPredefined ? null : (
                 <div className="flex items-center space-x-4">
-                  <div className="cursor-pointer" onClick={() => handleEditField(index)}>
+                  <div className="cursor-pointer" onClick={() => handleEditField(index, true)}>
                     <FontAwesomeIcon icon={faEdit} style={{ fontSize: '20px' }} />
                   </div>
-                  <div className="cursor-pointer" onClick={() => handleDeleteField(index)}>
+                  <div className="cursor-pointer" onClick={() => handleDeleteField(index, true)}>
                     <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '20px' }} />
                   </div>
                 </div>
+                )}
               </div>
             )}
           </div>
         ))}
-      </div>
-      <div>
+
+        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Line Item Fields</h3>
+        {lineItemFields.map((field, index) => (
+          <div key={index} className="mb-4">
+            {editingIndex === index  && editingCategory === 'Line Item' ? (
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  className="p-2 border rounded"
+                  value={editFieldName}
+                  onChange={(e) => setEditFieldName(e.target.value)}
+                  placeholder="Field Name"
+                />
+                <select
+                  className="p-2 border rounded"
+                  value={editFieldType}
+                  onChange={(e) => setEditFieldType(e.target.value)}
+                >
+                  {fieldTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md">
+                  Save
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between p-4 bg-gray-200 rounded-lg shadow">
+                <div className="flex flex-col text-left">
+                  <p className="text-lg font-semibold text-gray-800">{field.name}</p>
+                  <p className="text-md text-gray-600">{field.formattingType}</p>
+                </div>
+                {isPredefined ? null : (
+                <div className="flex items-center space-x-4">
+                  <div className="cursor-pointer" onClick={() => handleEditField(index, false)}>
+                    <FontAwesomeIcon icon={faEdit} style={{ fontSize: '20px' }} />
+                  </div>
+                  <div className="cursor-pointer" onClick={() => handleDeleteField(index, false)}>
+                    <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '20px' }} />
+                  </div>
+                </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      
+      {isPredefined ? null : (
+        <>
         <h3 className="text-lg font-medium text-gray-700 mb-3">Add New Field</h3>
-        <div className="flex items-center space-x-2 p-4 bg-gray-50 rounded-md shadow">
+        <div className="flex items-center space-x-2 mb-4">
           <input
             type="text"
             className="p-2 border rounded"
@@ -156,23 +342,38 @@ const Schema = () => {
           />
           <select
             className="p-2 border rounded"
+            value={newFieldCategory}
+            onChange={(e) => setNewFieldCategory(e.target.value)}
+          >
+            <option value="">Select Field Category</option>
+            {fieldCategories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <select
+            className="p-2 border rounded"
             value={newFieldType}
             onChange={(e) => setNewFieldType(e.target.value)}
           >
-            <option value="">Select Type</option>
+            <option value="">Select Field Type</option>
             {fieldTypes.map((type) => (
               <option key={type} value={type}>
                 {type}
               </option>
             ))}
           </select>
-          {renderFieldConfig(newFieldType, newFieldConfig, setNewFieldConfig)}
-          <button onClick={handleAddField} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+          <button
+            onClick={handleAddField}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
             Add Field
           </button>
         </div>
+        </>
+      )}
       </div>
-
     </div>
   );
 };

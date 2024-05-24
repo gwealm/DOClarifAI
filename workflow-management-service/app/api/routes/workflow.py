@@ -4,11 +4,13 @@
 from typing import Any
 from fastapi import APIRouter, HTTPException
 from common.crud.postgres import workflows as crud_workflows
+from common.crud.postgres import templates as crud_templates
 from common.deps import (
     CurrentUser,
     PostgresDB,
 )
 from common.models.workflows import (Workflow, WorkflowIn, WorkflowCreate)
+from common.models.templates import Template
 
 router = APIRouter()
 
@@ -19,7 +21,16 @@ def create_workflow(*, session: PostgresDB, current_user: CurrentUser,
   """
   Create a new workflow.
   """
-  # TODO: less verbose way of doing this
+  template:Template = crud_templates.get_template_by_id(session=session,template_id=workflow_in.template_id)
+  if not template:
+    raise HTTPException(status_code=404, detail="Template not found")
+  if template.user!=current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+  if not template.active:
+    raise HTTPException(status_code=400,
+                    detail="The provided template is not active")
+  
   workflow_create = WorkflowCreate.model_construct(**workflow_in.model_dump(),
                                                    user_id=current_user.id)
   workflow_create = WorkflowCreate.model_validate(workflow_create)

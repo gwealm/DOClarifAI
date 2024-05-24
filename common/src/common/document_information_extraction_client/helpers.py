@@ -10,8 +10,6 @@ from .constants import API_FIELD_CLIENT_ID, API_FIELD_DOCUMENT_TYPE, API_FIELD_E
 
 def create_document_options(client_id,
                             document_type,
-                            header_fields=None,
-                            line_item_fields=None,
                             template_id=None,
                             schema_id=None,
                             received_date=None,
@@ -22,10 +20,6 @@ def create_document_options(client_id,
     Args:
         client_id (str): The client ID.
         document_type (str): The type of document.
-        header_fields (Union[str, List[str]], optional):
-          The extracted header fields. Defaults to None.
-        line_item_fields (Union[str, List[str]], optional):
-          The extracted line item fields. Defaults to None.
         template_id (str, optional): The template ID. Defaults to None.
         schema_id (str, optional): The schema ID. Defaults to None.
         received_date (str, optional): The received date. Defaults to None.
