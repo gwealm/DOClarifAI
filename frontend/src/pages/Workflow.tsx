@@ -40,7 +40,7 @@ function Workflow() {
   const handleSliderChange = async (value: number) => {
     setConfidence(value);
     try {
-      const response = await auth.fetch(`http://localhost:8085/${id}/confidence_interval?confidence_interval=${value / 100}`, {
+      const response = await auth.fetch(`/workflowmanagement/${id}/confidence_interval?confidence_interval=${value / 100}`, {
         method: 'PUT',
       });
 
@@ -56,7 +56,7 @@ function Workflow() {
 
   const fetchWorkflow = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8085/${id}`, {
+      const response = await fetch(`/workflowmanagement/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ function Workflow() {
 
   const addEmailToWorkflow = async () => {
     try {
-      const response = await auth.fetch(`http://localhost:8085/${id}/email?email=${encodeURIComponent(email)}`, {
+      const response = await auth.fetch(`/workflowmanagement/${id}/email?email=${encodeURIComponent(email)}`, {
         method: 'POST',
       });
 

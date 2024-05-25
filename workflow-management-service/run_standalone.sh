@@ -19,5 +19,5 @@ run_compose() {
     fi
 }
 
-run_compose up workflow-management -d --build --remove-orphans
-run_compose logs workflow-management -f 
+run_compose up workflowmanagement -d --build --remove-orphans
+run_compose logs workflowmanagement -f 

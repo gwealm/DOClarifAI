@@ -57,38 +57,38 @@ def upload_document_extraction(
     file_path: str,
 ):
 
-    with Session(engine) as session:
-        workflow = crud_workflows.get_workflow_by_id(session=session, workflow_id=workflow_id)
-        min_confidence = workflow.confidence_interval  
-        document_data = document_extraction["extraction"]
-        irregular_fields = check_confidence_level(document_data, min_confidence)
+  with Session(engine) as session:
+    workflow = crud_workflows.get_workflow_by_id(session=session, workflow_id=workflow_id)
+    min_confidence = workflow.confidence_interval  
+    document_data = document_extraction["extraction"]
+    irregular_fields = check_confidence_level(document_data, min_confidence)
 
-        status: FileProcesingStatus
+    status: FileProcesingStatus
 
-        if irregular_fields:
-            status = FileProcesingStatus.FAILED
-            document_extraction["processed"] = False
-        else:
-            status = FileProcesingStatus.SUCCESS
-            os.remove(file_path)
-            document_extraction["processed"] = True
+    if irregular_fields:
+      status = FileProcesingStatus.FAILED
+      document_extraction["processed"] = False
+    else:
+      status = FileProcesingStatus.SUCCESS
+      os.remove(file_path)
+      document_extraction["processed"] = True
 
-        collection = mongo_db["documents"]
-        collection.insert_one(document_extraction)
-        dox_id = document_extraction["id"]
+    collection = mongo_db["documents"]
+    collection.insert_one(document_extraction)
+    dox_id = document_extraction["id"]
 
-        file_metadata = crud_files.get_file_by_id(session=session, file_id=file_metadata_id)
-        file_metadata.process_status = status
-        file_metadata.dox_id = dox_id
-        if status == FileProcesingStatus.SUCCESS:
-            file_metadata.unprocessed_path = None
+    file_metadata = crud_files.get_file_by_id(session=session, file_id=file_metadata_id)
+    file_metadata.process_status = status
+    file_metadata.dox_id = dox_id
+    if status == FileProcesingStatus.SUCCESS:
+      file_metadata.unprocessed_path = None
 
-        session.add(file_metadata)
-        session.commit()
+    session.add(file_metadata)
+    session.commit()
 
-        # Send notification if the file status is successful
-        if status == FileProcesingStatus.SUCCESS:
-            user_id = workflow.user.id
-            message = f"File {file_metadata.name} inside the workflow: \"{workflow.name}\" has been processed successfully"
-            asyncio.create_task(manager.send_personal_message(message, user_id))
+    # Send notification if the file status is successful
+    if status == FileProcesingStatus.SUCCESS:
+      user_id = workflow.user.id
+      message = f"File {file_metadata.name} inside the workflow: \"{workflow.name}\" has been processed successfully"
+      asyncio.create_task(manager.send_personal_message(message, user_id))
 

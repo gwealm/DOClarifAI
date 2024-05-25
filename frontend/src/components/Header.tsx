@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
 import { useAuth } from './auth/Auth';
 import MiniAboutMe from './MiniAboutMe';
@@ -8,7 +7,7 @@ import MiniAboutMe from './MiniAboutMe';
 const Header = () => {
     const auth = useAuth();
     const [notifications, setNotifications] = useState([]);
-    const [websocket, setWebsocket] = useState(null);
+    const [, setWebsocket] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
     const [currentURL, setCurrentURL] = useState("");
     
@@ -20,7 +19,7 @@ const Header = () => {
         if (auth.isLoggedIn) {
             getUserId().then((user_id) => {
                 if (user_id) {
-                    const ws = new WebSocket(`ws://localhost:8081/ws/${user_id}`);
+                    const ws = new WebSocket(`/importer/ws/${user_id}`);
                     console.log("Connecting to websocket");
                     ws.onmessage = (event) => {
                         const newNotification = event.data;
@@ -38,6 +37,7 @@ const Header = () => {
                 }
             });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [auth.isLoggedIn]);
 
     const getUserId = async () => {
@@ -45,7 +45,13 @@ const Header = () => {
             return auth.user.id;
         }
 
-        const response = await auth.fetch("http://localhost:8083/users/me", {});
+        const response = await auth.fetch("/auth/users/me", {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         if (response.ok) {
             const userInfo = await response.json();
             auth.setUser(userInfo);
@@ -138,9 +144,6 @@ const Header = () => {
                         </Link>
                     </div>
                 )}
-                <div className="flex md:hidden lg:gap-x-12 px-2">
-                    <ModeToggle />
-                </div>
             </nav>
         </header>
     );
