@@ -26,7 +26,7 @@ const NewWorkflowModal = ({ onClose, onAddWorkflow }) => {
     useEffect(() => {
       const fetchTemplates = async () => {
         try {
-          const response = await auth.fetch('http://localhost:8085/template/', {
+          const response = await auth.fetch('/template/', {
             method: 'GET',
           });
   

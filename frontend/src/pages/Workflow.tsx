@@ -67,7 +67,7 @@ function Workflow() {
 
   const fetchWorkflow = useCallback(async () => {
     try {
-      const response = await fetch(`/workflow-management/${id}`, {
+      const response = await fetch(`/workflowmanagement/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

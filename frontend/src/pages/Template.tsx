@@ -47,7 +47,7 @@ const Template = () => {
   const updateTemplate = async (e) => {
     e.preventDefault();
     try {
-      const response = await auth.fetch(`http://localhost:8085/template/${id}`, {
+      const response = await auth.fetch(`/template/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const Template = () => {
 
   const fetchTemplate = async (id) => {
     try {
-      const response = await auth.fetch(`http://localhost:8085/template/${id}`, {
+      const response = await auth.fetch(`/template/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ const Template = () => {
 
   const toggleIsActive = async () => {
     try {
-      const url = `http://localhost:8085/template/${id}/${isActive ? 'deactivate' : 'activate'}`;
+      const url = `/template/${id}/${isActive ? 'deactivate' : 'activate'}`;
       const response = await auth.fetch(url, {
         method: 'POST',
         headers: {
