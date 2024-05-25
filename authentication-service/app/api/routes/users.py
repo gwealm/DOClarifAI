@@ -48,7 +48,6 @@ def change_password(session: PostgresDB, current_user: CurrentUser, new_pw: Pass
   """
   Get current user.
   """
-  print("Running")
   crud_users.change_user_password(session,current_user,new_pw.new_password)
 
 @router.delete("/{user_id}")

@@ -27,7 +27,6 @@ const Profile = () => {
         setPasswordConfirm("");
     }
     const onChangePassword = () => {
-        debugger;
         if (password === passwordConfirm && password !== "") {
             setPasswordError(false);
             setEditMode((e) => !e);
