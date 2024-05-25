@@ -48,7 +48,7 @@ def _get_message_info(service, user_id, msg_id):
     """Get attachments and other information from a Message with given id.
 
     :param service: Authorized Gmail API service instance.
-    :param user_id: User"s email address. The special value "me" can be used to indicate the authenticated user.
+    :param user_id: User's email address. The special value "me" can be used to indicate the authenticated user.
     :param msg_id: ID of Message containing attachment.
     :return: Tuple containing sender email, receiver email, list of attachments (UploadFile instances).
     """
@@ -157,7 +157,7 @@ def reply_to_email(service, msg_id, message, workflow_id):
         mime_message["Subject"] = reply_subject
         mime_message["In-Reply-To"] = original_message["id"]
         mime_message["References"] = original_message["id"]
-        mime_message["From"] = f""Do Not Reply" <doclarifai+{workflow_id}@gmail.com>"
+        mime_message["From"] = f"'Do Not Reply' <doclarifai+{workflow_id}@gmail.com>"
 
         # Encode the message in base64
         encoded_message = base64.urlsafe_b64encode(mime_message.as_bytes()).decode()
@@ -182,7 +182,7 @@ class GmailAutomationClient:
 
     
     def _fetch_token(self):
-        # The file token.json stores the user"s access and refresh tokens, and is
+        # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
         self._creds = Credentials.from_authorized_user_file("google_oauth2_token/token.json", self._SCOPES)
@@ -216,11 +216,11 @@ class GmailAutomationClient:
                             workflow: Workflow = crud_workflows.get_workflow_by_id(
                                 session=session, workflow_id=workflow_id)
                             if not workflow:
-                                error_msg = "The workflow with the provided id doesn"t exist"
+                                error_msg = "The workflow with the provided id doesn't exist"
                                 reply_to_email(service,msg_id,error_msg,workflow_id)
                                 break
                             if workflow.email!=sender:
-                                error_msg = "The workflow with the provided id isn"t configured to receive emails from this address"
+                                error_msg = "The workflow with the provided id isn't configured to receive emails from this address"
                                 reply_to_email(service,msg_id,error_msg,workflow_id)
                                 break
 
