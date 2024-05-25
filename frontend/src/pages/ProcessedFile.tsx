@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
+import DeleteFieldModal from "../components/DeleteFieldModal";
 
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
@@ -416,6 +417,18 @@ const ProcessedFile = () => {
     return 'low';
   };
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteFieldIndex, setDeleteFieldIndex] = useState<number | null>(null);
+
+  const toggleDeleteModal = (index: number | null) => {
+      setIsDeleteModalOpen(index !== null && !isDeleteModalOpen);
+      setDeleteFieldIndex(index);
+  };
+
+  const handleDeleteField = (index) => {
+    console.log("Field deleted"); 
+  };
+
   return (
     <div className="flex justify-center mx-32 my-8">
       <div className="relative mr-32">
@@ -581,31 +594,42 @@ const ProcessedFile = () => {
                 {fields.headerFields.map((field, index) => {
                   const confidenceLevel = getConfidenceLevel(field.confidence);
                   return (
-                    <li key={`headerField-${index}`} className="py-2 flex items-center">
-                      <div className={`flex-1 pl-4 p-2 border-l-4 ${confidenceLevels[confidenceLevel]} bg-opacity-20`}>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-gray-700">{field.name}:</span>
-                          <div className="flex items-center justify-end ml-auto bg-white border border-gray-300 rounded-md px-2 py-1">
-                            {selectedFieldLevel === "headerFields" && selectedOuterFieldIdx === index ? (
-                              renderInputByType("headerFields", index, null)
-                            ) : (
-                              <input
-                                type="text"
-                                value={field.value}
-                                readOnly
-                                className="w-55 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
-                              />
-                            )}
-                            <FontAwesomeIcon
-                              onClick={() => handleFieldSelection("headerFields", index, null)}
-                              icon={faPenToSquare}
-                              className="ml-2 cursor-pointer text-blue-500"
+                    <div key={index} className="relative">
+                        <li className="py-2 flex items-center" onClick={() => toggleDeleteModal(index)}>
+                            <div className={`flex-1 pl-4 p-2 border-l-4 ${confidenceLevels[confidenceLevel]} bg-opacity-20`}>
+                                <div className="flex justify-between items-center mb-1">
+                                    <span className="text-gray-700">{field.name}:</span>
+                                    <div className="flex items-center justify-end ml-auto bg-white border border-gray-300 rounded-md px-2 py-1">
+                                        {selectedFieldLevel === "headerFields" && selectedOuterFieldIdx === index ? (
+                                            renderInputByType("headerFields", index, null)
+                                        ) : (
+                                            <input
+                                                type="text"
+                                                value={field.value}
+                                                readOnly
+                                                className="w-55 px-2 py-1 bg-white border-none outline-none overflow-hidden text-ellipsis"
+                                            />
+                                        )}
+                                        <FontAwesomeIcon
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFieldSelection("headerFields", index, null);
+                                            }}
+                                            icon={faPenToSquare}
+                                            className="ml-2 cursor-pointer text-blue-500"
+                                        />
+                                    </div>
+                                </div>
+                                <p className="text-gray-500 text-xs text-left">Confidence: {Math.round(field.confidence * 100 * 100) / 100}%</p>
+                            </div>
+                        </li>
+                        {deleteFieldIndex === index && isDeleteModalOpen && (
+                            <DeleteFieldModal
+                                onClose={() => toggleDeleteModal(null)}
+                                onDelete={() => handleDeleteField(index)}
                             />
-                          </div>
-                        </div>
-                        <p className="text-gray-500 text-xs text-left">Confidence: {Math.round(field.confidence * 100 * 100) / 100}%</p>
-                      </div>
-                    </li>
+                        )}
+                    </div>
                   );
                 })}
               </ul>
