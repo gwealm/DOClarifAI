@@ -3,7 +3,7 @@
 """
 from fastapi import APIRouter
 
-from common.crud.postgres import document_types as crud_document_types 
+from common.crud.postgres import document_types as crud_document_types
 from common.crud.postgres import schemas as crud_schemas
 from common.crud.postgres import templates as crud_templates
 from common.models.document_types import DocumentType
@@ -34,7 +34,7 @@ def get_document_type_active_schemas(session:PostgresDB, current_user: CurrentUs
     user_id=current_user.id,
     document_type_id=document_type_id
   )
-  
+
 
 @router.get("/{document_type_id}/templates/active")
 def get_document_type_active_schemas(session:PostgresDB, current_user: CurrentUser, document_type_id: int) -> list[Template]:
