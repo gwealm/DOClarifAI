@@ -251,160 +251,187 @@ const Schema = () => {
   };
 
   return (
-    <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
+    <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[calc(100vh-130px)] h-auto mx-20 my-5 p-5 flex flex-col">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-300">
         <h2 className="text-xl font-semibold text-gray-800">{name}</h2>
         <h3 className="text-md text-gray-600">{description}</h3>
         {isPredefined ? null : (
           <button
-            className={`px-4 py-2 rounded-md ${isActive ? 'bg-red-600 text-white' : 'bg-green-600 text-white'}`}
+            className={`px-4 py-2 rounded-md ${isActive ? 'bg-red-600 text-white hover:bg-opacity-70' : 'bg-green-600 text-white hover:bg-opacity-70'}`}
             onClick={handleToggleActiveState}
           >
             {isActive ? 'Deactivate' : 'Activate'}
           </button>
         )}
       </div>
-      <div>
-        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Header Fields</h3>
-        {headerFields.map((field, index) => (
-          <div key={index} className="mb-4">
-            {editingIndex === index && editingCategory === 'Header' ? (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  className="p-2 border rounded"
-                  value={editFieldName}
-                  onChange={(e) => setEditFieldName(e.target.value)}
-                  placeholder="Field Name"
-                />
-                <select
-                  className="p-2 border rounded"
-                  value={editFieldType}
-                  onChange={(e) => setEditFieldType(e.target.value)}
-                >
-                  {fieldTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-                <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md">
-                  Save
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between p-4 bg-gray-200 rounded-lg shadow">
-                <div className="flex flex-col text-left">
-                  <p className="text-lg font-semibold text-gray-800">{field.name}</p>
-                  <p className="text-md text-gray-600">{field.formattingType}</p>
-                </div>
-                {isPredefined ? null : (
-                <div className="flex items-center space-x-4">
-                  <div className="cursor-pointer" onClick={() => handleEditField(index, true)}>
-                    <FontAwesomeIcon icon={faEdit} style={{ fontSize: '20px' }} />
-                  </div>
-                  <div className="cursor-pointer" onClick={() => handleDeleteField(index, true)}>
-                    <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '20px' }} />
-                  </div>
-                </div>
-                )}
-              </div>
-            )}
+      <div className='flex flex-col h-full'>
+        {isPredefined ? null : (
+          <>
+          <div className="flex items-center space-x-2 mb-4">
+            <input
+              type="text"
+              className="p-2 border rounded"
+              value={newFieldName}
+              onChange={(e) => setNewFieldName(e.target.value)}
+              placeholder="Field Name"
+            />
+            <select
+              className="p-2 border rounded"
+              value={newFieldCategory}
+              onChange={(e) => setNewFieldCategory(e.target.value)}
+            >
+              <option value="">Select Field Category</option>
+              {fieldCategories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <select
+              className="p-2 border rounded"
+              value={newFieldType}
+              onChange={(e) => setNewFieldType(e.target.value)}
+            >
+              <option value="">Select Field Type</option>
+              {fieldTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={handleAddField}
+              className="text-md font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-[#5583C5] bg-opacity-80 border border-gray-300 hover:bg-opacity-50"
+            >
+              Add Field
+            </button>
           </div>
-        ))}
+          </>
+        )}
 
-        <h3 className="text-lg font-medium text-gray-700 mb-3">Current Line Item Fields</h3>
-        {lineItemFields.map((field, index) => (
-          <div key={index} className="mb-4">
-            {editingIndex === index  && editingCategory === 'Line Item' ? (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  className="p-2 border rounded"
-                  value={editFieldName}
-                  onChange={(e) => setEditFieldName(e.target.value)}
-                  placeholder="Field Name"
-                />
-                <select
-                  className="p-2 border rounded"
-                  value={editFieldType}
-                  onChange={(e) => setEditFieldType(e.target.value)}
-                >
-                  {fieldTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-                <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md">
-                  Save
-                </button>
-              </div>
+        <div className="flex h-full">
+          <div className="border-2 border-blue bg-[#E8F0FE] bg-opacity-50 rounded-lg w-full mr-2 my-3 p-4 flex flex-col h-full">
+            <h3 className="text-lg text-left font-medium text-gray-500 mb-3 pb-2 border-b-2">Current Header Fields</h3>
+            <div className="grid grid-cols-2 items-center pb-2 border-b-2">
+              <span className="text-md text-left font-medium text-gray-500">Field Name</span>
+              <span className="text-md text-left font-medium text-gray-500">Data Type</span>
+            </div>
+            {headerFields.length === 0 ? (
+              <p className="text-md text-left text-gray-500 pt-3">No header fields available.</p>
             ) : (
-              <div className="flex items-center justify-between p-4 bg-gray-200 rounded-lg shadow">
-                <div className="flex flex-col text-left">
-                  <p className="text-lg font-semibold text-gray-800">{field.name}</p>
-                  <p className="text-md text-gray-600">{field.formattingType}</p>
+              headerFields.map((field, index) => (
+                <div key={index}>
+                  {editingIndex === index && editingCategory === 'Header' ? (
+                    <div className="grid grid-cols-2 pt-3">
+                      <div className='text-left'>
+                      <input
+                        type="text"
+                        className="p-2 border rounded"
+                        value={editFieldName}
+                        onChange={(e) => setEditFieldName(e.target.value)}
+                        placeholder="Field Name"
+                      />
+                      </div>
+                      <div className='flex justify-between'>
+                      <select
+                        className="p-2 border rounded"
+                        value={editFieldType}
+                        onChange={(e) => setEditFieldType(e.target.value)}
+                      >
+                        {fieldTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                      <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-opacity-70">
+                        Save
+                      </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 p-3 bg-white rounded-lg border-2 border-blue mt-2">
+                      <p className="text-md text-left font-medium text-gray-800">{field.name}</p>
+                      <div className="flex justify-between">
+                        <p className="text-md text-gray-600">{field.formattingType}</p>
+                        {isPredefined ? null : (
+                          <div className="flex items-center space-x-4">
+                            <div className="cursor-pointer" onClick={() => handleEditField(index, true)}>
+                              <FontAwesomeIcon icon={faEdit} style={{ fontSize: '16px' }} />
+                            </div>
+                            <div className="cursor-pointer" onClick={() => handleDeleteField(index, true)}>
+                              <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '16px' }} />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {isPredefined ? null : (
-                <div className="flex items-center space-x-4">
-                  <div className="cursor-pointer" onClick={() => handleEditField(index, false)}>
-                    <FontAwesomeIcon icon={faEdit} style={{ fontSize: '20px' }} />
-                  </div>
-                  <div className="cursor-pointer" onClick={() => handleDeleteField(index, false)}>
-                    <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '20px' }} />
-                  </div>
-                </div>
-                )}
-              </div>
+              ))
             )}
           </div>
-        ))}
-      
-      {isPredefined ? null : (
-        <>
-        <h3 className="text-lg font-medium text-gray-700 mb-3">Add New Field</h3>
-        <div className="flex items-center space-x-2 mb-4">
-          <input
-            type="text"
-            className="p-2 border rounded"
-            value={newFieldName}
-            onChange={(e) => setNewFieldName(e.target.value)}
-            placeholder="Field Name"
-          />
-          <select
-            className="p-2 border rounded"
-            value={newFieldCategory}
-            onChange={(e) => setNewFieldCategory(e.target.value)}
-          >
-            <option value="">Select Field Category</option>
-            {fieldCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-          <select
-            className="p-2 border rounded"
-            value={newFieldType}
-            onChange={(e) => setNewFieldType(e.target.value)}
-          >
-            <option value="">Select Field Type</option>
-            {fieldTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={handleAddField}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md"
-          >
-            Add Field
-          </button>
+          <div className="border-2 border-blue-[#5583C5] bg-[#E8F0FE] bg-opacity-50 rounded-lg w-full ml-2 my-3 p-4 flex flex-col">
+            <h3 className="text-lg text-left font-medium text-gray-500 mb-3 pb-2 border-b-2">Current Line Item Fields</h3>
+            <div className="grid grid-cols-2 items-center pb-2 border-b-2">
+              <span className="text-md text-left font-medium text-gray-500">Field Name</span>
+              <span className="text-md text-left font-medium text-gray-500">Data Type</span>
+            </div>
+            {lineItemFields.length === 0 ? (
+              <p className="text-md text-left text-gray-500 pt-3">No line item fields available.</p>
+            ) : (
+              lineItemFields.map((field, index) => (
+              <div key={index}>
+                {editingIndex === index  && editingCategory === 'Line Item' ? (
+                  <div className="grid grid-cols-2 pt-3">
+                    <div className='text-left'>
+                    <input
+                      type="text"
+                      className="p-2 border rounded"
+                      value={editFieldName}
+                      onChange={(e) => setEditFieldName(e.target.value)}
+                      placeholder="Field Name"
+                    />
+                    </div>
+                    <div className='flex justify-between'>
+                    <select
+                      className="p-2 border rounded"
+                      value={editFieldType}
+                      onChange={(e) => setEditFieldType(e.target.value)}
+                    >
+                      {fieldTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                    <button onClick={saveEdit} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-opacity-70">
+                      Save
+                    </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 p-3 bg-white rounded-lg border-2 border-blue mt-2">
+                    <p className="text-md text-left font-medium text-gray-800">{field.name}</p>
+                    <div className="flex justify-between">
+                    <p className="text-md text-gray-600">{field.formattingType}</p>
+                      {isPredefined ? null : (
+                      <div className="flex items-center space-x-4">
+                        <div className="cursor-pointer" onClick={() => handleEditField(index, false)}>
+                          <FontAwesomeIcon icon={faEdit} style={{ fontSize: '16px' }} />
+                        </div>
+                        <div className="cursor-pointer" onClick={() => handleDeleteField(index, false)}>
+                          <FontAwesomeIcon icon={faTrashCan} style={{ fontSize: '16px' }} />
+                        </div>
+                      </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )))}
+          </div>
         </div>
-        </>
-      )}
       </div>
       <Modal
         isOpen={isModalOpen}
