@@ -9,7 +9,7 @@ function ProcessedFiles() {
   const { id } = useParams();
 
   const handleDownloadFiles = (id) => {
-    const url = 'http://localhost:8082/documents/' + id + '/xlsx';
+    const url = '/exporter/documents/' + id + '/xlsx';
     auth.fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -30,9 +30,10 @@ function ProcessedFiles() {
   }
 
   const fetchDocuments = useCallback(async () => {
-    const url = 'http://localhost:8082/documents/' + id;
+    const url = '/exporter/documents/' + id;
     auth.fetch(url, {
       method: 'GET',
+      mode: 'cors',
     })
       .then((response) => response.json())
       .then((data) => {
@@ -42,13 +43,14 @@ function ProcessedFiles() {
       .catch((error) => {
         console.error(`Error: ${error}`);
       });
-  }, [id]);
+  }, [auth, id]);
 
   useEffect(() => {
     fetchDocuments();
   }, [fetchDocuments]);
 
   return (
+    <div className='w-full h-full bg-white p-8'>
     <div className="mx-20 my-5">
       <div className="flex max-w-8xl items-center justify-between pl-6 mb-4">
         <div className="flex lg:flex-1 items-center">
@@ -80,7 +82,7 @@ function ProcessedFiles() {
           ))}
         </div>
       </div>
-    </div>
+    </div></div>
   );
 }
 

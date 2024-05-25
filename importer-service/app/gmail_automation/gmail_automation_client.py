@@ -60,31 +60,31 @@ def _get_message_info(service, user_id, msg_id):
         message = service.users().messages().get(userId=user_id, id=msg_id).execute()
 
         # Extract sender and receiver from message headers
-        headers = message.get('payload', {}).get('headers', [])
+        headers = message.get("payload", {}).get("headers", [])
         for header in headers:
-            if header['name'] == 'From':
-                sender = header['value']
-            elif header['name'] == 'To':
-                receiver = header['value']
+            if header["name"] == "From":
+                sender = header["value"]
+            elif header["name"] == "To":
+                receiver = header["value"]
 
-        email_pattern = r'<(.*?)>'
+        email_pattern = r"<(.*?)>"
         sender_email = re.search(email_pattern, sender)
         if sender_email:
             sender_email = sender_email.group(1)
         else:
             sender_email = sender
 
-        for part in message['payload']['parts']:
-            if part['filename']:
-                if 'data' in part['body']:
-                    data = part['body']['data']
+        for part in message["payload"]["parts"]:
+            if part["filename"]:
+                if "data" in part["body"]:
+                    data = part["body"]["data"]
                 else:
-                    att_id = part['body']['attachmentId']
+                    att_id = part["body"]["attachmentId"]
                     att = service.users().messages().attachments().get(userId=user_id, messageId=msg_id, id=att_id).execute()
-                    data = att['data']
-                file_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
-                filename = part['filename']
-                content_type = part['mimeType']
+                    data = att["data"]
+                file_data = base64.urlsafe_b64decode(data.encode("UTF-8"))
+                filename = part["filename"]
+                content_type = part["mimeType"]
                 temp_file = tempfile.SpooledTemporaryFile()
                 temp_file.write(file_data)
                 temp_file.seek(0)
@@ -92,7 +92,7 @@ def _get_message_info(service, user_id, msg_id):
                 attachment_files.append(UploadFile(temp_file,filename=filename,headers={"content-type":content_type}))
 
     except HttpError as error:
-        print(f'An error occurred: {error}')
+        print(f"An error occurred: {error}")
 
     return sender_email, receiver, attachment_files
         
@@ -141,39 +141,39 @@ def reply_to_email(service, msg_id, message, workflow_id):
         original_message = service.users().messages().get(userId="me", id=msg_id).execute()
 
         # Extract the original sender
-        headers = original_message.get('payload', {}).get('headers', [])
+        headers = original_message.get("payload", {}).get("headers", [])
         original_sender = None
         original_subject = None
         for header in headers:
-            if header['name'] == 'From':
-                original_sender = header['value']
-            elif header['name'] == 'Subject':
-                original_subject = header['value']
+            if header["name"] == "From":
+                original_sender = header["value"]
+            elif header["name"] == "Subject":
+                original_subject = header["value"]
 
         # Create the reply message
         reply_subject = f"Re: {original_subject}" if original_subject else "Re: Your email"
         mime_message = MIMEText(message)
-        mime_message['To'] = original_sender
-        mime_message['Subject'] = reply_subject
-        mime_message['In-Reply-To'] = original_message['id']
-        mime_message['References'] = original_message['id']
-        mime_message['From'] = f'"Do Not Reply" <doclarifai+{workflow_id}@gmail.com>'
+        mime_message["To"] = original_sender
+        mime_message["Subject"] = reply_subject
+        mime_message["In-Reply-To"] = original_message["id"]
+        mime_message["References"] = original_message["id"]
+        mime_message["From"] = f"'Do Not Reply' <doclarifai+{workflow_id}@gmail.com>"
 
         # Encode the message in base64
         encoded_message = base64.urlsafe_b64encode(mime_message.as_bytes()).decode()
 
         # Create the message body
         body = {
-            'raw': encoded_message,
-            'threadId': original_message['threadId'],
+            "raw": encoded_message,
+            "threadId": original_message["threadId"],
         }
 
         # Send the message
         send_message = service.users().messages().send(userId="me", body=body).execute()
-        print(f"Message sent: {send_message['id']}")
+        print(f"Message sent: {send_message["id"]}")
 
     except HttpError as error:
-        print(f'An error occurred while replying with error: {error}')
+        print(f"An error occurred while replying with error: {error}")
 
 class GmailAutomationClient:
     def __init__(self):
@@ -198,7 +198,7 @@ class GmailAutomationClient:
         self._fetch_token()
         try:
             service = build("gmail", "v1", credentials=self._creds)
-            messages = service.users().messages().list(userId="me", labelIds=['UNREAD']).execute()
+            messages = service.users().messages().list(userId="me", labelIds=["UNREAD"]).execute()
             if "messages" in messages:
                 for message in messages["messages"]:
                     msg_id = message["id"]
@@ -251,7 +251,7 @@ class GmailAutomationClient:
                                     file_metadata.process_status = FileProcesingStatus.FAILED
                             session.commit()
                         
-                    service.users().messages().modify(userId="me", id=msg_id, body={'removeLabelIds': ['UNREAD']}).execute()
+                    service.users().messages().modify(userId="me", id=msg_id, body={"removeLabelIds": ["UNREAD"]}).execute()
 
         except HttpError as error:
             print(f"An error occurred: {error}")

@@ -20,8 +20,9 @@ const Workflows = () => {
             return;
         }
         try {
-            const response = await auth.fetch('http://localhost:8085/', {
+            const response = await auth.fetch('/workflowmanagement/', {
                 method: 'GET',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -37,7 +38,7 @@ const Workflows = () => {
         } catch (error) {
             console.error('Error fetching workflows:', error);
         }
-    }, [auth.isLoggedIn]);
+    }, [auth]);
 
     useEffect(() => {
         fetchWorkflows();
@@ -45,8 +46,9 @@ const Workflows = () => {
 
     const handleAddWorkflow = async (workflowName) => {
         try {
-            const response = await auth.fetch('http://localhost:8085/', {
+            const response = await auth.fetch('/workflowmanagement/', {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -71,7 +73,7 @@ const Workflows = () => {
 
     const handleDeleteWorkflow = async (index, workflowId) => {
         try {
-            const response = await auth.fetch(`http://localhost:8085/${workflowId}`, {
+            const response = await auth.fetch(`/workflowmanagement/${workflowId}`, {
                 method: 'DELETE',
             });
     
@@ -89,8 +91,8 @@ const Workflows = () => {
     };
 
     return (
-        <>
-            <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col justify-between">
+        <div className='w-full h-full bg-white p-8'>
+            <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 p-5 flex flex-col justify-between">
                 <div>
                     <div className="flex max-w-8xl items-center justify-between pl-6">
                         <div className="flex lg:flex-1">
@@ -117,7 +119,7 @@ const Workflows = () => {
                 </div>
             </div>
             {isNewWorkflowModalOpen && <NewWorkflowModal onClose={toggleNewWorkflowModal} onAddWorkflow={handleAddWorkflow} />}
-        </>
+        </div>
     );
 }
 

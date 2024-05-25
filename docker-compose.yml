@@ -48,3 +48,6 @@ include:
       - "workflow-management-service/compose.standalone.yml"
     env_file:
       - "workflow-management-service/env/standalone.env"
+
+  - path:
+      - "proxy/docker-compose.yml"

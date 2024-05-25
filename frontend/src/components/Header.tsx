@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
 import { useAuth } from './auth/Auth';
 import MiniAboutMe from './MiniAboutMe';
@@ -8,14 +7,19 @@ import MiniAboutMe from './MiniAboutMe';
 const Header = () => {
     const auth = useAuth();
     const [notifications, setNotifications] = useState([]);
-    const [websocket, setWebsocket] = useState(null);
+    const [, setWebsocket] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
+    const [currentURL, setCurrentURL] = useState("");
+    
+    useEffect(() => {
+        setCurrentURL(window.location.pathname);
+    }, []);
 
     useEffect(() => {
         if (auth.isLoggedIn) {
             getUserId().then((user_id) => {
                 if (user_id) {
-                    const ws = new WebSocket(`ws://localhost:8081/ws/${user_id}`);
+                    const ws = new WebSocket(`/importer/ws/${user_id}`);
                     console.log("Connecting to websocket");
                     ws.onmessage = (event) => {
                         const newNotification = event.data;
@@ -33,6 +37,7 @@ const Header = () => {
                 }
             });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [auth.isLoggedIn]);
 
     const getUserId = async () => {
@@ -40,7 +45,13 @@ const Header = () => {
             return auth.user.id;
         }
 
-        const response = await auth.fetch("http://localhost:8083/users/me", {});
+        const response = await auth.fetch("/auth/users/me", {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         if (response.ok) {
             const userInfo = await response.json();
             auth.setUser(userInfo);
@@ -51,12 +62,12 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-[#C8EDFD] shadow-md">
+        <header className={`${currentURL == "/" ? "bg-gradient-to-r from-[#f9fdfef8] to-[#65BEE5]" : "bg-[#C8EDFD]" }`}>
             <nav className="flex max-w-8xl items-center justify-between p-6 lg:px-8 lg:py-3" aria-label="Global">
                 <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
+                    <a href="/" className="-m-1.5 p-1.5">
                         <span className="sr-only">WeClarifai</span>
-                        <img className="h-12 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
+                        <img className="h-16 w-auto" src="logotipo.png" alt="" />
                     </a>
                 </div>
 
@@ -127,14 +138,14 @@ const Header = () => {
                     </>
                 ) : (
                     <div className="flex lg:flex-1 justify-end items-center space-x-8">
-                        <Link to="/login" className="text-sm font-semibold leading-6 text-white px-4 py-2 rounded-md bg-[#447282] border border-gray-300 hover:bg-opacity-70 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        <Link to="/login" className="bg-blue-500 text-white px-6 py-2 rounded  hover:bg-opacity-70">
                             Log in
+                        </Link>
+                        <Link to="/register" className="text-sm font-semibold leading-6 text-blue-500 px-4 py-2 rounded-md bg-white border hover:bg-opacity-70 focus:outline-none focus:border-blue-500 focus:ring">
+                            Sign up
                         </Link>
                     </div>
                 )}
-                <div className="hidden flex lg:flex lg:gap-x-12 px-2">
-                    <ModeToggle />
-                </div>
             </nav>
         </header>
     );

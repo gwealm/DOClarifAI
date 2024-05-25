@@ -16,7 +16,7 @@ const MiniAboutMe = () => {
                 return;
             }
             // TODO: why is this request firing twice?
-            const r = await auth.fetch("http://localhost:8083/users/me", {});
+            const r = await auth.fetch("/auth/users/me", {});
             if (r.ok) {
                 const userInfo = await r.json();
                 auth.setUser(userInfo);
