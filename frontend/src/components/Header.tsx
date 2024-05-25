@@ -139,7 +139,7 @@ const Header = () => {
                         <Link to="/login" className="bg-blue-500 text-white px-6 py-2 rounded  hover:bg-opacity-70">
                             Log in
                         </Link>
-                        <Link to="/signup" className="text-sm font-semibold leading-6 text-blue-500 px-4 py-2 rounded-md bg-white border hover:bg-opacity-70 focus:outline-none focus:border-blue-500 focus:ring">
+                        <Link to="/register" className="text-sm font-semibold leading-6 text-blue-500 px-4 py-2 rounded-md bg-white border hover:bg-opacity-70 focus:outline-none focus:border-blue-500 focus:ring">
                             Sign up
                         </Link>
                     </div>
