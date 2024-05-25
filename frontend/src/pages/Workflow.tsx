@@ -1,3 +1,4 @@
+import React from 'react';
 import { DragDrop } from '../components/DragDrop.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
@@ -105,82 +106,84 @@ function Workflow() {
   }
 
   return (
-    <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
-      <div className="flex max-w-8xl items-center justify-between pl-6">
-        <div className="flex lg:flex-1 items-center">
-          <Link to={`/workflows`} className="mr-4" style={{ fontSize: '1.5rem' }}>
-            &larr;
-          </Link>
-          <h2 className="text-lg font-semibold text-black">{workflow.name}</h2>
-          <h3 className="text-md font-semibold text-gray-500 ml-4">{workflow.description}</h3>
-          <FontAwesomeIcon icon={faPenToSquare} className="ml-4" />
-        </div>
-      </div>
-      <div className="border-b border-blue-[#F5F5F5] my-4"></div>
-
-      <div className="mb-4">
-        <label className="text-md font-semibold flex self-start text-black pl-6">
-          Template
-        </label>
-        <select className="flex place-self-start mt-4 border-r-8 border-transparent mb-8 mr-12 ml-8 rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500">
-          <option>Single Invoice</option>
-          {/* Add more options here */}
-        </select>
-      </div>
-
-      <div className="mb-4 py-7">
-        <label className="text-md font-semibold flex self-start text-black pl-6">
-          Add Email
-        </label>
-        <div className="flex items-center pl-6">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-4 border-r-8 border-transparent rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500"
-            placeholder="Email"
-            required
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-            title="Please enter a valid email address"
-          />
-          <button
-            onClick={addEmailToWorkflow}
-            className="mt-4 ml-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Add Email
-          </button>
-        </div>
-        {successMessage && (
-          <div className="text-green-500 text-sm font-semibold mt-2 pl-6">
-            {successMessage}
+    <div className='w-full -h-full bg-white p-8'>
+      <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col">
+        <div className="flex max-w-8xl items-center justify-between pl-6">
+          <div className="flex lg:flex-1 items-center">
+            <Link to={`/workflows`} className="mr-4" style={{ fontSize: '1.5rem' }}>
+              &larr;
+            </Link>
+            <h2 className="text-lg font-semibold text-black">{workflow.name}</h2>
+            <h3 className="text-md font-semibold text-gray-500 ml-4">{workflow.description}</h3>
+            <FontAwesomeIcon icon={faPenToSquare} className="ml-4" />
           </div>
-        )}
-      </div>
+        </div>
+        <div className="border-b border-blue-[#F5F5F5] my-4"></div>
 
-      <DragDrop workflowId={id} />
+        <div className="mb-4">
+          <label className="text-md font-semibold flex self-start text-black pl-6">
+            Template
+          </label>
+          <select className="flex place-self-start mt-4 border-r-8 border-transparent mb-8 mr-12 ml-8 rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500">
+            <option>Single Invoice</option>
+            {/* Add more options here */}
+          </select>
+        </div>
 
-      <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
-        <label className="text-md font-semibold flex text-black pl-6">
-          Minimum Confidence Level Required
-        </label>
-        {confidence !== null && (
-          <Slider marks={marks} defaultValue={confidence} className="w-2/3" onChange={handleSliderChange} />
-        )}
-      </div>
+        <div className="mb-4 py-7">
+          <label className="text-md font-semibold flex self-start text-black pl-6">
+            Add Email
+          </label>
+          <div className="flex items-center pl-6">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-4 border-r-8 border-transparent rounded-md pl-3 py-2 px-4 text-gray-700 leading-tight outline outline-1 outline-blue-500"
+              placeholder="Email"
+              required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              title="Please enter a valid email address"
+            />
+            <button
+              onClick={addEmailToWorkflow}
+              className="mt-4 ml-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Add Email
+            </button>
+          </div>
+          {successMessage && (
+            <div className="text-green-500 text-sm font-semibold mt-2 pl-6">
+              {successMessage}
+            </div>
+          )}
+        </div>
 
-      <div className="flex justify-center space-x-3 ml-4 py-7">
-        <button className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Start Workflow
-        </button>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Stop Workflow
-        </button>
-        <Link
-          to={`/workflow/${id}/processed-files`}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Processed Files
-        </Link>
+        <DragDrop workflowId={id} />
+
+        <div className="flex flex-col items-center justify-center gap-4 mb-6 mt-6">
+          <label className="text-md font-semibold flex text-black pl-6">
+            Minimum Confidence Level Required
+          </label>
+          {confidence !== null && (
+            <Slider marks={marks} defaultValue={confidence} className="w-2/3" onChange={handleSliderChange} />
+          )}
+        </div>
+
+        <div className="flex justify-center space-x-3 ml-4 py-7">
+          <button className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Start Workflow
+          </button>
+          <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Stop Workflow
+          </button>
+          <Link
+            to={`/workflow/${id}/processed-files`}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Processed Files
+          </Link>
+        </div>
       </div>
     </div>
   );

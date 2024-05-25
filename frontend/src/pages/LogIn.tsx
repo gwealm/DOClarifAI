@@ -31,13 +31,14 @@ const LogIn = () => {
 
     }
     return (
+        <div className='w-full h-full bg-white p-8'>
         <div className="flex justify-center items-center">
-            <div className="border-[3px] border-[#C8EDFD] rounded-lg w-[600px] min-h-[500px] h-auto mx-20 my-12 p-3 flex flex-col">
+            <div className="border-[3px] border-blue-[#5583C5] rounded-lg w-[600px] min-h-[500px] h-auto mx-20 my-12 p-3 flex flex-col">
                 <div className="flex justify-start items-center max-w-8xl bg-[#C8EDFD] rounded-md p-2">
                     <div className="flex">
                         <a href="#" className="-m-1.5 p-1.5">
                             <span className="sr-only">Your Company</span>
-                            <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
+                            <img className="h-8 w-auto" src="logotipo.png" alt="" />
                         </a>
                     </div>
                     <div className="flex px-4">
@@ -97,6 +98,7 @@ const LogIn = () => {
                     <a href="#" className="text-blue-500 hover:underline mx-2">Click here</a>
                 </p>
             </div>
+        </div>
         </div>
     );
 }

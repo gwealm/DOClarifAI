@@ -91,8 +91,8 @@ const Workflows = () => {
     };
 
     return (
-        <>
-            <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 my-5 p-5 flex flex-col justify-between">
+        <div className='w-full h-full bg-white p-8'>
+            <div className="border-2 border-blue-[#5583C5] rounded-lg w-45 min-h-[600px] h-auto mx-20 p-5 flex flex-col justify-between">
                 <div>
                     <div className="flex max-w-8xl items-center justify-between pl-6">
                         <div className="flex lg:flex-1">
@@ -119,7 +119,7 @@ const Workflows = () => {
                 </div>
             </div>
             {isNewWorkflowModalOpen && <NewWorkflowModal onClose={toggleNewWorkflowModal} onAddWorkflow={handleAddWorkflow} />}
-        </>
+        </div>
     );
 }
 
