@@ -265,26 +265,55 @@ function Workflow() {
       )}
 
       {isEditModalVisible && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Edit Workflow</h2>
-            <input
-              value={editedName}
-              onChange={handleEditModalNameChange}
-              placeholder="Workflow Name"
-              className="mb-4 border border-gray-300 rounded-lg px-4 py-2 w-full"
-            />
-            <input
-              value={editedDescription}
-              onChange={handleEditModalDescriptionChange}
-              placeholder="Workflow Description"
-              className="mb-4 border border-gray-300 rounded-lg px-4 py-2 w-full"
-            />
-            <div className="flex justify-around">
-              <button onClick={handleEditOk} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Save</button>
-              <button onClick={handleEditCancel} className="bg-gray-300 text-gray-700 px-4 py-2 rounded">Cancel</button>
+        <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                  <div
+                    class="flex flex-shrink-0 items-center justify-between rounded-t-md bg-blue-100 border-b-2 border-neutral-100 p-4 dark:border-white/10">
+                    <h5
+                      class="text-xl font-medium leading-normal text-surface dark:text-white">
+                      Edit Workflow
+                    </h5>
+                  </div>
+                    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Name"> Name </label>
+                        <input 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700  focus:outline-none focus:shadow-outline" 
+                            type="text" 
+                            name="name"
+                            value={editedName}
+                            onChange={handleEditModalNameChange}
+                            required
+                        />
+                    </div>
+                    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Description"> Description </label>
+                        <input 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+                            type="text" 
+                            name="description"
+                            value={editedDescription}
+                            onChange={handleEditModalDescriptionChange}
+                        />
+                    </div>
+                    <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button 
+                            onClick={handleEditOk}
+                            className="inline-flex w-full justify-center rounded-md bg-[#1976D2] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-opacity-80 sm:ml-3 sm:w-auto"
+                        >
+                            Save
+                        </button>
+                        <button 
+                            onClick={handleEditCancel}
+                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+                </div>
             </div>
-          </div>
         </div>
       )}
       <Modal
