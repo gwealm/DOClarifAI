@@ -7,7 +7,7 @@ import MiniAboutMe from './MiniAboutMe';
 const Header = () => {
     const auth = useAuth();
     const [notifications, setNotifications] = useState([]);
-    const [websocket, setWebsocket] = useState(null);
+    const [, setWebsocket] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
 
     useEffect(() => {
