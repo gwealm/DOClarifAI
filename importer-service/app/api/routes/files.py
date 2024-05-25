@@ -22,7 +22,7 @@ router = APIRouter()
 
 @router.post("/{workflow_id}", status_code=202)
 async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
-                      postgres_db: PostgresDB,file: UploadFile, 
+                      postgres_db: PostgresDB,file: UploadFile,
                       background_tasks: BackgroundTasks, workflow_id: int) -> DocumentStatus:
   """
     This asynchronous endpoint lets the client
@@ -62,7 +62,7 @@ async def upload_file(dox_client: DoxClient, current_user: CurrentUser,
   )
 
   extracted_info = await dox_client.upload_document(
-      file, client_id, document_type.name, 
+      file, client_id, document_type.name,
       background_tasks.add_task,document_extracted_callback,
       template.template_id_dox,schema.schema_id_dox
   )

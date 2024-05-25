@@ -2,10 +2,7 @@
 This module contains the functions to interact with the database.
 """
 
-from common.models.users import User
-from common.models.workflows import Workflow
-from common.models.templates import Template
-from common.models.files import File, FileProcesingStatus
+from common.models.files import FileProcesingStatus
 from common.crud.postgres import files as crud_files
 from common.crud.postgres import workflows as crud_workflows
 from common.postgres import engine
@@ -55,7 +52,7 @@ def update_document_extraction_metadata(
 
   with Session(engine) as session:
     workflow = crud_workflows.get_workflow_by_id(session=session, workflow_id=workflow_id)
-    min_confidence = workflow.confidence_interval  
+    min_confidence = workflow.confidence_interval
     document_data = document_extraction["extraction"]
     irregular_fields = check_confidence_level(document_data, min_confidence)
 
