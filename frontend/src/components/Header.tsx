@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import { ModeToggle } from './ModeToggle';
 import { Link } from 'react-router-dom';
 import { useAuth } from './auth/Auth';
 import MiniAboutMe from './MiniAboutMe';
@@ -130,9 +129,6 @@ const Header = () => {
                         </Link>
                     </div>
                 )}
-                <div className="hidden flex lg:flex lg:gap-x-12 px-2">
-                    <ModeToggle />
-                </div>
             </nav>
         </header>
     );
