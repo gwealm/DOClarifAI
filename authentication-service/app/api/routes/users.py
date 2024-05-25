@@ -2,11 +2,13 @@
   Users routes.
 """
 from typing import Any
+from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException
 from common.crud.postgres import users as crud_users
 from common.deps import (
     CurrentUser,
     PostgresDB,
+    
 )
 from common.models.users import (User, UserCreate, UserPublic)
 
@@ -37,12 +39,17 @@ def read_user_me(current_user: CurrentUser) -> Any:
   """
   return current_user
 
-@router.post("/me/change-password", response_model=UserPublic)
-def change_password(session:PostgresDB ,current_user: CurrentUser,new_password: str) -> Any:
+
+class PasswordChangeRequest(BaseModel):
+  new_password :str
+
+@router.post("/me/change-password")
+def change_password(session: PostgresDB, current_user: CurrentUser, new_pw: PasswordChangeRequest) -> Any:
   """
   Get current user.
   """
-  crud_users.change_user_password(current_user,new_password)
+  print("Running")
+  crud_users.change_user_password(session,current_user,new_pw.new_password)
 
 @router.delete("/{user_id}")
 def delete_user(session: PostgresDB, current_user: CurrentUser,
