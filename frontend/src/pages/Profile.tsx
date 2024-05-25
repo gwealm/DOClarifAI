@@ -31,7 +31,11 @@ const Profile = () => {
         if (password === passwordConfirm && password !== "") {
             setPasswordError(false);
             setEditMode((e) => !e);
-            auth.fetch("http://localhost:8083/users/me/change-password", {method:"POST",body: JSON.stringify({ password: password }) });
+            auth.fetch("http://localhost:8083/users/me/change-password", {
+                method: "POST", headers: {
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify({ new_password: password })
+            });
 
         }
         else {
