@@ -1,4 +1,5 @@
 {
+    debug
 	auto_https off
 	skip_install_trust
 }
@@ -20,8 +21,8 @@ route {
         reverse_proxy exporter:8082
     }
 
-    handle_path /workflow-management/* {
-        reverse_proxy workflowManagement:8085
+    handle_path /workflowmanagement/* {
+        reverse_proxy workflowmanagement:8080
     }
 
 	handle {

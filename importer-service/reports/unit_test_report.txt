@@ -99,4 +99,4 @@ TOTAL                                                    471    418    11%
 =========================== short test summary info ============================
 ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 15 v...
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-========================= 2 warnings, 1 error in 2.62s =========================
+========================= 2 warnings, 1 error in 2.97s =========================

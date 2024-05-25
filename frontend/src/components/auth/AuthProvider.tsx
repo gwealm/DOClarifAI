@@ -56,7 +56,13 @@ function AuthProvider(props:Props) {
         params.headers.set("Authorization", `Bearer ${token}`);
         const res = await fetch(url, params);
         if (res.status == 403 || res.status == 404) {
-            const json_res = await res.json();
+            let json_res;
+            try {
+                json_res = await res.json();
+            } catch (e) {
+                console.error("Error parsing JSON response");
+                throw new Error("Error parsing JSON response");
+            }
             const data = { errorMsg: json_res.detail }
             onLogout();
             navigate("/login", { state:data} );
@@ -70,14 +76,14 @@ function AuthProvider(props:Props) {
         data.append("username", username);
         console.log("Trying to log in");
         data.append("password", password);
-        const res = await fetch("/auth/oauth/token/", {
+        const res = await fetch("/auth/oauth/token", {
             method: 'post',
             mode: 'cors',
             body: data,
         });
-        const json_res = await res.json();
         if (res.ok) {
             console.log("Log In Success");
+            const json_res = await res.json();
             const token = json_res.access_token
             onLogIn(token);
             return null;
@@ -85,6 +91,7 @@ function AuthProvider(props:Props) {
             saveToken(null);
             setIsLogedIn(false);
             console.log("Log In Failed")
+            const json_res = await res.json()
             return json_res.detail;
         }
     }
