@@ -57,15 +57,11 @@ const Profile = () => {
                             </svg>
                         </div>
                         <div className="flex items-center">
-                            <button onClick={toggleDeleteModal} className="text-sm font-semibold leading-6 text-black flex items-center px-4 py-2 mr-3 rounded-md bg-white bg-opacity-80 border-2 border-[#D9D9D9] hover:bg-gray-100 focus:outline-none" >
-                                Delete Profile
-                                <FontAwesomeIcon icon={faTrashCan} className="ml-3" />
-                            </button>
                             {editMode ?
                                 <>
-                                    <button onClick={onCancelPasswordChange} className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-[#5583C5] bg-opacity-80 border border-gray-300 hover:bg-opacity-50 focus:outline-none" >
+                                    <button onClick={onCancelPasswordChange} className="text-sm font-semibold leading-6 text-black flex items-center px-4 py-2 mr-3 rounded-md bg-white bg-opacity-80 border-2 border-[#D9D9D9] hover:bg-gray-100 focus:outline-none" >
                                         Cancel
-                                        <FontAwesomeIcon icon={faPenToSquare} className="ml-3" />
+                                        <FontAwesomeIcon icon={faTrashCan} className="ml-3" />
                                     </button>
                                     <button onClick={onChangePassword} className="text-sm font-semibold leading-6 text-white flex items-center px-4 py-2 rounded-md bg-[#5583C5] bg-opacity-80 border border-gray-300 hover:bg-opacity-50 focus:outline-none" >
                                         Save Changes
