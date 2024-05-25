@@ -1,1 +1,1 @@
-docker compose up init-postgres database-postgres authentication exporter importer workflow-management --build
+docker compose up mongo mongo-express init-postgres database-postgres authentication exporter importer workflow-management --build

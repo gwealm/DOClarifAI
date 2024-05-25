@@ -55,6 +55,7 @@ function AuthProvider(props:Props) {
         }
         params.headers.set("Authorization", `Bearer ${token}`);
         const res = await fetch(url, params);
+
         if (res.status == 403) {
             const json_res = await res.json();
             const data = { errorMsg: json_res.detail }
@@ -70,14 +71,14 @@ function AuthProvider(props:Props) {
         data.append("username", username);
         console.log("Trying to log in");
         data.append("password", password);
-        const res = await fetch("http://localhost:8083/oauth/token", {
+        const res = await fetch("/auth/oauth/token", {
             method: 'post',
             mode: 'cors',
             body: data,
         });
-        const json_res = await res.json();
         if (res.ok) {
             console.log("Log In Success");
+            const json_res = await res.json();
             const token = json_res.access_token
             onLogIn(token);
             return null;
@@ -85,12 +86,13 @@ function AuthProvider(props:Props) {
             saveToken(null);
             setIsLogedIn(false);
             console.log("Log In Failed")
+            const json_res = await res.json()
             return json_res.detail;
         }
     }
     const register = async (username: string, password: string) => {
         const data = { "username": username, "password": password };
-        const res = await fetch("http://localhost:8083/users", {
+        const res = await fetch("/auth/users/", {
             method: 'post',
             mode: 'cors',
             headers: {

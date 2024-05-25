@@ -1,3 +1,4 @@
+import React from 'react';
 import { DragDrop } from '../components/DragDrop.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
@@ -51,7 +52,6 @@ function Workflow() {
     setWorkflow({ ...workflow, [name]: value })
   };
 
-
   const handleSliderChange = (value) => {
     setWorkflow({ ...workflow, confidence_interval: value/100 })
   };
@@ -67,7 +67,7 @@ function Workflow() {
 
   const fetchWorkflow = useCallback(async () => {
     try {
-      const response = await auth.fetch(`http://localhost:8085/${id}`, {
+      const response = await fetch(`/workflow-management/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ function Workflow() {
 
   const fetchTemplates = async () => {
     try {
-      const response = await auth.fetch('http://localhost:8085/template/', {
+      const response = await auth.fetch('/template/', {
         method: 'GET',
       });
 
@@ -108,7 +108,7 @@ function Workflow() {
   const updateWorkflow = async (e) => {
     e.preventDefault();
     try {
-      const response = await auth.fetch(`http://localhost:8085/${id}`, {
+      const response = await auth.fetch(`/template/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

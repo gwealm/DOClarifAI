@@ -11,7 +11,7 @@ export function DragDrop( {workflowId} ) {
         setUploadStatus('uploading');
         const formData = new FormData();
         formData.append("file", file);
-        const url = "http://localhost:8081/files/" + workflowId;
+        const url = "/importer/files/" + workflowId;
         fetch(url, {
             method: "POST",
             mode: 'cors',

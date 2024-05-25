@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.11.9, pytest-8.2.0, pluggy-1.5.0
+platform linux -- Python 3.11.9, pytest-8.2.1, pluggy-1.5.0
 rootdir: /app
 plugins: cov-5.0.0, anyio-4.3.0
 collected 0 items
@@ -16,4 +16,4 @@ app/main.py               6      6     0%   7-19
 ---------------------------------------------------
 TOTAL                    21     21     0%
 
-============================ no tests ran in 0.03s =============================
+============================ no tests ran in 0.12s =============================
