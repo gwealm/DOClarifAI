@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useAuth } from './auth/Auth';
-import { Link } from 'react-router-dom';
 
 const MiniAboutMe = () => {
     /**
