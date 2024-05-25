@@ -43,7 +43,7 @@ function ProcessedFiles() {
       .catch((error) => {
         console.error(`Error: ${error}`);
       });
-  }, [id]);
+  }, [auth, id]);
 
   useEffect(() => {
     fetchDocuments();

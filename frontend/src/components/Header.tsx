@@ -32,6 +32,7 @@ const Header = () => {
                 }
             });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [auth.isLoggedIn]);
 
     const getUserId = async () => {

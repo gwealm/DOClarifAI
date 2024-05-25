@@ -38,7 +38,7 @@ const Workflows = () => {
         } catch (error) {
             console.error('Error fetching workflows:', error);
         }
-    }, [auth.isLoggedIn]);
+    }, [auth]);
 
     useEffect(() => {
         fetchWorkflows();
