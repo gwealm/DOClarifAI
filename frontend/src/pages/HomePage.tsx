@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
-import { FaEvernote } from 'react-icons/fa';
 
 export function HomePage() {
   return (

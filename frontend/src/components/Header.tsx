@@ -13,7 +13,7 @@ const Header = () => {
     
     useEffect(() => {
         setCurrentURL(window.location.pathname);
-    }, [window.location.pathname]);
+    }, []);
 
     useEffect(() => {
         if (auth.isLoggedIn) {
