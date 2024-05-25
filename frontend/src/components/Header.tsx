@@ -14,7 +14,7 @@ const Header = () => {
         if (auth.isLoggedIn) {
             getUserId().then((user_id) => {
                 if (user_id) {
-                    const ws = new WebSocket(`ws://localhost:8081/ws/${user_id}`);
+                    const ws = new WebSocket(`/importer/ws/${user_id}`);
                     console.log("Connecting to websocket");
                     ws.onmessage = (event) => {
                         const newNotification = event.data;
@@ -39,7 +39,13 @@ const Header = () => {
             return auth.user.id;
         }
 
-        const response = await auth.fetch("http://localhost:8083/users/me", {});
+        const response = await auth.fetch("/auth/users/me", {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         if (response.ok) {
             const userInfo = await response.json();
             auth.setUser(userInfo);

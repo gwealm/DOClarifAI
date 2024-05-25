@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  proxy:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      container_name: proxy
+      restart: unless-stopped
+      ports:
+        - "80:80"

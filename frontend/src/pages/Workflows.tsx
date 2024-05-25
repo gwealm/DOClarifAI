@@ -20,8 +20,9 @@ const Workflows = () => {
             return;
         }
         try {
-            const response = await auth.fetch('http://localhost:8085/', {
+            const response = await auth.fetch('/workflowmanagement/', {
                 method: 'GET',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -45,8 +46,9 @@ const Workflows = () => {
 
     const handleAddWorkflow = async (workflowName) => {
         try {
-            const response = await auth.fetch('http://localhost:8085/', {
+            const response = await auth.fetch('/workflowmanagement/', {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -71,7 +73,7 @@ const Workflows = () => {
 
     const handleDeleteWorkflow = async (index, workflowId) => {
         try {
-            const response = await auth.fetch(`http://localhost:8085/${workflowId}`, {
+            const response = await auth.fetch(`/workflowmanagement/${workflowId}`, {
                 method: 'DELETE',
             });
     
