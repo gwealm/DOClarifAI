@@ -31,6 +31,12 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
   session.refresh(db_obj)
   return db_obj
 
+def change_user_password(session:Session,user:User,password):
+  user.hashed_password = get_password_hash(password)
+  session.commit()
+  return {"message":"Changed Password"}
+  
+
 
 def get_user_by_username(*, session: Session, username: str) -> User | None:
   """

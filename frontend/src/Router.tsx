@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Workflow from "./pages/Workflow";
 import Header from "./components/Header";
 import LogIn from "./pages/LogIn";
+import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import AuthProvider from "./components/auth/AuthProvider";
@@ -20,6 +21,7 @@ function Router() {
                         <Route path="/workflows" element={<Workflows />} />
                         <Route path="/" element={<HomePage />} />
                         <Route path="/workflow/:id" element={<Workflow />} />
+                        <Route path="/profile" element={<Profile />} />
                         <Route
                             path="/workflow/:id/processed-files"
                             element={<ProcessedFiles />}

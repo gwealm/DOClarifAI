@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAuth } from './auth/Auth';
+import { Link } from 'react-router-dom';
 
 const MiniAboutMe = () => {
     /**
@@ -26,6 +27,7 @@ const MiniAboutMe = () => {
     return (
         <span className="text-sm text-gray-900">
             {auth.user?.username ?? ""}
-        </span>);
+        </span>
+    );
 }
 export default MiniAboutMe;
