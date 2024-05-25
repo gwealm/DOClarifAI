@@ -7,7 +7,13 @@
 :80
 
 route {
+	handle_path /template/* {        
+        reverse_proxy template:8085
+	}
 
+	handle_path /templates/* {        
+        reverse_proxy templates:8085
+	}
 
 	handle_path /auth/* {        
         reverse_proxy authentication:8083
