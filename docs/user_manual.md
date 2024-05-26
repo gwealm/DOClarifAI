@@ -54,7 +54,7 @@ To submit documents for processing within a workflow:
 
 ## 5. Receiving Notifications
 
-Once a document is successfully processed, you will receive a notification in the frontend. Notifications will appear in the notification area of your dashboard.
+Once a document is processed or not, you will receive a notification in the frontend. Notifications will appear in the notification area of your dashboard.
 
 ![notification](./resources/notification.png)
 
@@ -68,15 +68,27 @@ To view the processed files:
 
 ![processed_files](./resources/processed_files.png)
 
-## 7. Exporting Files
+## 7. Manual Configuration
 
-You can export the processed files to Excel:
+If a document fails to meet the confidence threshold, you can manually configure the extracted values:
+
+1. In the **Processed Files** section, locate the document flagged for manual review.
+2. Click on **Results**.
+3. Adjust the extracted values as needed and save the changes, so that the document is marked as successfully processed.
+
+![results](./resources/results.png)
+
+## 8. Exporting Files
+
+You can export successfully processed files to Excel for further analysis:
 
 1. In the **Processed Files** section of your workflow, select the files you wish to export.
-2. Click on **Export to Excel**.
+2. Click on the download icon.
 3. The files will be downloaded as an Excel spreadsheet.
 
-## 8. Automating Tasks via Email
+![export](./resources/export.png)
+
+## 9. Automating Tasks via Email
 
 Automate document submission via email by forwarding attachments to our designated email address:
 
@@ -84,7 +96,11 @@ Automate document submission via email by forwarding attachments to our designat
    - Replace `<workflow_id>` with the ID of your workflow.
 2. The document will be automatically added to the specified workflow for processing.
 
-## 9. Creating Custom Schemas
+3. You will need to add the email address you are sending from in the Workflow settings.
+
+![email](./resources/email.png)
+
+## 10. Creating Custom Schemas
 
 Custom schemas allow you to train the AI model to better extract specific fields:
 
@@ -92,8 +108,13 @@ Custom schemas allow you to train the AI model to better extract specific fields
 2. Click on **Create New Schema**.
 3. Define the fields you want the AI to extract.
 4. Save the schema.
+5. Note that SAP already provides various schemas for different document types.
 
-## 10. Activating Schemas and Templates
+![schema](./resources/schemas.png)
+
+![schema_page](./resources/schema_page.png)
+
+## 11. Activating Schemas and Templates
 
 After creating a schema:
 
@@ -102,18 +123,14 @@ After creating a schema:
 3. **Activate the Template**: Navigate to the **Templates** section and activate the template.
 4. **Associate with Workflow**: Link the activated template to your desired workflow.
 
-## 11. Setting Confidence Values
+## 12. Setting Confidence Values
 
 You can set a confidence threshold to determine the accuracy of the document processing:
 
 1. In your workflow settings, set the confidence value (e.g., 50%).
 2. Documents with a confidence interval below this value will be flagged for manual review.
 
-## 12. Manual Configuration
+![confidence](./resources/confidence.png)
 
-If a document fails to meet the confidence threshold, you can manually configure the extracted values:
 
-1. In the **Processed Files** section, locate the document flagged for manual review.
-2. Click on **Results**.
-3. Adjust the extracted values as needed and save the changes.
 
