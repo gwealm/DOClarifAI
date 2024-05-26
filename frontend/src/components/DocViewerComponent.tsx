@@ -17,7 +17,7 @@ const DocViewerComponent = () => {
     invoiceDate:  { type: "Date", value: new Date(), x: 0, y: 0.5, w: 1, h: 0.5 }
 
   });
-  const [document, setDocument] = useState("document.pdf");
+  const [document, ] = useState("document.pdf");
 
   const docViewerRef = useRef(null);
 

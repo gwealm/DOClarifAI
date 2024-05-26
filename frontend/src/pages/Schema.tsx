@@ -113,8 +113,8 @@ const Schema = () => {
         predefined: false
       };
   
-      let updatedHeaderFields = [...headerFields];
-      let updatedLineItemFields = [...lineItemFields];
+      const updatedHeaderFields = [...headerFields];
+      const updatedLineItemFields = [...lineItemFields];
   
       if (newFieldCategory === 'Header') {
         updatedHeaderFields.push(newField);
@@ -159,8 +159,8 @@ const Schema = () => {
   
 
   const handleDeleteField = (index, header) => {
-    let updatedHeaderFields = [...headerFields];
-    let updatedLineItemFields = [...lineItemFields];
+    const updatedHeaderFields = [...headerFields];
+    const updatedLineItemFields = [...lineItemFields];
 
     if (header) {
       updatedHeaderFields.splice(index, 1);
@@ -203,8 +203,8 @@ const Schema = () => {
   };
 
   const saveEdit = () => {
-    let updatedHeaderFields = [...headerFields];
-    let updatedLineItemFields = [...lineItemFields];
+    const updatedHeaderFields = [...headerFields];
+    const updatedLineItemFields = [...lineItemFields];
 
     if (editingIndex !== null && editingCategory === 'Header') {
       updatedHeaderFields[editingIndex].name = editFieldName;

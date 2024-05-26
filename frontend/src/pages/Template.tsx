@@ -73,6 +73,7 @@ const Template = () => {
   useEffect(() => {
     fetchDocumentTypes()
     fetchTemplate(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDocumentTypes = async () => {

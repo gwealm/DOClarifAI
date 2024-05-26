@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useAuth } from "../components/auth/Auth";
@@ -32,7 +33,7 @@ const ProcessedFile = () => {
   );
   const [schema, setSchema] = useState(null);
   const [missingHeaderFields, setMissingHeaderFields] = useState([]);
-  const [missingLineFields, setMissingLineFields] = useState([]);
+  const [, setMissingLineFields] = useState([]);
 
   const FieldComponent = ({ index, item, onAdd }) => {
     return (
@@ -131,7 +132,7 @@ const ProcessedFile = () => {
     const onAdd = (index, item) => {
 
       const newFields = structuredClone(fields);
-      let toSend = {
+      const toSend = {
         "name": item.name,
         "category": "details",
         "value": "",
@@ -155,6 +156,7 @@ const ProcessedFile = () => {
   useEffect(() => {
     fetchExtractedInformation();
     fetchDocument();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDocument = async () => {
@@ -368,7 +370,7 @@ const ProcessedFile = () => {
 
   const handleFieldValueChange = (event) => {
     let updatedField;
-    let updatedFields = { ...fields };
+    const updatedFields = { ...fields };
     if (selectedInnerFieldIdx !== null)
       updatedField = { ...fields[selectedFieldLevel][selectedOuterFieldIdx][selectedInnerFieldIdx] };
     else
