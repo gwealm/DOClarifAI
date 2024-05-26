@@ -3,7 +3,7 @@
 """
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 
 from common.models.workflows import Workflow
 from common.deps import CurrentUser
