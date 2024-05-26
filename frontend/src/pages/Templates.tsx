@@ -31,7 +31,7 @@ const Templates = () => {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await auth.fetch('/template/', {
+        const response = await auth.fetch('/workflowmanagement/template/', {
           method: 'GET',
         });
 
@@ -52,7 +52,7 @@ const Templates = () => {
 
   const handleAddTemplate = async (template) => {
     try {
-      const response = await auth.fetch('/template/', {
+      const response = await auth.fetch('/workflowmanagement/template/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ const Templates = () => {
               {templates.map((template) => (
                   <div className="flex max-w-8xl items-center justify-between bg-[#C8EDFD] bg-opacity-50 my-3 p-6 rounded-lg">
                       <div className="flex lg:flex-1">
-                          <Link key={template.id} to={`/schemas/${template.id}`}>
+                          <Link key={template.id} to={`/templates/${template.id}`}>
                           <p className="text-lg font-normal text-black">{template.name}</p>
                           </Link>
                       </div>

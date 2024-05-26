@@ -32,7 +32,7 @@ const Schemas = () => {
   useEffect(() => {
     const fetchSchemas = async () => {
       try {
-        const response = await auth.fetch('http://localhost:8085/schema/', {
+        const response = await auth.fetch('/workflowmanagement/schema/', {
           method: 'GET',
         });
 
@@ -50,7 +50,7 @@ const Schemas = () => {
 
     const fetchDocumentTypes = async () => {
       try {
-        const response = await auth.fetch('http://localhost:8085/document_type/', {
+        const response = await auth.fetch('/workflowmanagement/document_type/', {
           method: 'GET',
         });
 
@@ -78,7 +78,7 @@ const Schemas = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await auth.fetch('http://localhost:8085/schema/', {
+      const response = await auth.fetch('/workflowmanagement/schema/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

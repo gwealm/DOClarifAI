@@ -38,7 +38,7 @@ const LogIn = () => {
                     <div className="flex">
                         <a href="#" className="-m-1.5 p-1.5">
                             <span className="sr-only">Your Company</span>
-                            <img className="h-8 w-auto" src="logotipo.png" alt="" />
+                            <img className="h-8 w-auto" src="./src/assets/weclarifai_logo.jpg" alt="" />
                         </a>
                     </div>
                     <div className="flex px-4">
@@ -82,21 +82,12 @@ const LogIn = () => {
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2">Or</div>
                 </div>
 
-                <div className="flex justify-between items-center mx-8">
-                    <button className="flex items-center justify-center w-1/2 text-sm font-semibold leading-6 text-black mx-6 p-2 rounded-md bg-white border-2 border-[#D9D9D9] hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                        <img className="h-6 w-auto me-3" src="./src/assets/google_logo.png" alt="" />
-                        Sign in with Google
-                    </button>
+                <div className="flex justify-center items-center">
 
                     <a href="/register" className="w-1/2 text-sm font-semibold leading-6 text-white mx-6 p-2 rounded-md bg-[#1976D2] border hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                         Register here
                     </a>
                 </div>
-
-                <p className="my-4">
-                    Forgot your password?
-                    <a href="#" className="text-blue-500 hover:underline mx-2">Click here</a>
-                </p>
             </div>
         </div>
         </div>

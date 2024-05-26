@@ -1,31 +1,108 @@
 ************* Module app.core.config
 app/core/config.py:35:2: C0103: Attribute name "POSTGRES_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-app/core/config.py:53:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
 ************* Module document
-app/api/routes/document.py:11:0: C0412: Imports from package common are not grouped (ungrouped-imports)
+app/api/routes/document.py:35:65: C0303: Trailing whitespace (trailing-whitespace)
+************* Module endpoints
+common/src/common/document_information_extraction_client/endpoints.py:30:0: C0304: Final newline missing (missing-final-newline)
+************* Module dox_api_client
+common/src/common/document_information_extraction_client/dox_api_client.py:132:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:147:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:156:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:161:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:171:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:186:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:191:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:207:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:212:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:217:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/document_information_extraction_client/dox_api_client.py:195:0: W1405: Quote delimiter " is inconsistent with the rest of the file (inconsistent-quotes)
+common/src/common/document_information_extraction_client/dox_api_client.py:9:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
+common/src/common/document_information_extraction_client/dox_api_client.py:11:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
+common/src/common/document_information_extraction_client/dox_api_client.py:14:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
+common/src/common/document_information_extraction_client/dox_api_client.py:7:0: W0611: Unused List imported from typing (unused-import)
+common/src/common/document_information_extraction_client/dox_api_client.py:7:0: W0611: Unused Union imported from typing (unused-import)
+************* Module helpers
+common/src/common/document_information_extraction_client/helpers.py:6:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
+common/src/common/document_information_extraction_client/helpers.py:45:46: E0601: Using variable 'header_fields' before assignment (used-before-assignment)
+common/src/common/document_information_extraction_client/helpers.py:54:49: E0601: Using variable 'line_item_fields' before assignment (used-before-assignment)
 ************* Module common.crud.postgres.files
-common/src/common/crud/postgres/files.py:34:0: C0301: Line too long (99/80) (line-too-long)
+common/src/common/crud/postgres/files.py:77:72: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/files.py:133:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/crud/postgres/files.py:134:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:135:53: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/files.py:135:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:136:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:137:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:139:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:141:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:142:0: W0311: Bad indentation. Found 12 spaces, expected 6 (bad-indentation)
+common/src/common/crud/postgres/files.py:143:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:144:0: W0311: Bad indentation. Found 12 spaces, expected 6 (bad-indentation)
+common/src/common/crud/postgres/files.py:146:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:148:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:149:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:150:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:151:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:152:0: W0311: Bad indentation. Found 8 spaces, expected 4 (bad-indentation)
+common/src/common/crud/postgres/files.py:8:0: W0404: Reimport 'File' (imported line 5) (reimported)
+common/src/common/crud/postgres/files.py:80:26: W0613: Unused argument 'extracted_document' (unused-argument)
+************* Module common.crud.postgres.schemas
+common/src/common/crud/postgres/schemas.py:46:55: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/schemas.py:66:0: C0304: Final newline missing (missing-final-newline)
+common/src/common/crud/postgres/schemas.py:53:12: C0121: Comparison 'Schema.active == True' should be 'Schema.active is True' if checking for the singleton value True, or 'bool(Schema.active)' if testing for truthiness (singleton-comparison)
+************* Module common.crud.postgres.templates
+common/src/common/crud/postgres/templates.py:63:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/templates.py:53:22: C0121: Comparison 'Template.active == True' should be 'Template.active is True' if checking for the singleton value True, or 'bool(Template.active)' if testing for truthiness (singleton-comparison)
+common/src/common/crud/postgres/templates.py:68:12: C0121: Comparison 'Template.active == True' should be 'Template.active is True' if checking for the singleton value True, or 'bool(Template.active)' if testing for truthiness (singleton-comparison)
+common/src/common/crud/postgres/templates.py:6:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
 ************* Module common.crud.postgres.users
+common/src/common/crud/postgres/users.py:38:0: C0303: Trailing whitespace (trailing-whitespace)
 common/src/common/crud/postgres/users.py:11:0: W0611: Unused Template imported from common.models.templates (unused-import)
 common/src/common/crud/postgres/users.py:12:0: W0611: Unused File imported from common.models.files (unused-import)
 common/src/common/crud/postgres/users.py:13:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
-************* Module common.crud.postgres.workflows
-common/src/common/crud/postgres/workflows.py:24:0: C0301: Line too long (82/80) (line-too-long)
+************* Module common.crud.postgres.document_types
+common/src/common/crud/postgres/document_types.py:11:71: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/document_types.py:12:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/document_types.py:23:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/crud/postgres/document_types.py:30:0: W0311: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)
+common/src/common/crud/postgres/document_types.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+common/src/common/crud/postgres/document_types.py:3:0: C0412: Imports from package common are not grouped (ungrouped-imports)
+************* Module common.http_client.exceptions
+common/src/common/http_client/exceptions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module common.http_client.constants
+common/src/common/http_client/constants.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module common.config
-common/src/common/config.py:52:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-common/src/common/config.py:71:2: C0103: Attribute name "MONGO_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
-************* Module common.models.files
-common/src/common/models/files.py:33:0: C0301: Line too long (88/80) (line-too-long)
+common/src/common/config.py:39:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/config.py:56:2: C0103: Attribute name "SQLALCHEMY_DATABASE_URI" doesn't conform to '^_{0,2}[a-z][a-z0-9_]*$' pattern (invalid-name)
+************* Module common.models.schemas
+common/src/common/models/schemas.py:56:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/schemas.py:59:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/schemas.py:14:0: W1405: Quote delimiter ' is inconsistent with the rest of the file (inconsistent-quotes)
+common/src/common/models/schemas.py:30:2: C0103: Class attribute name "defaultExtractor" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+common/src/common/models/schemas.py:31:2: C0103: Class attribute name "setupType" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+common/src/common/models/schemas.py:32:2: C0103: Class attribute name "setupTypeVersion" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+common/src/common/models/schemas.py:34:2: C0103: Class attribute name "formattingType" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+common/src/common/models/schemas.py:36:2: C0103: Class attribute name "formattingTypeVersion" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+common/src/common/models/schemas.py:40:2: C0103: Class attribute name "headerFields" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+common/src/common/models/schemas.py:41:2: C0103: Class attribute name "lineItemFields" doesn't conform to '^(_?[A-Z][A-Z0-9_]*|__[a-z0-9_]+__|_?[a-z][a-z0-9_]*)$' pattern (invalid-name)
+************* Module common.models.templates
+common/src/common/models/templates.py:38:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/templates.py:41:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/templates.py:44:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/templates.py:47:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/templates.py:50:0: C0303: Trailing whitespace (trailing-whitespace)
 ************* Module common.models.workflows
-common/src/common/models/workflows.py:33:0: C0303: Trailing whitespace (trailing-whitespace)
-common/src/common/models/workflows.py:35:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/workflows.py:34:0: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/models/workflows.py:36:0: C0303: Trailing whitespace (trailing-whitespace)
 ************* Module common.deps
-common/src/common/deps.py:55:0: C0301: Line too long (104/80) (line-too-long)
-common/src/common/deps.py:49:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Your session has ended or is invalid') from exc' (raise-missing-from)
+common/src/common/deps.py:17:16: C0303: Trailing whitespace (trailing-whitespace)
+common/src/common/deps.py:52:4: W0707: Consider explicitly re-raising using 'except (JWTError, ValidationError) as exc' and 'raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Your session has ended or is invalid') from exc' (raise-missing-from)
 common/src/common/deps.py:18:0: W0611: Unused Workflow imported from common.models.workflows (unused-import)
 common/src/common/deps.py:19:0: W0611: Unused Template imported from common.models.templates (unused-import)
 common/src/common/deps.py:20:0: W0611: Unused File imported from common.models.files (unused-import)
+common/src/common/deps.py:21:0: W0611: Unused Schema imported from common.models.schemas (unused-import)
+common/src/common/deps.py:22:0: W0611: Unused DocumentType imported from common.models.document_types (unused-import)
 
 -----------------------------------
-Your code has been rated at 9.48/10
+Your code has been rated at 8.79/10
 

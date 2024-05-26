@@ -67,7 +67,7 @@ function Workflow() {
 
   const fetchWorkflow = useCallback(async () => {
     try {
-      const response = await fetch(`/workflowmanagement/${id}`, {
+      const response = await auth.fetch(`/workflowmanagement/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ function Workflow() {
 
   const fetchTemplates = async () => {
     try {
-      const response = await auth.fetch('/template/', {
+      const response = await auth.fetch('/workflowmanagement/template/', {
         method: 'GET',
       });
 
@@ -108,7 +108,7 @@ function Workflow() {
   const updateWorkflow = async (e) => {
     e.preventDefault();
     try {
-      const response = await auth.fetch(`/template/${id}`, {
+      const response = await auth.fetch(`/workflowmanagement/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

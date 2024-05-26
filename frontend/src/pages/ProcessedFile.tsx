@@ -159,7 +159,7 @@ const ProcessedFile = () => {
 
   const fetchDocument = async () => {
     try {
-      const url = `http://localhost:8085/${workflowId}/file/${fileId}/original-file`;
+      const url = `/workflowmanagement/${workflowId}/file/${fileId}/original-file`;
       const response = await auth.fetch(url, {
         method: "GET"
       });
@@ -172,7 +172,7 @@ const ProcessedFile = () => {
   };
 
   const fetchExtractedInformation = async () => {
-    const url = `http://localhost:8085/${workflowId}/file/${fileId}/results`;
+    const url = `/workflowmanagement/${workflowId}/file/${fileId}/results`;
     await auth.fetch(url, {
       method: "GET"
     })
@@ -181,7 +181,6 @@ const ProcessedFile = () => {
         setSchema(data["schema"]);
         console.log(data);
         setFields(data["extraction"]);
-        debugger;
         const headerFieldNames = data["extraction"]["headerFields"].map(f => f.name);
         setMissingHeaderFields(data["schema"]["headerFields"].filter(f => !headerFieldNames.includes(f.name)));
         setMissingLineFields(data["schema"]["lineItemFields"]);
@@ -192,7 +191,7 @@ const ProcessedFile = () => {
   }
 
   const postGroundTruth = async () => {
-    const url = `http://localhost:8085/${workflowId}/file/${fileId}/ground-truth/`;
+    const url = `/workflowmanagement/${workflowId}/file/${fileId}/ground-truth/`;
     const data = {
       extraction: fields
     }

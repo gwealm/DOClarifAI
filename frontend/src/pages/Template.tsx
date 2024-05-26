@@ -47,7 +47,7 @@ const Template = () => {
   const updateTemplate = async (e) => {
     e.preventDefault();
     try {
-      const response = await auth.fetch(`/template/${id}`, {
+      const response = await auth.fetch(`/workflowmanagement/template/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const Template = () => {
 
   const fetchDocumentTypes = async () => {
     try {
-      const response = await fetch(`http://localhost:8085/document_type/`, {
+      const response = await fetch(`/workflowmanagement/document_type/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const Template = () => {
 
   const fetchTemplate = async (id) => {
     try {
-      const response = await auth.fetch(`/template/${id}`, {
+      const response = await auth.fetch(`/workflowmanagement/template/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ const Template = () => {
 
   const toggleIsActive = async () => {
     try {
-      const url = `/template/${id}/${isActive ? 'deactivate' : 'activate'}`;
+      const url = `/workflowmanagement/template/${id}/${isActive ? 'deactivate' : 'activate'}`;
       const response = await auth.fetch(url, {
         method: 'POST',
         headers: {
@@ -142,7 +142,7 @@ const Template = () => {
 
   const fetchSchemas = async (document_type_id) => {
     try {
-      const response = await auth.fetch(`http://localhost:8085/document_type/${document_type_id}/schema/active`, {
+      const response = await auth.fetch(`/workflowmanagement/document_type/${document_type_id}/schema/active`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

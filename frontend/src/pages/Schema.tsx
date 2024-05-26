@@ -28,7 +28,7 @@ const Schema = () => {
   useEffect(() => {
     const fetchSchema = async () => {
       try {
-        const response = await auth.fetch(`http://localhost:8085/schema/${id}`, {
+        const response = await auth.fetch(`/workflowmanagement/schema/${id}`, {
           method: 'GET',
         });
 
@@ -75,7 +75,7 @@ const Schema = () => {
   const handleToggleActiveState = async () => {
     try {
       const endpoint = isActive ? 'deactivate' : 'activate';
-      const response = await auth.fetch(`http://localhost:8085/schema/${id}/${endpoint}`, {
+      const response = await auth.fetch(`/workflowmanagement/schema/${id}/${endpoint}`, {
         method: 'POST',
       });
 
@@ -122,7 +122,7 @@ const Schema = () => {
         updatedLineItemFields.push(newField);
       }
   
-      auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
+      auth.fetch(`/workflowmanagement/schema/${id}/fields`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ const Schema = () => {
       updatedLineItemFields.splice(index, 1);
     }
 
-    auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
+    auth.fetch(`/workflowmanagement/schema/${id}/fields`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ const Schema = () => {
       updatedLineItemFields[editingIndex].formattingType = editFieldType;
     }
 
-    auth.fetch(`http://localhost:8085/schema/${id}/fields`, {
+    auth.fetch(`/workflowmanagement/schema/${id}/fields`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

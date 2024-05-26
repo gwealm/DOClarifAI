@@ -138,7 +138,7 @@ def reply_to_email(service, msg_id, message, workflow_id):
 
         # Send the message
         send_message = service.users().messages().send(userId="me", body=body).execute()
-        print(f"Message sent: {send_message["id"]}")
+        print(f"Message sent: {send_message}")
 
     except HttpError as error:
         print(f"An error occurred while replying with error: {error}")

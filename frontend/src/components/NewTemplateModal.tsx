@@ -36,7 +36,7 @@ const NewTemplateModal = ({ onClose, onAddTemplate }) => {
 
     const fetchSchemas = async (document_type_id) => {
         try {
-          const response = await auth.fetch(`http://localhost:8085/document_type/${document_type_id}/schema/active`, {
+          const response = await auth.fetch(`/workflowmanagement/document_type/${document_type_id}/schema/active`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const NewTemplateModal = ({ onClose, onAddTemplate }) => {
   
       const fetchDocumentTypes = async () => {
         try {
-          const response = await auth.fetch('http://localhost:8085/document_type/', {
+          const response = await auth.fetch('/workflowmanagement/document_type/', {
             method: 'GET',
           });
   

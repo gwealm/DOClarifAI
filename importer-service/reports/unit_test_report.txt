@@ -13,61 +13,17 @@ app/main.py:3: in <module>
 app/api/main.py:7: in <module>
     from app.api.routes import files
 app/api/routes/files.py:8: in <module>
-    from app.api.deps import MongoDB, DoxClient
-app/api/deps.py:7: in <module>
-    from app.core.config import settings
-app/core/config.py:68: in <module>
-    settings = Settings()
-/usr/local/lib/python3.11/site-packages/pydantic_settings/main.py:84: in __init__
-    super().__init__(
-E   pydantic_core._pydantic_core.ValidationError: 15 validation errors for Settings
-E   SAP_CLIENT_ID
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   SAP_CLIENT_SECRET
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   SAP_BASE_URL
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   SAP_UAA_URL
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   TOKEN_URL
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   POSTGRES_HOST
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   POSTGRES_PORT
-E     Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/int_type
-E   POSTGRES_USER
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   POSTGRES_PASSWORD
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   POSTGRES_DB
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   MONGO_HOST
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   MONGO_PORT
-E     Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/int_type
-E   MONGO_USER
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   MONGO_PASSWORD
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
-E   MONGO_DB
-E     Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
-E       For further information visit https://errors.pydantic.dev/2.7/v/string_type
+    from app.crud import documents as crud_documents
+app/crud/documents.py:6: in <module>
+    from common.crud.postgres import files as crud_files
+/usr/local/lib/python3.11/site-packages/common/crud/postgres/files.py:10: in <module>
+    from common.postgres import engine
+/usr/local/lib/python3.11/site-packages/common/postgres.py:7: in <module>
+    engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
+/usr/local/lib/python3.11/site-packages/common/config.py:57: in SQLALCHEMY_DATABASE_URI
+    return MultiHostUrl.build(
+E   ValueError: expected either `host` or `hosts` to be set
 =============================== warnings summary ===============================
-../usr/local/lib/python3.11/site-packages/pydantic/fields.py:804
 ../usr/local/lib/python3.11/site-packages/pydantic/fields.py:804
   /usr/local/lib/python3.11/site-packages/pydantic/fields.py:804: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.7/migration/
     warn(
@@ -79,24 +35,19 @@ Name                                                   Stmts   Miss  Cover   Mis
 ------------------------------------------------------------------------------------
 app/__init__.py                                            0      0   100%
 app/api/__init__.py                                        0      0   100%
-app/api/deps.py                                           17     13    24%   8-41
+app/api/deps.py                                           11     11     0%   4-30
 app/api/main.py                                            4      2    50%   9-10
-app/api/routes/files.py                                   49     46     6%   9-107
-app/core/config.py                                        38      2    95%   43, 61
+app/api/routes/files.py                                   37     34     8%   9-77
+app/crud/documents.py                                     45     43     4%   7-83
 app/gmail_automation/__init__.py                           0      0   100%
-app/gmail_automation/generate_google_oauth2_token.py      18     18     0%   1-34
-app/gmail_automation/gmail_automation_client.py          153    153     0%   1-257
-app/http_client/__init__.py                                0      0   100%
-app/http_client/constants.py                              10     10     0%   1-14
-app/http_client/exceptions.py                             19     19     0%   1-34
-app/http_client/helpers.py                                12     12     0%   5-45
-app/http_client/http_client_base.py                      121    121     0%   5-448
+app/gmail_automation/generate_google_oauth2_token.py      18     18     0%   1-33
+app/gmail_automation/gmail_automation_client.py          139    139     0%   1-229
 app/main.py                                               25     22    12%   4-37
 app/models/document_status.py                              5      0   100%
 ------------------------------------------------------------------------------------
-TOTAL                                                    471    418    11%
+TOTAL                                                    284    269     5%
 
 =========================== short test summary info ============================
-ERROR tests/test_main.py - pydantic_core._pydantic_core.ValidationError: 15 v...
+ERROR tests/test_main.py - ValueError: expected either `host` or `hosts` to b...
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-========================= 2 warnings, 1 error in 2.97s =========================
+========================= 1 warning, 1 error in 3.03s ==========================
