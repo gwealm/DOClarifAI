@@ -50,4 +50,4 @@ TOTAL                                                    284    269     5%
 =========================== short test summary info ============================
 ERROR tests/test_main.py - ValueError: expected either `host` or `hosts` to b...
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-========================= 1 warning, 1 error in 3.03s ==========================
+========================= 1 warning, 1 error in 3.07s ==========================

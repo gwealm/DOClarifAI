@@ -43,7 +43,7 @@ function Router() {
                             element={<ProcessedFiles />}
                         />
                         <Route
-                            path="/workflow/:id/processed-files/:fileId"
+                            path="/workflow/:workflowId/processed-files/:fileId"
                             element={<ProcessedFile />}
                         />
                         <Route path="/about-us" element={<AboutUs />} />

@@ -191,7 +191,7 @@ const ProcessedFile = () => {
   }
 
   const postGroundTruth = async () => {
-    const url = `/workflowmanagement/${workflowId}/file/${fileId}/ground-truth/`;
+    const url = `/workflowmanagement/${workflowId}/file/${fileId}/ground-truth`;
     const data = {
       extraction: fields
     }
