@@ -26,6 +26,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "vite.config.ts", "src/components/ModeToggle.tsx"],
+  "include": ["src/**/*.ts", "test/**/*.ts", "vite.config.ts", "src/components/auth/AuthProvider.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

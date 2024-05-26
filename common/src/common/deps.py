@@ -13,7 +13,16 @@ from sqlmodel import Session
 from common.config import settings
 from common.postgres import engine
 from common.models.users import User
+
+# DO NOT DELETE. 
+from common.models.workflows import Workflow
+from common.models.templates import Template
+from common.models.files import File
+from common.models.schemas import Schema
+from common.models.document_types import DocumentType
+
 from common.models.tokens import TokenPayload
+from common.document_information_extraction_client.dox_api_client import DoxApiClient
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
 
@@ -42,12 +51,36 @@ def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
   except (JWTError, ValidationError):
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
-        detail="Could not validate credentials",
+        detail="Your session has ended or is invalid",
     )
   user = session.get(User, token_data.sub)
   if not user:
-    raise HTTPException(status_code=404, detail="User not found")
+    raise HTTPException(status_code=404, detail="User account associated with session no longer exists")
   return user
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+class DoxApiClientSingleton:
+  """
+    Singleton class for managing the instantiation of the DoxApiClient.
+    """
+
+  _instance = None
+
+  def __new__(cls):
+    """
+        Create a new instance of DoxApiClient if it doesn't exist,
+          otherwise return the existing instance.
+        """
+    if cls._instance is None:
+      cls._instance = DoxApiClient(settings.SAP_BASE_URL,
+                                   settings.SAP_CLIENT_ID,
+                                   settings.SAP_CLIENT_SECRET,
+                                   settings.SAP_UAA_URL)
+    return cls._instance
+
+
+DoxClient = Annotated[DoxApiClient, Depends(DoxApiClientSingleton)]
+

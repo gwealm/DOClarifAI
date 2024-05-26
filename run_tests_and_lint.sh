@@ -1,0 +1,1 @@
+docker compose up authentication-tests exporter-tests importer-tests workflowmanagement-tests --build

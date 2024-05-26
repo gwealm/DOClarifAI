@@ -3,7 +3,6 @@ from pydantic_core import MultiHostUrl
 from pydantic import (
     PostgresDsn,
     computed_field,
-    MongoDsn,
 )
 
 from pydantic_settings import BaseSettings
@@ -37,6 +36,11 @@ class Settings(BaseSettings):
   PRIVATE_KEY: str | None = read_key_from_file(PRIVATE_KEY_FILE)
   PUBLIC_KEY: str | None = read_key_from_file(PUBLIC_KEY_FILE)
   JWT_ALGORITHM: str | None = "ES256"
+  
+  SAP_CLIENT_ID: str|None = os.getenv("SAP_CLIENT_ID")
+  SAP_CLIENT_SECRET: str|None = os.getenv("SAP_CLIENT_SECRET")
+  SAP_BASE_URL: str|None = os.getenv("SAP_BASE_URL")
+  SAP_UAA_URL: str|None = os.getenv("SAP_UAA_URL")
 
   # 60 minutes * 24 hours * 8 days = 8 days
   ACCESS_TOKEN_EXPIRE_MINUTES: int | None = 60 * 24 * 8
@@ -60,20 +64,6 @@ class Settings(BaseSettings):
     )
 
   TOKEN_URL: str | None = os.getenv("TOKEN_URL")
-  MONGO_HOST: str | None = os.getenv("MONGO_HOST")
-  MONGO_PORT: int | None = os.getenv("MONGO_PORT")
-  MONGO_USER: str | None = os.getenv("MONGO_INITDB_ROOT_USERNAME")
-  MONGO_PASSWORD: str | None = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
-  MONGO_DB: str | None = os.getenv("MONGO_DB")
-
-  @computed_field
-  @property
-  def MONGO_DATABASE_URI(self) -> MongoDsn:
-    return MultiHostUrl.build(scheme="mongodb",
-                              username=self.MONGO_USER,
-                              password=self.MONGO_PASSWORD,
-                              host=self.MONGO_HOST,
-                              port=self.MONGO_PORT)
 
 
 settings = Settings()

@@ -2,11 +2,14 @@
   Users routes.
 """
 from typing import Any
+from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException
 from common.crud.postgres import users as crud_users
+from common.crud.postgres import schemas as crud_schemas
 from common.deps import (
     CurrentUser,
     PostgresDB,
+    DoxClient  
 )
 from common.models.users import (User, UserCreate, UserPublic)
 
@@ -14,7 +17,7 @@ router = APIRouter()
 
 
 @router.post("/", response_model=UserPublic)
-def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
+async def create_user(*, session: PostgresDB, user_in: UserCreate, dox_client:DoxClient) -> Any:
   """
   Create a new user.
   """
@@ -23,10 +26,11 @@ def create_user(*, session: PostgresDB, user_in: UserCreate) -> Any:
   if user:
     raise HTTPException(
         status_code=400,
-        detail="The user with this username already exists in the system",
+        detail="The provided username is already taken",
     )
   user_create = UserCreate.model_validate(user_in)
   user = crud_users.create_user(session=session, user_create=user_create)
+  await crud_schemas.add_default_schemas(session=session, user=user,dox_client=dox_client)
   return user
 
 
@@ -37,6 +41,16 @@ def read_user_me(current_user: CurrentUser) -> Any:
   """
   return current_user
 
+
+class PasswordChangeRequest(BaseModel):
+  new_password :str
+
+@router.post("/me/change-password")
+def change_password(session: PostgresDB, current_user: CurrentUser, new_pw: PasswordChangeRequest) -> Any:
+  """
+  Get current user.
+  """
+  crud_users.change_user_password(session,current_user,new_pw.new_password)
 
 @router.delete("/{user_id}")
 def delete_user(session: PostgresDB, current_user: CurrentUser,

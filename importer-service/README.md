@@ -11,12 +11,12 @@ Before utilizing this repository, ensure the following software is installed on 
 In addition, you need a service key for Document Information Extraction. You can find a tutorial on how to get one [here](https://developers.sap.com/tutorials/cp-aibus-dox-free-booster-key.html).
 In the .env file, set SAP_BASE_URL as  url, SAP_CLIENT_ID as uaa.clientid, SAP_CLIENT_SECRET as uaa.clientsecret, and SAP_UAA_URL as uaa.url
 
-You will also need a docker network called lgp-network. 
-In order to do this, run the following command:
-
+Lastly, you'll need an OAUTH2 token to interact with the Gmail API. To get this token, change directory into importer-service and run
 ```bash
-docker network create lgp-network
+python3 app/gmail_automation/generate_google_oauth2_token.py
 ```
+This requires that you have the client secrets credentials (crendentials.json) on the google_oauth2_token folder.
+To get this JSON, navigate to the [google cloud console](https://console.cloud.google.com/apis/credentials), log in as doclarifai@gmail.com, navigate to the WeClarifai project, click on the download button for the  Gmail automation OAuth2.0 Client and then click on DOWNLOAD JSON, storing the file inside google_oauth2_token with the name credentials.json
 
 
 ## Getting Started

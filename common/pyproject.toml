@@ -26,7 +26,7 @@ dependencies = [
     "httpx",
     "sqlalchemy",
     "pydantic-settings",
+    "pandas",
     "SQLAlchemy",
-    "pymongo",
     "psycopg[binary,pool]",
 ]

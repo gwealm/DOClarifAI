@@ -19,4 +19,4 @@ run_compose() {
     fi
 }
 
-run_compose up tests --build
+run_compose up workflowmanagement-tests --build

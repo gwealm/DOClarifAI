@@ -15,7 +15,7 @@ services:
     volumes:
       - ./app:/app/app
 
-  tests:
+  exporter-tests:
     env_file:
       - ./env/standalone.env
     build: 

@@ -7,13 +7,14 @@ WORKDIR /app
 
 # Install dependencies
 COPY requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 COPY --from=common . /app/common
-RUN pip install /app/common
+RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple /app/common
 
 COPY ./app /app/app
 COPY ./ES256 /app/ES256
+COPY ./google_oauth2_token /app/google_oauth2_token
 
 
 # Stage Tests

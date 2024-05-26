@@ -6,7 +6,6 @@ urllib3
 python-multipart
 uvicorn
 httpx
-pymongo
 sqlalchemy
 python-jose[cryptography]
 passlib[bcrypt]
@@ -14,3 +13,8 @@ sqlmodel
 pydantic-settings
 SQLAlchemy
 psycopg[binary,pool]
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+apscheduler
+websockets
