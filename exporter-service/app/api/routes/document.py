@@ -5,9 +5,7 @@ from fastapi import APIRouter
 from fastapi import BackgroundTasks
 from fastapi import HTTPException, Path
 from fastapi.responses import FileResponse
-from common.deps import CurrentUser,PostgresDB
-from app.api.deps import MongoDB
-from app.crud import documents as crud_documents
+from common.deps import CurrentUser,PostgresDB,DoxClient
 from common.crud.postgres import files as crud_files
 from common.crud.postgres import workflows as crud_workflows
 from common.models.workflows import Workflow
@@ -18,21 +16,31 @@ import os
 router = APIRouter()
 
 
-@router.get("/{document_id}/xlsx")
-async def export_document_excel(
-    db: MongoDB,
+@router.get("/{file_id}/xlsx")
+async def export_extracted_results(
+    session: PostgresDB,
     background_tasks: BackgroundTasks,
-    user: CurrentUser,
-    document_id: str = Path(...,
-                            description="The ID of the document to download")
+    dox_client:DoxClient,
+    current_user: CurrentUser,
+    file_id: int
 ) -> FileResponse:
   """
-        This endpoint lets the client download a document in xlsx format.
-      """
-  document_xlsx_file_path: str = crud_documents.get_document_by_id_xlsx(
-      db, user, document_id)
+    This endpoint lets the client download the extracted results for a file in xlsx format.
+  """
+
+  file:File = crud_files.get_file_by_id(session=session,file_id=file_id)
+  workflow:Workflow = file.workflow
+
+  if not file:
+    raise HTTPException(status_code=404, detail="File not found")  
+  elif workflow.user != current_user:
+    raise HTTPException(status_code=403,
+                        detail="The user doesn't have enough privileges")
+
+  document_xlsx_file_path: str = await crud_files.get_extracted_results_by_id_xlsx(
+      session=session, file_id=file_id, dox_client=dox_client)
   if document_xlsx_file_path is None:
-    raise HTTPException(status_code=404, detail="Document not found")
+    raise HTTPException(status_code=500, detail="Error exporting the extracted results")
 
   background_tasks.add_task(os.remove, document_xlsx_file_path)
   return FileResponse(

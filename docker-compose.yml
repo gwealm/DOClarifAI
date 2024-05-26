@@ -9,11 +9,6 @@ services:
       - "8080:8080"
     restart: unless-stopped
 include:
-  # mongodb
-  - path:
-      - "database/mongodb/docker-compose.yml"
-    env_file:
-      - "database/mongodb/.env"
   # postgres
   - path:
       - "database/postgres/compose.base.yml"

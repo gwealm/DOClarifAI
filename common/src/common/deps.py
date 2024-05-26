@@ -14,12 +14,15 @@ from common.config import settings
 from common.postgres import engine
 from common.models.users import User
 
-# DO NOT DELETE. User needs templates and workflows, workflows need files
+# DO NOT DELETE. 
 from common.models.workflows import Workflow
 from common.models.templates import Template
 from common.models.files import File
+from common.models.schemas import Schema
+from common.models.document_types import DocumentType
 
 from common.models.tokens import TokenPayload
+from common.document_information_extraction_client.dox_api_client import DoxApiClient
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
 
@@ -57,3 +60,27 @@ def get_current_user(session: PostgresDB, token: OAuth2Token) -> User:
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+class DoxApiClientSingleton:
+  """
+    Singleton class for managing the instantiation of the DoxApiClient.
+    """
+
+  _instance = None
+
+  def __new__(cls):
+    """
+        Create a new instance of DoxApiClient if it doesn't exist,
+          otherwise return the existing instance.
+        """
+    if cls._instance is None:
+      cls._instance = DoxApiClient(settings.SAP_BASE_URL,
+                                   settings.SAP_CLIENT_ID,
+                                   settings.SAP_CLIENT_SECRET,
+                                   settings.SAP_UAA_URL)
+    return cls._instance
+
+
+DoxClient = Annotated[DoxApiClient, Depends(DoxApiClientSingleton)]
+

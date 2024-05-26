@@ -55,14 +55,9 @@ function AuthProvider(props:Props) {
         }
         params.headers.set("Authorization", `Bearer ${token}`);
         const res = await fetch(url, params);
-        if (res.status == 403 || res.status == 404) {
-            let json_res;
-            try {
-                json_res = await res.json();
-            } catch (e) {
-                console.error("Error parsing JSON response");
-                throw new Error("Error parsing JSON response");
-            }
+
+        if (res.status == 403) {
+            const json_res = await res.json();
             const data = { errorMsg: json_res.detail }
             onLogout();
             navigate("/login", { state:data} );

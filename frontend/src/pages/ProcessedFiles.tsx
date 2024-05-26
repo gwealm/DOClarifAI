@@ -61,29 +61,39 @@ function ProcessedFiles() {
         </div>
       </div>
 
-      <div className="border-2 rounded-lg p-5 flex flex-col justify-between min-h-[600px]">
-        <div>
-          <div className="flex max-w-8xl items-center justify-between pl-6 mb-4">
-            <div className="flex lg:flex-1 justify-left">
-              <h2 className="text-lg font-semibold text-black">Name</h2>
-            </div>
-            <div className="flex lg:flex-1 justify-left">
-              <h2 className="text-lg font-semibold text-black">Last Modified</h2>
-            </div>
-            <div className="flex lg:flex-1 justify-left">
-              <h2 className="text-lg font-semibold text-black">File Status</h2>
-            </div>
-          </div>
+      <div className="border-2 rounded-lg p-5 flex flex-col min-h-[600px]">
+            <div>
+                <div className="grid grid-cols-4 gap-x-4 pl-6 mb-4">
+                    <div>
+                        <h2 className="text-lg font-semibold text-black text-center">Name</h2>
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-semibold text-black text-center">Last Modified</h2>
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-semibold text-black text-center">File Status</h2>
+                    </div>
+                </div>
 
-          <div className="border-b border-blue-200 mb-4"></div>
+                <div className="border-b border-blue-200 mb-4"></div>
 
-          {files.map((file, index) => (
-            <ProcessedFileCard key={index} dox_id={file.dox_id} index={index} name={file.name} date={file.uploaded_at} processed_status={file.process_status} onDownload={handleDownloadFiles} />
-          ))}
+                {files.map((file, index) => (
+                    <ProcessedFileCard
+                        key={index}
+                        fileId={file.id}
+                        workflowId={file.workflow_id}
+                        dox_id={file.dox_id}
+                        index={index}
+                        name={file.name}
+                        date={file.uploaded_at}
+                        processed_status={file.process_status}
+                        onDownload={handleDownloadFiles}
+                    />
+                ))}
+            </div>
         </div>
       </div>
-    </div></div>
-  );
+  </div>);
 }
 
 export default ProcessedFiles;

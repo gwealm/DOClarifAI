@@ -8,6 +8,12 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ProcessedFiles from "./pages/ProcessedFiles";
 import AuthProvider from "./components/auth/AuthProvider";
+import Template from "./pages/Template"
+import Templates from "./pages/Templates"
+import Schema from "./pages/Schema"
+import Schemas from "./pages/Schemas"
+import ProcessedFile from "./pages/ProcessedFile"
+
 import { AboutUs } from "./pages/AboutUs";
 import { HomePage } from "./pages/HomePage";
 
@@ -20,11 +26,25 @@ function Router() {
                     <Routes location={location} key={location.pathname}>
                         <Route path="/workflows" element={<Workflows />} />
                         <Route path="/" element={<HomePage />} />
-                        <Route path="/workflow/:id" element={<Workflow />} />
                         <Route path="/profile" element={<Profile />} />
+                        <Route path="/templates" element={<Templates  />} />
+                        <Route
+                            path="/templates/:id"
+                            element={<Template />}
+                        />
+                        <Route path="/schemas" element={<Schemas  />} />
+                        <Route
+                            path="/schemas/:id"
+                            element={<Schema />}
+                        />
+                        <Route path="/workflow/:id" element={<Workflow />} />
                         <Route
                             path="/workflow/:id/processed-files"
                             element={<ProcessedFiles />}
+                        />
+                        <Route
+                            path="/workflow/:workflowId/processed-files/:fileId"
+                            element={<ProcessedFile />}
                         />
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/login" element={<LogIn />} />

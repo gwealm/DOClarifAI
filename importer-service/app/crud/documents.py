@@ -2,11 +2,7 @@
 This module contains the functions to interact with the database.
 """
 
-from pymongo.database import Database
-from common.models.users import User
-from common.models.workflows import Workflow
-from common.models.templates import Template
-from common.models.files import File, FileProcesingStatus
+from common.models.files import FileProcesingStatus
 from common.crud.postgres import files as crud_files
 from common.crud.postgres import workflows as crud_workflows
 from common.postgres import engine
@@ -14,7 +10,6 @@ from app.websockets.manager import manager
 import asyncio
 
 from sqlmodel import Session
-import os
 
 
 def check_confidence_level(document_extraction: dict,
@@ -49,17 +44,15 @@ def check_confidence_level(document_extraction: dict,
   return irregular_fields
 
 
-def upload_document_extraction(
-    mongo_db: Database,
+def update_document_extraction_metadata(
     document_extraction: dict,
     workflow_id: int,
-    file_metadata_id: int,
-    file_path: str,
+    file_metadata_id: int
 ):
 
   with Session(engine) as session:
     workflow = crud_workflows.get_workflow_by_id(session=session, workflow_id=workflow_id)
-    min_confidence = workflow.confidence_interval  
+    min_confidence = workflow.confidence_interval
     document_data = document_extraction["extraction"]
     irregular_fields = check_confidence_level(document_data, min_confidence)
 
@@ -67,22 +60,14 @@ def upload_document_extraction(
 
     if irregular_fields:
       status = FileProcesingStatus.FAILED
-      document_extraction["processed"] = False
     else:
       status = FileProcesingStatus.SUCCESS
-      os.remove(file_path)
-      document_extraction["processed"] = True
 
-    collection = mongo_db["documents"]
-    collection.insert_one(document_extraction)
     dox_id = document_extraction["id"]
 
     file_metadata = crud_files.get_file_by_id(session=session, file_id=file_metadata_id)
     file_metadata.process_status = status
     file_metadata.dox_id = dox_id
-    if status == FileProcesingStatus.SUCCESS:
-      file_metadata.unprocessed_path = None
-
     session.add(file_metadata)
     session.commit()
 
@@ -91,4 +76,8 @@ def upload_document_extraction(
       user_id = workflow.user.id
       message = f"File {file_metadata.name} inside the workflow: \"{workflow.name}\" has been processed successfully"
       asyncio.create_task(manager.send_personal_message(message, user_id))
-
+    # Send notification if the file status is failed
+    elif status == FileProcesingStatus.FAILED:
+      user_id = workflow.user.id
+      message = f"File {file_metadata.name} inside the workflow: \"{workflow.name}\" has failed to process"
+      asyncio.create_task(manager.send_personal_message(message, user_id))

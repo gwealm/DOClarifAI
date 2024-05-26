@@ -2,9 +2,8 @@
   This module contains the CRUD operations for the Template ORM.
 """
 from sqlmodel import Session, select
-from common.models.templates import Template, TemplateCreate
-from common.models.users import User
-
+from common.models.templates import Template, TemplateCreate, TemplateUpdate
+from common.models.workflows import Workflow
 
 def create_template(*, session: Session, template: TemplateCreate) -> Template:
   """
@@ -15,34 +14,56 @@ def create_template(*, session: Session, template: TemplateCreate) -> Template:
   Returns:
     template: The created template
   """
-  db_obj = Template.model_validate(template)
+
+  db_obj = Template(
+      name=template.name,
+      description=template.description,
+      template_id_dox=template.template_id_dox,
+      schema_id=template.schema_id,
+      user_id=template.user_id,
+      document_type_id=template.document_type_id
+  )
   session.add(db_obj)
   session.commit()
   session.refresh(db_obj)
+  return db_obj
 
-  if template.user_id:
-    statement = select(User).where(User.id == template.user_id)
-    # Don't know why This has to be done.
-    # While creating a template normally, if it had directly the user_id this
-    # would be set to None after calling session.refresh()
-    user = session.exec(statement).one()
-    if not user:
-      return None
-    db_obj.user = user
-    session.commit()
-    session.refresh(db_obj)
+def update_template(*, session:Session, template_id:int, template_in: TemplateUpdate) -> Template:
+  db_obj:Template = session.query(Template).filter(Template.id == template_id).first()
+  if not db_obj:
+    return None
+  db_obj.name = template_in.name
+  db_obj.description = template_in.description
+  db_obj.schema_id = template_in.schema_id
+  db_obj.document_type_id = template_in.document_type_id
+  db_obj.template_id_dox = template_in.template_id_dox
+  session.commit()
+  session.refresh(db_obj)
   return db_obj
 
 
-def get_templates(*, session: Session) -> list[Template]:
-  """
-    List Available templates.
-    Args:
-      session: PostgresDB session
-    Returns:
-      list[template]: available templates
-  """
-  statement = select(Template)
-  # TODO: Paginate Results
-  templates = session.exec(statement).all()
-  return templates
+def get_template_by_id(*, session:Session, template_id:int) -> Template:
+  statement = select(Template).where(Template.id == template_id)
+  template = session.exec(statement).first()
+  return template
+
+def get_user_active_templates(*, session:Session, user_id:int) -> list[Template]:
+  statement =  select(Template)\
+              .filter(Template.user_id == user_id)\
+              .filter(Template.active == True)
+  active_templates = session.exec(statement).all()
+  return active_templates
+
+
+def get_user_template_by_name(*, session:Session, user_id:int, template_name:str) -> Template | None:
+  return session.query(Template)\
+    .filter(Template.user_id==user_id)\
+    .filter(Template.name==template_name)\
+    .first()
+    
+def get_active_templates_by_document_type(*, session:Session, user_id:int, document_type_id:int) -> list[Template]:
+  return session.query(Template)\
+    .filter(Template.user_id==user_id)\
+    .filter(Template.document_type_id==document_type_id)\
+    .filter(Template.active==True)\
+    .all()

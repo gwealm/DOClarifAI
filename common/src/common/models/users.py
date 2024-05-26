@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
   from .workflows import Workflow
   from .templates import Template
+  from .schemas import Schema
 
 
 class UserBase(SQLModel):
@@ -31,6 +32,7 @@ class User(UserBase, table=True):
   hashed_password: str
   workflows: list["Workflow"] = Relationship(back_populates="user")
   templates: list["Template"] = Relationship(back_populates="user")
+  schemas: list["Schema"] = Relationship(back_populates="user")
 
 
 class UserPublic(UserBase):

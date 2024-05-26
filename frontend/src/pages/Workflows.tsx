@@ -44,7 +44,7 @@ const Workflows = () => {
         fetchWorkflows();
     }, [fetchWorkflows]);
 
-    const handleAddWorkflow = async (workflowName) => {
+    const handleAddWorkflow = async (workflow) => {
         try {
             const response = await auth.fetch('/workflowmanagement/', {
                 method: 'POST',
@@ -52,10 +52,7 @@ const Workflows = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    name: workflowName,
-                    description: ""
-                }),
+                body: JSON.stringify(workflow),
             });
 
             if (!response.ok) {

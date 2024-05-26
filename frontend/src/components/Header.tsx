@@ -80,6 +80,12 @@ const Header = () => {
                             <Link to="/workflows" className="text-sm font-semibold leading-6 text-gray-900">
                                 Workflows
                             </Link>
+                            <Link to="/schemas" className="text-sm font-semibold leading-6 text-gray-900">
+                                Schemas
+                            </Link>
+                            <Link to="/templates" className="text-sm font-semibold leading-6 text-gray-900">
+                                Templates
+                            </Link>
                         </div>
                         <div className="flex lg:flex-1 justify-end items-center space-x-8">
                             <div className="relative">

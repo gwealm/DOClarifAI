@@ -21,7 +21,6 @@ class FileProcesingStatus(Enum):
 class FileCreate(BaseModel):
   workflow_id: int = Field(default=None, foreign_key="workflow.id")
   name: str | None
-  unprocessed_path: str | None
 
 class File(SQLModel, table=True):
   """
@@ -29,7 +28,6 @@ class File(SQLModel, table=True):
   """
   id: int | None = Field(default=None, primary_key=True)
   name: str | None
-  unprocessed_path: str | None
   process_status: FileProcesingStatus | None = Field(default=FileProcesingStatus.QUEUED)
   dox_id: str | None = Field(default=None)
   uploaded_at: datetime = Field(default_factory=datetime.now)

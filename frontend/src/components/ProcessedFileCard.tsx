@@ -1,39 +1,59 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { Link } from 'react-router-dom';
 
-const ProcessedFileCard = ({ index, dox_id, name, date, processed_status, onDownload }) => {
-    // const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-    
+const ProcessedFileCard = ({ index, fileId, workflowId, dox_id, name, date, processed_status, onDownload }) => {
     const FileProcessingStatus = {
         0: 'Upload Queued',
         1: 'Upload Processing',
         2: 'Upload Failed',
         3: 'Successful Upload',
-      };
+    };
+
+    const handleDownloadClick = (e) => {
+        e.stopPropagation();
+        onDownload(fileId);
+    };
 
     return (
-        <>
-        <div className="relative flex max-w-8xl justify-between bg-[#C8EDFD] bg-opacity-50 my-3 p-6 rounded-lg">
-            <div className="flex lg:flex-1 justify-left">
-                <a key={index}>
+        <div className="relative grid grid-cols-4 gap-x-4 bg-[#C8EDFD] bg-opacity-50 my-3 p-6 rounded-lg items-center">
+            <div>
                 <p className="text-lg font-semibold text-black">{name}</p>
-                </a>
             </div>
-            <div className="flex lg:flex-1 justify-left">
+            <div>
                 <p className="text-lg text-black">{new Date(date).toLocaleString()}</p>
             </div>
-            <div className="flex lg:flex-1 justify-left">
+            <div>
                 <p className="text-lg text-black">{FileProcessingStatus[processed_status]}</p>
             </div>
-            {processed_status === 3 && (
-            <div className="absolute right-5 cursor-pointer hover:cursor-pointer" onClick={() => onDownload(dox_id)}>
-                <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
+            <div className="flex justify-end items-center">
+                {processed_status === 2  && (
+                <>
+                    <Link
+                        to={`/workflow/${workflowId}/processed-files/${fileId}`}
+                        className="mr-12 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Results
+                    </Link>
+                </>
+                )}
+                {processed_status === 3 && (
+                    <>
+                    <Link
+                        to={`/workflow/${workflowId}/processed-files/${fileId}`}
+                        className="mr-12 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Results
+                    </Link>
+                        <div className="ml-12 cursor-pointer" onClick={handleDownloadClick}>
+                            <FontAwesomeIcon icon={faDownload} style={{ fontSize: '24px' }} />
+                        </div>
+                    </>
+                )}
             </div>
-            )}
         </div>
-        </>
     );
-}
+};
 
 export default ProcessedFileCard;

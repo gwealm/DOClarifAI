@@ -10,13 +10,11 @@ Name                   Stmts   Miss  Cover   Missing
 ----------------------------------------------------
 app/__init__.py            0      0   100%
 app/api/__init__.py        0      0   100%
-app/api/deps.py            9      9     0%   5-18
 app/api/main.py            4      4     0%   4-9
 app/core/__init__.py       0      0   100%
-app/core/config.py        34     34     0%   2-61
-app/core/mongo_db.py       3      3     0%   4-7
+app/core/config.py        25     25     0%   2-46
 app/main.py                6      6     0%   4-16
 ----------------------------------------------------
-TOTAL                     56     56     0%
+TOTAL                     35     35     0%
 
-============================ no tests ran in 0.06s =============================
+============================ no tests ran in 0.09s =============================

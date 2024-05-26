@@ -7,8 +7,6 @@
 :80
 
 route {
-
-
 	handle_path /auth/* {        
         reverse_proxy authentication:8083
 	}

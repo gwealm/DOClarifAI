@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
 
 const Register = () => {
@@ -80,18 +80,6 @@ const Register = () => {
                             />
                         </div>
 
-                        <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4 flex items-center">
-                            <input
-                                className="form-checkbox h-4 w-4 text-blue-500"
-                                type="checkbox"
-                                value=""
-                                id="checkboxDefault" />
-                            <label
-                                className="text-xs inline-block ps-[0.15rem] hover:cursor-pointer mx-2">
-                                I agree to the
-                                <a href="#" className="text-gray-700 underline"> terms & policy</a>
-                            </label>
-                        </div>
                         <button
                             onClick={onClickRegister}
                             className="text-md font-semibold leading-6 text-white mx-6 py-2 rounded-md bg-[#1976D2] border border-gray-300 hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
@@ -106,15 +94,10 @@ const Register = () => {
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2">Or</div>
                     </div>
 
-                    <div className="flex justify-between items-center mx-8">
-                        <button className="flex items-center justify-center w-1/2 text-sm font-semibold leading-6 text-black mx-6 p-2 rounded-md bg-white border-2 border-[#D9D9D9] hover:bg-gray-100 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                            <img className="h-6 w-auto me-3" src="./src/assets/google_logo.png" alt="" />
-                            Sign up with Google
-                        </button>
-
-                        <button className="w-1/2 text-sm font-semibold leading-6 text-white mx-6 p-2 rounded-md bg-[#1976D2] border hover:bg-opacity-80 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                            Log in here
-                        </button>
+                    <div className="flex justify-center items-center">
+                        <a href="/login" className="w-1/2 text-sm font-semibold leading-6 text-white mx-6 p-2 rounded-md bg-[#1976D2] border hover:bg-opacity-80 hover:text-white focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                            Login here
+                        </a>
                     </div>
                 </div>
             </div>

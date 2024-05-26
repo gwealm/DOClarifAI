@@ -5,10 +5,12 @@
 import json
 import logging
 from typing import List, Union
-from app.http_client.http_client_base import CommonClient
+from common.http_client.http_client_base import CommonClient
 from .constants import API_FIELD_CLIENT_ID, API_FIELD_RETURN_NULL, API_REQUEST_FIELD_FILE, API_REQUEST_FIELD_OPTIONS
-from fastapi import UploadFile, HTTPException, BackgroundTasks
-from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT
+from fastapi import UploadFile, HTTPException, Response
+from .endpoints import DOCUMENT_ENDPOINT, DOCUMENT_ID_ENDPOINT, DOCUMENT_FILE_ENDPOINT,SCHEMAS_ENDPOINT,\
+  SCHEMA_CAPABILITIES_ENDPOINT, SCHEMA_ID_ENDPOINT, TEMPLATES_ENDPOINT,\
+  TEMPLATE_ID_ACTIVATE_ENDPOINT, TEMPLATE_ID_DEACTIVATE_ENDPOINT
 from .helpers import create_document_options
 
 
@@ -60,8 +62,6 @@ class DoxApiClient(CommonClient):
                             document_type: str,
                             create_background_task_callback,
                             document_extracted_callback,
-                            header_fields: Union[str, List[str]] = None,
-                            line_item_fields: Union[str, List[str]] = None,
                             template_id=None,
                             schema_id=None) -> dict:
     """
@@ -74,10 +74,6 @@ class DoxApiClient(CommonClient):
             document_type (str): The type of the document.
             background_tasks (BackgroundTasks): Background tasks
               manager for asynchronous processing.
-            header_fields (Union[str, List[str]], optional): Header
-              fields to extract. Defaults to None.
-            line_item_fields (Union[str, List[str]], optional): Line
-              item fields to extract. Defaults to None.
             template_id (Any, optional): The template ID for document
               extraction. Defaults to None.
             schema_id (Any, optional): The schema ID for document
@@ -87,8 +83,7 @@ class DoxApiClient(CommonClient):
             dict: The JSON response containing information
               about the submitted document.
         """
-    options = create_document_options(client_id, document_type, header_fields,
-                                      line_item_fields, template_id, schema_id)
+    options = create_document_options(client_id, document_type,template_id, schema_id)
 
     client_id = options.get(API_FIELD_CLIENT_ID)
     self.logger.debug('Starting upload of %s documents for client %s',
@@ -123,8 +118,6 @@ class DoxApiClient(CommonClient):
     """
         Polls the DOX API for a document identified by its
           ID until the extraction results are ready.
-        Stores the results in the mongodb document database
-          (lgp database, documents collection).
         Args:
             document_id: The ID of the document for which
               extraction results are requested.
@@ -150,3 +143,79 @@ class DoxApiClient(CommonClient):
     logging.debug('Document %s processed!', document_id)
     logging.debug(extracted_document)
     document_extracted_callback(extracted_document)
+    return extracted_document
+  
+  async def get_original_uploaded_document(self, document_id):
+    file_response =  await self.get(DOCUMENT_FILE_ENDPOINT.format(document_id=document_id))
+    file_response.raise_for_status()
+
+    content = file_response.content
+    content_type = file_response.headers.get('Content-Type')
+
+    return Response(content=content, media_type=content_type)
+ 
+  async def save_ground_truth(self, document_id, payload):
+    response = await self.post(DOCUMENT_ID_ENDPOINT.format(document_id=document_id),json=payload)
+    response.raise_for_status()
+    return response.json()
+  
+  async def get_all_schemas(self):
+    response = await self.get(SCHEMAS_ENDPOINT+'?clientId=default')
+    response.raise_for_status()
+    return response.json()
+
+  async def get_schema(self, schema_id):
+    response = await self.get(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def create_schema(self, payload):
+    response = await self.post(SCHEMAS_ENDPOINT, json=payload)
+    response.raise_for_status()
+    return response.json()
+
+  async def update_schema(self, schema_id, payload):
+    response = await self.put(SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)+'?clientId=default', json=payload)
+    response.raise_for_status()
+    return response.json()
+
+  async def get_schema_first_version(self, schema_id):
+    response = await self.get(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def post_fields_on_schema_version(self, schema_id, payload):
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1/fields?clientId=default', json=payload)
+    response.raise_for_status()
+    return response.json()
+  
+  async def get_document_types(self):
+    response = await self.get(SCHEMA_CAPABILITIES_ENDPOINT)
+    response.raise_for_status()
+    return response.json()["documentTypes"]
+
+  async def create_template(self, payload):
+    response = await self.post(TEMPLATES_ENDPOINT, json=payload)
+    response.raise_for_status()
+    return response.json()
+
+
+  async def activate_template(self, template_id):
+    response = await self.post(f'{TEMPLATE_ID_ACTIVATE_ENDPOINT.format(template_id=template_id)}?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def deactivate_template(self, template_id):
+    response = await self.post(f'{TEMPLATE_ID_DEACTIVATE_ENDPOINT.format(template_id=template_id)}?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def activate_schema_version(self, schema_id):
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1/activate?clientId=default')
+    response.raise_for_status()
+    return response.json()
+  
+  async def deactivate_schema_version(self, schema_id):
+    response = await self.post(f'{SCHEMA_ID_ENDPOINT.format(schema_id=schema_id)}/versions/1/deactivate?clientId=default')
+    response.raise_for_status()
+    return response.json()
