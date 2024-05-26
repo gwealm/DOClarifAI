@@ -86,7 +86,7 @@ function Workflow() {
     } catch (error) {
       console.error('Error fetching workflow:', error);
     }
-  }, [id]);
+  }, [auth, id]);
 
 
   const fetchTemplates = async () => {
@@ -143,6 +143,7 @@ function Workflow() {
   useEffect(() => {
     fetchWorkflow();
     fetchTemplates();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchWorkflow]);
 
   if (!auth.isLoggedIn) {
@@ -332,6 +333,6 @@ function Workflow() {
       </Modal>
 
       </div>
-)};
+)}
 
 export default Workflow;

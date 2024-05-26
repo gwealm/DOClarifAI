@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useAuth } from "../components/auth/Auth";
@@ -32,7 +33,7 @@ const ProcessedFile = () => {
   );
   const [schema, setSchema] = useState(null);
   const [missingHeaderFields, setMissingHeaderFields] = useState([]);
-  const [missingLineFields, setMissingLineFields] = useState([]);
+  const [, setMissingLineFields] = useState([]);
 
   const FieldComponent = ({ index, item, onAdd }) => {
     return (
@@ -97,6 +98,7 @@ const ProcessedFile = () => {
     return <AddFieldsComponent onAdd={onAdd} title={"Add Missing Header Fields"} fields={missingHeaderFields} />
   }
   const AddLineItemsFieldComponent = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onAdd = (index, item) => {
       const newFields = structuredClone(fields);
       newFields.lineItems.push([]);
@@ -155,6 +157,7 @@ const ProcessedFile = () => {
   useEffect(() => {
     fetchExtractedInformation();
     fetchDocument();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDocument = async () => {
@@ -368,7 +371,7 @@ const ProcessedFile = () => {
 
   const handleFieldValueChange = (event) => {
     let updatedField;
-    let updatedFields = { ...fields };
+    const updatedFields = { ...fields };
     if (selectedInnerFieldIdx !== null)
       updatedField = { ...fields[selectedFieldLevel][selectedOuterFieldIdx][selectedInnerFieldIdx] };
     else

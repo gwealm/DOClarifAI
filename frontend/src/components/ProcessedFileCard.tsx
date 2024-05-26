@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom';
 
-const ProcessedFileCard = ({ index, fileId, workflowId, dox_id, name, date, processed_status, onDownload }) => {
+const ProcessedFileCard = ({ fileId, workflowId, name, date, processed_status, onDownload }) => {
     const FileProcessingStatus = {
         0: 'Upload Queued',
         1: 'Upload Processing',
