@@ -98,7 +98,6 @@ const ProcessedFile = () => {
     return <AddFieldsComponent onAdd={onAdd} title={"Add Missing Header Fields"} fields={missingHeaderFields} />
   }
   const AddLineItemsFieldComponent = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onAdd = (index, item) => {
       const newFields = structuredClone(fields);
       newFields.lineItems.push([]);
@@ -133,7 +132,7 @@ const ProcessedFile = () => {
     const onAdd = (index, item) => {
 
       const newFields = structuredClone(fields);
-      let toSend = {
+      const toSend = {
         "name": item.name,
         "category": "details",
         "value": "",
