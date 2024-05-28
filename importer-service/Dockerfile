@@ -24,7 +24,7 @@ FROM build as tests
     COPY /tests/ /app/tests/
     COPY /tests/entrypoint.sh /app/entrypoint.sh
     COPY /reports /app/reports
-    RUN pip install pytest pytest-cov pylint
+    RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pytest pytest pytest-cov pylint
     CMD ["sh","entrypoint.sh"]
 
 # Stage App
